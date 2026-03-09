@@ -1,5 +1,11 @@
 # Smart Todo — Test Plan
 
+> **Parallel Agent Strategy**: This plan is split into dedicated BE and FE test documents.
+> - [test-plan-be.md](./test-plan-be.md) — Backend tests (Jest + Supertest + testcontainers)
+> - [test-plan-fe.md](./test-plan-fe.md) — Frontend tests (Jest + RTL + Cypress)
+
+---
+
 ## 1. Testing Strategy Overview
 
 | Layer              | Tool                        | Scope                                      |

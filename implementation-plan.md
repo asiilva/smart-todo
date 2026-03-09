@@ -1,5 +1,15 @@
 # Smart Todo — Implementation Plan
 
+> **Parallel Agent Strategy**: This plan is split into dedicated BE and FE documents for parallel execution.
+> - [implementation-plan-be.md](./implementation-plan-be.md) — Backend agent works on `/apps/api`
+> - [implementation-plan-fe.md](./implementation-plan-fe.md) — Frontend agent works on `/apps/web`
+>
+> **Phase 1** (scaffolding) runs sequentially to set up the monorepo.
+> **Phases 2-6**: BE and FE tasks within each phase can run **in parallel** once the shared types in `/packages/shared` are defined.
+> **Phase 7** (polish) runs in parallel by nature.
+
+---
+
 ## Phase 1: Project Scaffolding & Infrastructure
 > Foundation — get the monorepo, database, and CI running
 
