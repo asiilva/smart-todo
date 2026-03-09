@@ -1,8 +1,12 @@
 # Smart Todo — Backend Implementation Plan
 
-> This document contains all backend (API) tasks extracted from the main implementation plan.
+> This document contains the core backend (API) tasks: auth, organizations, profiles, boards, tasks, planner, insights.
 > Designed to be used by a dedicated agent working on `/apps/api`.
 > Reference: [implementation-plan.md](./implementation-plan.md) for full context.
+>
+> **AI and Telegram are in separate docs for parallel agent execution:**
+> - [implementation-plan-ai.md](./implementation-plan-ai.md) — AI provider, estimation, prompts
+> - [implementation-plan-telegram.md](./implementation-plan-telegram.md) — Telegram bot, webhook, handlers
 
 ---
 
@@ -64,7 +68,7 @@
 
 ---
 
-## Phase 3: User Profiles & AI Provider
+## Phase 3: User Profiles
 
 ### 3.1 Profile Module
 - [ ] `POST /api/users/me/profile` — accept text description + resume file (PDF/DOCX)
@@ -72,24 +76,9 @@
 - [ ] `PUT /api/users/me` — update user details
 - [ ] Resume file upload handling (Multer → local/cloud storage)
 - [ ] Resume text extraction (pdf-parse for PDF, mammoth for DOCX)
+- [ ] Call AI provider to generate structured tech profile (see [implementation-plan-ai.md](./implementation-plan-ai.md))
 - [ ] Unit tests for profile service
 - [ ] Integration tests for profile endpoints
-
-### 3.2 AI Provider (Factory Pattern)
-- [ ] Define `AIProvider` interface:
-  ```
-  estimateTaskDuration(task, userProfile, history): EstimationResult
-  parseTaskFromText(text): ParsedTask
-  transcribeAudio(audioBuffer): string
-  generateTechProfile(resumeText): TechProfile
-  suggestDayPlan(tasks, userProfile, availability): DayPlan
-  ```
-- [ ] Implement `ClaudeProvider`
-- [ ] Implement `OpenAIProvider`
-- [ ] Implement `AIProviderFactory` (reads from env config)
-- [ ] `generateTechProfile(resumeText)` — parse resume into structured profile
-- [ ] Unit tests for each provider (mocked API calls)
-- [ ] Integration test for factory
 
 ---
 
@@ -117,20 +106,12 @@
 
 ---
 
-## Phase 5: AI Estimation, Daily Planner & Insights
+## Phase 5: Daily Planner & Insights
 
-### 5.1 Estimation Service
-- [ ] `estimateTaskDuration(task, userProfile, history)` implementation
-- [ ] Prompt engineering: craft prompts with task details + user tech profile + historical projected vs executed data
-- [ ] Parse AI response into `EstimationResult` (projected_duration_minutes, confidence, reasoning)
-- [ ] Auto-trigger estimation on task creation (sets projected_duration_minutes)
-- [ ] `POST /api/tasks/:id/re-estimate` — manual re-estimation endpoint
-- [ ] `parseTaskFromText(text)` — extract title, description, priority, category from free text
-- [ ] Calibration logic: query past tasks to build accuracy context for AI
-- [ ] Unit tests (mocked AI responses)
-- [ ] Integration tests
+> **Note**: AI estimation service is in [implementation-plan-ai.md](./implementation-plan-ai.md).
+> This phase covers the planner and insights modules that consume estimation results.
 
-### 5.2 Daily Planner Module
+### 5.1 Daily Planner Module
 - [ ] `GET /api/planner/:date` — return: scheduled tasks, protected blocks, availability, total projected hours, remaining hours
 - [ ] `PUT /api/planner/settings` — set daily availability (available_from, available_until)
 - [ ] `POST /api/planner/protected-blocks` — create recurring/one-off protected time block
@@ -153,16 +134,8 @@
 
 ## Phase 6: Telegram Bot
 
-### 6.1 Bot Setup & Handlers
-- [ ] Set up Telegram bot (BotFather registration)
-- [ ] Webhook endpoint `POST /api/telegram/webhook`
-- [ ] `POST /api/telegram/link` — generate one-time linking code
-- [ ] Account linking flow: user sends `/link <code>` to bot → link telegram_chat_id to user
-- [ ] Handle text messages → `parseTaskFromText` → create task → reply with projected_duration
-- [ ] Handle voice messages → `transcribeAudio` → `parseTaskFromText` → create task
-- [ ] Bot commands: `/list`, `/done <id>`, `/status`, `/today` (daily summary)
-- [ ] Unit tests for message handlers
-- [ ] Integration tests for webhook flow
+> Fully covered in [implementation-plan-telegram.md](./implementation-plan-telegram.md).
+> A separate agent handles bot setup, webhook, account linking, and message handlers.
 
 ---
 

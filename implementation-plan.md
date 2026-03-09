@@ -1,11 +1,15 @@
 # Smart Todo — Implementation Plan
 
-> **Parallel Agent Strategy**: This plan is split into dedicated BE and FE documents for parallel execution.
-> - [implementation-plan-be.md](./implementation-plan-be.md) — Backend agent works on `/apps/api`
-> - [implementation-plan-fe.md](./implementation-plan-fe.md) — Frontend agent works on `/apps/web`
+> **Parallel Agent Strategy**: This plan is split into dedicated documents for parallel execution.
+> - [implementation-plan-be.md](./implementation-plan-be.md) — Backend agent (core API: auth, boards, tasks, planner)
+> - [implementation-plan-fe.md](./implementation-plan-fe.md) — Frontend agent (Next.js UI)
+> - [implementation-plan-ai.md](./implementation-plan-ai.md) — AI/LLM agent (provider abstraction, estimation, prompts)
+> - [implementation-plan-telegram.md](./implementation-plan-telegram.md) — Telegram agent (bot, webhook, message handlers)
 >
 > **Phase 1** (scaffolding) runs sequentially to set up the monorepo.
-> **Phases 2-6**: BE and FE tasks within each phase can run **in parallel** once the shared types in `/packages/shared` are defined.
+> **Phases 2-4**: BE and FE agents work **in parallel** once shared types are defined.
+> **Phase 3+**: AI agent can start once the provider interface types exist.
+> **Phase 5-6**: Telegram agent can start once tasks + AI provider are in place.
 > **Phase 7** (polish) runs in parallel by nature.
 
 ---

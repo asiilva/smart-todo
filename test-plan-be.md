@@ -1,8 +1,12 @@
 # Smart Todo — Backend Test Plan
 
-> Backend-specific tests extracted from the main test plan.
+> Backend core tests (auth, orgs, profiles, tasks, planner, insights).
 > Designed to be used by a dedicated agent working on `/apps/api`.
 > Reference: [test-plan.md](./test-plan.md) for full context.
+>
+> **AI and Telegram tests are in separate docs:**
+> - [test-plan-ai.md](./test-plan-ai.md) — AI provider, estimation, prompt tests
+> - [test-plan-telegram.md](./test-plan-telegram.md) — Telegram bot, webhook, handler tests
 
 ---
 
@@ -53,25 +57,7 @@
 - Handle empty resume gracefully
 - Update existing profile on re-upload
 
-### 2.4 AI Provider Factory
-- Return ClaudeProvider when configured for `claude`
-- Return OpenAIProvider when configured for `openai`
-- Throw on unknown provider string
-- Each provider implements all required interface methods
-- Factory reads provider from environment config
-
-### 2.5 AI Estimation (mocked API calls)
-- Parse estimation response into structured `EstimationResult`
-- Handle AI API timeout gracefully
-- Handle AI API rate limit gracefully
-- Include user tech profile in prompt
-- Include task title + description in prompt
-- Include historical accuracy data in prompt for calibration
-- Return confidence level (low/medium/high) with estimate
-- Extract category suggestion from AI response
-- Return fallback estimate when AI fails
-
-### 2.6 Task Service
+### 2.4 Task Service
 - Create task with valid data (projected_duration, category, scheduled_date)
 - Assign position correctly (append to end of column)
 - Reorder tasks within column (update positions of affected tasks)
@@ -80,7 +66,7 @@
 - Validate category enum values
 - Set scheduled_date defaults to today if not provided
 
-### 2.7 Time Tracking Service
+### 2.5 Time Tracking Service
 - Start timer creates a time_entry with started_at = now
 - Stop timer sets stopped_at and calculates duration_minutes
 - Cannot start timer if one is already running for the same task
@@ -89,7 +75,7 @@
 - Multiple start/stop sessions accumulate correctly
 - Stopping timer on task in "Done" column keeps entry valid
 
-### 2.8 Daily Planner Service
+### 2.6 Daily Planner Service
 - Calculate available hours for a date (available_until - available_from - protected blocks)
 - Detect overbooking when total projected_duration > available hours
 - Return tasks ordered by position for a given date
@@ -99,7 +85,7 @@
 - Handle date with no tasks (return empty with full availability)
 - Handle date with no protected blocks
 
-### 2.9 Insights Service
+### 2.7 Insights Service
 - Calculate average projected/executed ratio
 - Filter accuracy stats by category
 - Filter accuracy stats by date range
@@ -108,16 +94,6 @@
 - Calculate underestimation percentage correctly
 - Return per-category breakdown
 - Only include tasks that have both projected and executed durations
-
-### 2.10 Telegram Handler
-- Parse text message into ParsedTask (title, description, priority, category)
-- Handle voice message (mock transcription → parse)
-- Reject messages from unlinked Telegram accounts
-- Execute `/list` command — return task summary
-- Execute `/done <id>` command — move task to Done column
-- Execute `/status` command — return board overview
-- Execute `/today` command — return daily summary with hours
-- Handle unknown commands gracefully
 
 ---
 
@@ -163,8 +139,5 @@
 - `GET /api/insights/accuracy?category=work` — filtered results
 - `GET /api/insights/accuracy` — empty result when no completed tasks
 
-### 3.8 Telegram Webhook
-- `POST /api/telegram/webhook` — text message creates task and returns confirmation
-- `POST /api/telegram/webhook` — voice message transcribes and creates task
-- `POST /api/telegram/webhook` — unlinked user receives linking instructions
-- `POST /api/telegram/link` — generates one-time linking code
+> **Note**: AI provider/estimation tests → [test-plan-ai.md](./test-plan-ai.md)
+> **Note**: Telegram webhook/handler tests → [test-plan-telegram.md](./test-plan-telegram.md)
