@@ -440,6 +440,96 @@
     .protected-block-name { font-size: 13px; font-weight: 600; }
     .protected-block-time { font-size: 11px; color: var(--text-muted); }
 
+    /* ===== API Keys View ===== */
+    #apikeys-view { flex-direction: column; overflow-y: auto; padding: 24px; }
+    .apikeys-header {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 20px;
+    }
+    .apikeys-title { font-size: 20px; font-weight: 700; }
+    .apikeys-subtitle { font-size: 13px; color: var(--text-muted); margin-top: 4px; }
+    .btn-new-key {
+      padding: 8px 16px; border-radius: var(--radius); border: none;
+      background: var(--accent); color: white; font-size: 13px; font-weight: 600;
+      cursor: pointer; transition: background 0.2s;
+    }
+    .btn-new-key:hover { background: var(--accent-hover); }
+    .apikeys-list { display: flex; flex-direction: column; gap: 12px; max-width: 800px; }
+    .apikey-card {
+      background: var(--bg-surface); border-radius: var(--radius-lg);
+      padding: 16px 20px; border: 1px solid var(--border);
+      display: flex; align-items: center; gap: 16px;
+    }
+    .apikey-card.revoked { opacity: 0.5; }
+    .apikey-icon {
+      width: 40px; height: 40px; border-radius: 8px;
+      background: rgba(59,130,246,0.1); color: var(--accent);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px; flex-shrink: 0;
+    }
+    .apikey-card.revoked .apikey-icon { background: rgba(100,116,139,0.1); color: var(--text-dim); }
+    .apikey-info { flex: 1; min-width: 0; }
+    .apikey-name { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
+    .apikey-prefix {
+      font-size: 12px; font-family: 'SF Mono', 'Fira Code', monospace;
+      color: var(--text-muted); background: var(--bg); padding: 2px 8px;
+      border-radius: 4px; display: inline-block; margin-bottom: 6px;
+    }
+    .apikey-meta { display: flex; gap: 16px; font-size: 11px; color: var(--text-dim); flex-wrap: wrap; }
+    .apikey-scopes { display: flex; gap: 4px; flex-wrap: wrap; margin-top: 6px; }
+    .scope-tag {
+      font-size: 10px; padding: 2px 6px; border-radius: 4px;
+      background: rgba(59,130,246,0.1); color: var(--accent);
+      font-family: 'SF Mono', 'Fira Code', monospace;
+    }
+    .apikey-actions { display: flex; gap: 8px; flex-shrink: 0; }
+    .btn-revoke {
+      padding: 6px 12px; border-radius: var(--radius); border: 1px solid rgba(239,68,68,0.3);
+      background: rgba(239,68,68,0.1); color: var(--danger); font-size: 12px; font-weight: 600;
+      cursor: pointer; transition: all 0.2s;
+    }
+    .btn-revoke:hover { background: rgba(239,68,68,0.2); border-color: rgba(239,68,68,0.5); }
+    .apikey-revoked-badge {
+      font-size: 11px; padding: 4px 10px; border-radius: 4px;
+      background: rgba(100,116,139,0.15); color: var(--text-dim); font-weight: 600;
+    }
+    .apikey-created-banner {
+      display: none; background: rgba(16,185,129,0.1); border: 1px solid rgba(16,185,129,0.3);
+      border-radius: var(--radius-lg); padding: 16px 20px; margin-bottom: 16px; max-width: 800px;
+    }
+    .apikey-created-banner.visible { display: block; }
+    .apikey-created-banner-title { font-size: 14px; font-weight: 700; color: var(--success); margin-bottom: 8px; }
+    .apikey-created-banner-text { font-size: 12px; color: var(--text-muted); margin-bottom: 10px; }
+    .apikey-full-key {
+      font-family: 'SF Mono', 'Fira Code', monospace; font-size: 13px;
+      background: var(--bg); padding: 10px 14px; border-radius: var(--radius);
+      border: 1px solid var(--border); color: var(--success);
+      word-break: break-all; display: flex; align-items: center; gap: 10px;
+    }
+    .apikey-full-key code { flex: 1; }
+    .btn-copy-key {
+      padding: 4px 10px; border-radius: 4px; border: 1px solid var(--border);
+      background: var(--bg-surface); color: var(--text-muted); font-size: 11px; font-weight: 600;
+      cursor: pointer; transition: all 0.2s; flex-shrink: 0;
+    }
+    .btn-copy-key:hover { color: var(--text); border-color: var(--text-muted); }
+    .apikeys-empty {
+      text-align: center; padding: 48px 20px; color: var(--text-dim);
+      max-width: 800px;
+    }
+    .apikeys-empty-icon { font-size: 36px; margin-bottom: 12px; }
+    .apikeys-empty-text { font-size: 14px; margin-bottom: 4px; }
+    .apikeys-empty-sub { font-size: 12px; color: var(--text-dim); }
+
+    @media (max-width: 480px) {
+      #apikeys-view { padding: 12px; }
+      .apikeys-header { flex-direction: column; align-items: flex-start; gap: 8px; }
+      .btn-new-key { width: 100%; text-align: center; }
+      .apikey-card { flex-direction: column; align-items: flex-start; }
+      .apikey-actions { width: 100%; }
+      .btn-revoke { flex: 1; text-align: center; }
+    }
+
     /* ===== Modal ===== */
     .modal-overlay {
       display: none; position: fixed; inset: 0; z-index: 200;
@@ -686,6 +776,7 @@
       <div class="nav-tabs">
         <button class="nav-tab active" data-view="board-view">Board</button>
         <button class="nav-tab" data-view="planner-view">Planner</button>
+        <button class="nav-tab" data-view="apikeys-view">API Keys</button>
       </div>
       <div class="nav-right">
         <button class="notif-btn" id="notif-btn" title="Notifications">
@@ -751,6 +842,26 @@
         </div>
         <div class="planner-sidebar" id="planner-sidebar"></div>
       </div>
+
+      <!-- API Keys View -->
+      <div id="apikeys-view" class="view">
+        <div class="apikeys-header">
+          <div>
+            <div class="apikeys-title">API Keys</div>
+            <div class="apikeys-subtitle">Manage API keys for external apps and AI integrations</div>
+          </div>
+          <button class="btn-new-key" id="btn-new-key">+ Create API Key</button>
+        </div>
+        <div class="apikey-created-banner" id="apikey-created-banner">
+          <div class="apikey-created-banner-title">API Key Created</div>
+          <div class="apikey-created-banner-text">Copy your key now. You won't be able to see it again.</div>
+          <div class="apikey-full-key">
+            <code id="apikey-full-value"></code>
+            <button class="btn-copy-key" id="btn-copy-key">Copy</button>
+          </div>
+        </div>
+        <div class="apikeys-list" id="apikeys-list"></div>
+      </div>
     </div>
   </div>
 
@@ -799,6 +910,60 @@
       <div class="modal-actions">
         <button class="btn-cancel" id="btn-cancel">Cancel</button>
         <button class="btn-create" id="btn-create">Create Task</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- API Key Creation Modal -->
+  <div class="modal-overlay" id="apikey-modal-overlay">
+    <div class="modal">
+      <div class="modal-title">Create API Key</div>
+      <div class="form-group">
+        <label class="form-label">Key Name</label>
+        <input class="form-input" id="apikey-name" type="text" placeholder="e.g., Claude integration, CI pipeline">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Scopes</label>
+        <div style="display:flex;flex-direction:column;gap:8px;margin-top:4px;">
+          <label style="display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer;">
+            <input type="checkbox" id="scope-all" checked> <code style="font-size:12px;color:var(--accent);">*</code> Full access (all scopes)
+          </label>
+          <label style="display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer;">
+            <input type="checkbox" class="scope-checkbox" value="tasks:read" disabled> <code style="font-size:12px;">tasks:read</code> Read tasks & boards
+          </label>
+          <label style="display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer;">
+            <input type="checkbox" class="scope-checkbox" value="tasks:write" disabled> <code style="font-size:12px;">tasks:write</code> Create, update, delete tasks
+          </label>
+          <label style="display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer;">
+            <input type="checkbox" class="scope-checkbox" value="timer:read" disabled> <code style="font-size:12px;">timer:read</code> Read time entries
+          </label>
+          <label style="display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer;">
+            <input type="checkbox" class="scope-checkbox" value="timer:write" disabled> <code style="font-size:12px;">timer:write</code> Start/stop timers
+          </label>
+          <label style="display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer;">
+            <input type="checkbox" class="scope-checkbox" value="planner:read" disabled> <code style="font-size:12px;">planner:read</code> Read planner data
+          </label>
+          <label style="display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer;">
+            <input type="checkbox" class="scope-checkbox" value="planner:write" disabled> <code style="font-size:12px;">planner:write</code> Manage planner
+          </label>
+          <label style="display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer;">
+            <input type="checkbox" class="scope-checkbox" value="insights:read" disabled> <code style="font-size:12px;">insights:read</code> Read insights
+          </label>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Expiration (optional)</label>
+        <select class="form-select" id="apikey-expiry">
+          <option value="">No expiration</option>
+          <option value="30">30 days</option>
+          <option value="90">90 days</option>
+          <option value="180">6 months</option>
+          <option value="365">1 year</option>
+        </select>
+      </div>
+      <div class="modal-actions">
+        <button class="btn-cancel" id="btn-apikey-cancel">Cancel</button>
+        <button class="btn-create" id="btn-apikey-create">Create Key</button>
       </div>
     </div>
   </div>
@@ -951,6 +1116,7 @@
       requestNotificationPermission();
       renderBoard();
       renderPlanner();
+      renderApiKeys();
       initTimers();
     }
 
@@ -1604,6 +1770,185 @@
         renderPlanner();
         showToast('&#10003;', `Task created — AI estimated ${formatDuration(estimatedMinutes)}`);
       }, 1500);
+    });
+    // ===== API Keys =====
+    let apiKeys = [
+      {
+        id: 1, name: 'Claude AI Assistant', prefix: 'a1b2c3d4',
+        scopes: ['*'], createdAt: '2026-02-15',
+        lastUsedAt: '2026-03-09', expiresAt: null, revokedAt: null
+      },
+      {
+        id: 2, name: 'CI Pipeline — GitHub Actions', prefix: 'e5f6g7h8',
+        scopes: ['tasks:read', 'tasks:write'], createdAt: '2026-03-01',
+        lastUsedAt: '2026-03-08', expiresAt: '2026-06-01', revokedAt: null
+      },
+      {
+        id: 3, name: 'Old Zapier integration', prefix: 'x9y0z1w2',
+        scopes: ['tasks:read'], createdAt: '2026-01-10',
+        lastUsedAt: '2026-02-01', expiresAt: null, revokedAt: '2026-02-20'
+      }
+    ];
+    let nextKeyId = 4;
+
+    function generateFakeKey() {
+      const chars = '0123456789abcdef';
+      let key = '';
+      for (let i = 0; i < 64; i++) key += chars[Math.floor(Math.random() * chars.length)];
+      return `sk_live_${key}`;
+    }
+
+    function renderApiKeys() {
+      const list = document.getElementById('apikeys-list');
+      const activeKeys = apiKeys.filter(k => !k.revokedAt);
+      const revokedKeys = apiKeys.filter(k => k.revokedAt);
+      const allKeys = [...activeKeys, ...revokedKeys];
+
+      if (allKeys.length === 0) {
+        list.innerHTML = `
+          <div class="apikeys-empty">
+            <div class="apikeys-empty-icon">&#128273;</div>
+            <div class="apikeys-empty-text">No API keys yet</div>
+            <div class="apikeys-empty-sub">Create an API key to integrate external apps and AI agents with Smart Todo.</div>
+          </div>`;
+        return;
+      }
+
+      list.innerHTML = allKeys.map(key => {
+        const isRevoked = !!key.revokedAt;
+        const scopeDisplay = key.scopes.includes('*')
+          ? '<span class="scope-tag">* full access</span>'
+          : key.scopes.map(s => `<span class="scope-tag">${s}</span>`).join('');
+
+        const lastUsed = key.lastUsedAt
+          ? `Last used: ${key.lastUsedAt}`
+          : 'Never used';
+
+        const expiry = key.expiresAt
+          ? `Expires: ${key.expiresAt}`
+          : 'No expiration';
+
+        return `
+          <div class="apikey-card ${isRevoked ? 'revoked' : ''}">
+            <div class="apikey-icon">&#128273;</div>
+            <div class="apikey-info">
+              <div class="apikey-name">${key.name}</div>
+              <span class="apikey-prefix">sk_live_${key.prefix}...</span>
+              <div class="apikey-scopes">${scopeDisplay}</div>
+              <div class="apikey-meta">
+                <span>Created: ${key.createdAt}</span>
+                <span>${lastUsed}</span>
+                <span>${expiry}</span>
+                ${isRevoked ? `<span style="color:var(--danger)">Revoked: ${key.revokedAt}</span>` : ''}
+              </div>
+            </div>
+            <div class="apikey-actions">
+              ${isRevoked
+                ? '<span class="apikey-revoked-badge">Revoked</span>'
+                : `<button class="btn-revoke" data-key-id="${key.id}">Revoke</button>`
+              }
+            </div>
+          </div>`;
+      }).join('');
+
+      // Bind revoke buttons
+      list.querySelectorAll('.btn-revoke').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const keyId = parseInt(btn.dataset.keyId);
+          const key = apiKeys.find(k => k.id === keyId);
+          if (key && confirm(`Revoke API key "${key.name}"? This cannot be undone.`)) {
+            key.revokedAt = new Date().toISOString().split('T')[0];
+            renderApiKeys();
+            showToast('&#128273;', `API key "${key.name}" has been revoked`);
+          }
+        });
+      });
+    }
+
+    // Scope toggle logic
+    document.getElementById('scope-all').addEventListener('change', (e) => {
+      document.querySelectorAll('.scope-checkbox').forEach(cb => {
+        cb.disabled = e.target.checked;
+        if (e.target.checked) cb.checked = false;
+      });
+    });
+    document.querySelectorAll('.scope-checkbox').forEach(cb => {
+      cb.addEventListener('change', () => {
+        const anyChecked = [...document.querySelectorAll('.scope-checkbox')].some(c => c.checked);
+        document.getElementById('scope-all').checked = !anyChecked;
+        document.querySelectorAll('.scope-checkbox').forEach(c => c.disabled = false);
+      });
+    });
+
+    // Create key modal
+    const apikeyModal = document.getElementById('apikey-modal-overlay');
+    document.getElementById('btn-new-key').addEventListener('click', () => {
+      document.getElementById('apikey-name').value = '';
+      document.getElementById('apikey-expiry').value = '';
+      document.getElementById('scope-all').checked = true;
+      document.getElementById('scope-all').dispatchEvent(new Event('change'));
+      apikeyModal.classList.add('active');
+      document.getElementById('apikey-name').focus();
+    });
+    document.getElementById('btn-apikey-cancel').addEventListener('click', () => apikeyModal.classList.remove('active'));
+    apikeyModal.addEventListener('click', (e) => { if (e.target === apikeyModal) apikeyModal.classList.remove('active'); });
+
+    document.getElementById('btn-apikey-create').addEventListener('click', () => {
+      const name = document.getElementById('apikey-name').value.trim();
+      if (!name) { document.getElementById('apikey-name').focus(); return; }
+
+      const useAll = document.getElementById('scope-all').checked;
+      const scopes = useAll
+        ? ['*']
+        : [...document.querySelectorAll('.scope-checkbox:checked')].map(cb => cb.value);
+
+      if (!useAll && scopes.length === 0) {
+        showToast('&#9888;', 'Please select at least one scope');
+        return;
+      }
+
+      const expiryDays = document.getElementById('apikey-expiry').value;
+      let expiresAt = null;
+      if (expiryDays) {
+        const d = new Date();
+        d.setDate(d.getDate() + parseInt(expiryDays));
+        expiresAt = d.toISOString().split('T')[0];
+      }
+
+      const fullKey = generateFakeKey();
+      const prefix = fullKey.substring(8, 16);
+
+      const newKey = {
+        id: nextKeyId++, name, prefix, scopes,
+        createdAt: new Date().toISOString().split('T')[0],
+        lastUsedAt: null, expiresAt, revokedAt: null
+      };
+      apiKeys.unshift(newKey);
+
+      apikeyModal.classList.remove('active');
+
+      // Show the full key banner
+      document.getElementById('apikey-full-value').textContent = fullKey;
+      document.getElementById('apikey-created-banner').classList.add('visible');
+
+      renderApiKeys();
+      showToast('&#128273;', `API key "${name}" created`);
+    });
+
+    // Copy key to clipboard
+    document.getElementById('btn-copy-key').addEventListener('click', () => {
+      const key = document.getElementById('apikey-full-value').textContent;
+      navigator.clipboard.writeText(key).then(() => {
+        document.getElementById('btn-copy-key').textContent = 'Copied!';
+        setTimeout(() => { document.getElementById('btn-copy-key').textContent = 'Copy'; }, 2000);
+      });
+    });
+
+    // Hide banner when switching away from API Keys tab
+    document.querySelectorAll('.nav-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.getElementById('apikey-created-banner').classList.remove('visible');
+      });
     });
   </script>
 </body>
