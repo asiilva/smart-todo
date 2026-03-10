@@ -530,6 +530,106 @@
       .btn-revoke { flex: 1; text-align: center; }
     }
 
+    /* ===== Reports View ===== */
+    #reports-view { flex-direction: column; overflow-y: auto; padding: 24px; }
+    .reports-header {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 16px;
+    }
+    .reports-title { font-size: 20px; font-weight: 700; }
+    .reports-subtitle { font-size: 13px; color: var(--text-muted); margin-top: 4px; }
+    .btn-export {
+      padding: 8px 16px; border-radius: var(--radius); border: 1px solid var(--border);
+      background: var(--bg-surface); color: var(--text); font-size: 13px; font-weight: 600;
+      cursor: pointer; transition: all 0.2s;
+    }
+    .btn-export:hover { background: var(--bg-hover); border-color: var(--text-dim); }
+    .reports-controls {
+      display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin-bottom: 20px;
+    }
+    .reports-period-btns { display: flex; gap: 4px; }
+    .period-btn {
+      padding: 6px 14px; border-radius: var(--radius); border: 1px solid var(--border);
+      background: transparent; color: var(--text-muted); font-size: 12px; font-weight: 600;
+      cursor: pointer; transition: all 0.2s;
+    }
+    .period-btn.active { background: var(--accent); color: white; border-color: var(--accent); }
+    .period-btn:hover:not(.active) { color: var(--text); border-color: var(--text-dim); }
+    .reports-category-chips { display: flex; gap: 4px; flex-wrap: wrap; }
+    .report-cat-chip {
+      padding: 4px 10px; border-radius: 20px; border: 1px solid var(--border);
+      background: transparent; color: var(--text-muted); font-size: 11px; font-weight: 600;
+      cursor: pointer; transition: all 0.2s;
+    }
+    .report-cat-chip.active { background: var(--accent); color: white; border-color: var(--accent); }
+    .report-cat-chip:hover:not(.active) { color: var(--text); }
+    .reports-view-toggle { display: flex; gap: 4px; margin-left: auto; }
+    .view-toggle-btn {
+      padding: 6px 12px; border-radius: var(--radius); border: 1px solid var(--border);
+      background: transparent; color: var(--text-muted); font-size: 12px; font-weight: 600;
+      cursor: pointer; transition: all 0.2s;
+    }
+    .view-toggle-btn.active { background: var(--bg-card); color: var(--text); border-color: var(--text-dim); }
+    .view-toggle-btn:hover:not(.active) { color: var(--text); }
+    .reports-summary {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 12px; margin-bottom: 20px; max-width: 900px;
+    }
+    .summary-card {
+      background: var(--bg-surface); border-radius: var(--radius-lg);
+      padding: 16px; border: 1px solid var(--border);
+    }
+    .summary-card-label { font-size: 11px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
+    .summary-card-value { font-size: 22px; font-weight: 700; }
+    .summary-card-sub { font-size: 11px; color: var(--text-muted); margin-top: 4px; }
+    .reports-body { max-width: 900px; }
+    .report-task-row {
+      display: flex; align-items: center; gap: 12px; padding: 12px 16px;
+      background: var(--bg-surface); border-radius: var(--radius);
+      border: 1px solid var(--border); margin-bottom: 8px; transition: background 0.15s;
+    }
+    .report-task-row:hover { background: var(--bg-hover); }
+    .report-task-title { flex: 1; font-size: 14px; font-weight: 500; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .report-task-cat {
+      font-size: 10px; padding: 3px 8px; border-radius: 12px; color: white; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.3px; flex-shrink: 0;
+    }
+    .report-task-duration { font-size: 12px; color: var(--text-muted); flex-shrink: 0; min-width: 50px; text-align: right; }
+    .report-task-accuracy {
+      font-size: 11px; padding: 3px 8px; border-radius: 4px; font-weight: 700; flex-shrink: 0;
+    }
+    .report-task-date { font-size: 11px; color: var(--text-dim); flex-shrink: 0; min-width: 70px; text-align: right; }
+    .report-category-header {
+      display: flex; align-items: center; gap: 12px; padding: 12px 0 8px;
+      margin-top: 16px; border-bottom: 1px solid var(--border); margin-bottom: 8px;
+    }
+    .report-category-header:first-child { margin-top: 0; }
+    .report-cat-dot {
+      width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0;
+    }
+    .report-cat-name { font-size: 15px; font-weight: 700; text-transform: capitalize; }
+    .report-cat-stats { font-size: 12px; color: var(--text-muted); margin-left: auto; }
+    .reports-empty {
+      text-align: center; padding: 48px 20px; color: var(--text-dim); max-width: 900px;
+    }
+    .reports-empty-icon { font-size: 36px; margin-bottom: 12px; }
+    .reports-empty-text { font-size: 14px; margin-bottom: 4px; }
+    .reports-empty-sub { font-size: 12px; color: var(--text-dim); }
+
+    @media (max-width: 768px) {
+      .reports-controls { flex-direction: column; align-items: flex-start; }
+      .reports-view-toggle { margin-left: 0; }
+    }
+    @media (max-width: 480px) {
+      #reports-view { padding: 12px; }
+      .reports-header { flex-direction: column; align-items: flex-start; gap: 8px; }
+      .btn-export { width: 100%; text-align: center; }
+      .reports-summary { grid-template-columns: 1fr 1fr; }
+      .report-task-row { flex-wrap: wrap; gap: 6px; padding: 10px 12px; }
+      .report-task-title { width: 100%; }
+      .report-task-date { display: none; }
+    }
+
     /* ===== Task Detail Modal ===== */
     .task-detail-header {
       display: flex; align-items: flex-start; gap: 12px; margin-bottom: 20px;
@@ -990,6 +1090,7 @@
       <div class="nav-tabs">
         <button class="nav-tab active" data-view="board-view">Board</button>
         <button class="nav-tab" data-view="planner-view">Planner</button>
+        <button class="nav-tab" data-view="reports-view">Reports</button>
         <button class="nav-tab" data-view="apikeys-view">API Keys</button>
       </div>
       <div class="nav-right">
@@ -1076,6 +1177,46 @@
         </div>
         <div class="apikeys-list" id="apikeys-list"></div>
       </div>
+
+      <!-- Reports View -->
+      <div id="reports-view" class="view">
+        <div class="reports-header">
+          <div>
+            <div class="reports-title">Reports</div>
+            <div class="reports-subtitle">Review completed tasks by day, week, or month</div>
+          </div>
+          <button class="btn-export" id="btn-export-report">&#128196; Export CSV</button>
+        </div>
+
+        <!-- Period selector -->
+        <div class="reports-controls">
+          <div class="reports-period-btns">
+            <button class="period-btn active" data-period="day">Today</button>
+            <button class="period-btn" data-period="week">This Week</button>
+            <button class="period-btn" data-period="month">This Month</button>
+          </div>
+          <div class="reports-category-chips" id="reports-category-chips">
+            <button class="report-cat-chip active" data-cat="all">All</button>
+            <button class="report-cat-chip" data-cat="work">Work</button>
+            <button class="report-cat-chip" data-cat="exercise">Exercise</button>
+            <button class="report-cat-chip" data-cat="family">Family</button>
+            <button class="report-cat-chip" data-cat="personal">Personal</button>
+            <button class="report-cat-chip" data-cat="errand">Errand</button>
+            <button class="report-cat-chip" data-cat="learning">Learning</button>
+          </div>
+          <div class="reports-view-toggle">
+            <button class="view-toggle-btn active" data-mode="list">Full List</button>
+            <button class="view-toggle-btn" data-mode="grouped">Grouped by Category</button>
+          </div>
+        </div>
+
+        <!-- Summary stats -->
+        <div class="reports-summary" id="reports-summary"></div>
+
+        <!-- Task list / grouped -->
+        <div class="reports-body" id="reports-body"></div>
+      </div>
+
     </div>
   </div>
 
@@ -2472,6 +2613,211 @@
       renderPlanner();
       showToast('&#128465;', `Task "${task.title}" deleted`);
     });
+
+    // ===== Reports =====
+    const completedTasks = [
+      { title: 'Morning meditation', category: 'personal', projectedMinutes: 15, executedMinutes: 18, completedAt: '2026-03-10' },
+      { title: 'Daily standup', category: 'work', projectedMinutes: 15, executedMinutes: 12, completedAt: '2026-03-10' },
+      { title: 'Review PR #138 — Auth middleware', category: 'work', projectedMinutes: 30, executedMinutes: 25, completedAt: '2026-03-10' },
+      { title: 'Evening run — 3km', category: 'exercise', projectedMinutes: 30, executedMinutes: 35, completedAt: '2026-03-10' },
+      { title: 'Deploy staging build', category: 'work', projectedMinutes: 20, executedMinutes: 45, completedAt: '2026-03-09' },
+      { title: 'Fix payment webhook bug', category: 'work', projectedMinutes: 60, executedMinutes: 105, completedAt: '2026-03-09' },
+      { title: 'Grocery shopping', category: 'errand', projectedMinutes: 30, executedMinutes: 40, completedAt: '2026-03-09' },
+      { title: 'Help daughter with homework', category: 'family', projectedMinutes: 60, executedMinutes: 55, completedAt: '2026-03-09' },
+      { title: 'Read DDIA chapter 4', category: 'learning', projectedMinutes: 45, executedMinutes: 50, completedAt: '2026-03-09' },
+      { title: 'Morning yoga', category: 'exercise', projectedMinutes: 30, executedMinutes: 28, completedAt: '2026-03-09' },
+      { title: 'Daily standup', category: 'work', projectedMinutes: 15, executedMinutes: 14, completedAt: '2026-03-09' },
+      { title: 'Write unit tests for auth service', category: 'work', projectedMinutes: 90, executedMinutes: 80, completedAt: '2026-03-08' },
+      { title: 'Gym — upper body', category: 'exercise', projectedMinutes: 60, executedMinutes: 65, completedAt: '2026-03-08' },
+      { title: 'Family movie night', category: 'family', projectedMinutes: 120, executedMinutes: 130, completedAt: '2026-03-08' },
+      { title: 'Update project README', category: 'work', projectedMinutes: 20, executedMinutes: 15, completedAt: '2026-03-08' },
+      { title: 'Pay bills', category: 'errand', projectedMinutes: 15, executedMinutes: 10, completedAt: '2026-03-07' },
+      { title: 'Implement board drag-and-drop', category: 'work', projectedMinutes: 180, executedMinutes: 210, completedAt: '2026-03-07' },
+      { title: 'Evening walk — 2km', category: 'exercise', projectedMinutes: 25, executedMinutes: 30, completedAt: '2026-03-07' },
+      { title: 'Read DDIA chapter 3', category: 'learning', projectedMinutes: 45, executedMinutes: 55, completedAt: '2026-03-06' },
+      { title: 'Design database schema', category: 'work', projectedMinutes: 120, executedMinutes: 100, completedAt: '2026-03-06' },
+      { title: 'Cook family dinner', category: 'family', projectedMinutes: 60, executedMinutes: 75, completedAt: '2026-03-06' },
+      { title: 'Morning meditation', category: 'personal', projectedMinutes: 15, executedMinutes: 15, completedAt: '2026-03-05' },
+      { title: 'Sprint planning', category: 'work', projectedMinutes: 60, executedMinutes: 70, completedAt: '2026-03-05' },
+      { title: 'Gym — cardio', category: 'exercise', projectedMinutes: 45, executedMinutes: 40, completedAt: '2026-03-04' },
+      { title: 'Set up CI/CD pipeline', category: 'work', projectedMinutes: 120, executedMinutes: 150, completedAt: '2026-03-03' },
+      { title: 'Dentist appointment', category: 'personal', projectedMinutes: 60, executedMinutes: 50, completedAt: '2026-03-02' },
+      { title: 'Weekly meal prep', category: 'family', projectedMinutes: 90, executedMinutes: 100, completedAt: '2026-03-01' },
+    ];
+
+    let reportPeriod = 'day';
+    let reportCategoryFilter = 'all';
+    let reportViewMode = 'list';
+
+    function getReportDate() { return '2026-03-10'; }
+
+    function filterReportTasks() {
+      const ref = getReportDate();
+      let filtered = completedTasks;
+
+      // Period filter
+      if (reportPeriod === 'day') {
+        filtered = filtered.filter(t => t.completedAt === ref);
+      } else if (reportPeriod === 'week') {
+        const d = new Date(ref);
+        const day = d.getDay();
+        const mon = new Date(d); mon.setDate(d.getDate() - (day === 0 ? 6 : day - 1));
+        const sun = new Date(mon); sun.setDate(mon.getDate() + 6);
+        const from = mon.toISOString().split('T')[0];
+        const to = sun.toISOString().split('T')[0];
+        filtered = filtered.filter(t => t.completedAt >= from && t.completedAt <= to);
+      } else if (reportPeriod === 'month') {
+        const ym = ref.substring(0, 7);
+        filtered = filtered.filter(t => t.completedAt.startsWith(ym));
+      }
+
+      // Category filter
+      if (reportCategoryFilter !== 'all') {
+        filtered = filtered.filter(t => t.category === reportCategoryFilter);
+      }
+
+      return filtered;
+    }
+
+    function renderReports() {
+      const filtered = filterReportTasks();
+      const summaryEl = document.getElementById('reports-summary');
+      const bodyEl = document.getElementById('reports-body');
+
+      // Summary
+      const totalTasks = filtered.length;
+      const totalProjected = filtered.reduce((s, t) => s + t.projectedMinutes, 0);
+      const totalExecuted = filtered.reduce((s, t) => s + t.executedMinutes, 0);
+      const accuracy = totalProjected > 0 ? Math.round((totalProjected / Math.max(totalExecuted, 1)) * 100) : 0;
+
+      summaryEl.innerHTML = `
+        <div class="summary-card">
+          <div class="summary-card-label">Tasks Completed</div>
+          <div class="summary-card-value">${totalTasks}</div>
+        </div>
+        <div class="summary-card">
+          <div class="summary-card-label">Time Spent</div>
+          <div class="summary-card-value">${formatDuration(totalExecuted)}</div>
+          <div class="summary-card-sub">Projected: ${formatDuration(totalProjected)}</div>
+        </div>
+        <div class="summary-card">
+          <div class="summary-card-label">Accuracy</div>
+          <div class="summary-card-value" style="color:${accuracy >= 85 ? 'var(--success)' : accuracy >= 65 ? 'var(--warning)' : 'var(--danger)'}">${accuracy}%</div>
+          <div class="summary-card-sub">${totalExecuted <= totalProjected ? 'Under budget' : formatDuration(totalExecuted - totalProjected) + ' over'}</div>
+        </div>
+        <div class="summary-card">
+          <div class="summary-card-label">Avg per Task</div>
+          <div class="summary-card-value">${totalTasks > 0 ? formatDuration(Math.round(totalExecuted / totalTasks)) : '—'}</div>
+        </div>`;
+
+      if (totalTasks === 0) {
+        bodyEl.innerHTML = `
+          <div class="reports-empty">
+            <div class="reports-empty-icon">&#128202;</div>
+            <div class="reports-empty-text">No completed tasks</div>
+            <div class="reports-empty-sub">Complete some tasks and they'll appear in your report.</div>
+          </div>`;
+        return;
+      }
+
+      if (reportViewMode === 'list') {
+        bodyEl.innerHTML = filtered.map(t => renderReportRow(t)).join('');
+      } else {
+        // Grouped by category
+        const groups = {};
+        filtered.forEach(t => {
+          if (!groups[t.category]) groups[t.category] = [];
+          groups[t.category].push(t);
+        });
+        const catOrder = ['work', 'exercise', 'family', 'personal', 'errand', 'learning'];
+        bodyEl.innerHTML = catOrder.filter(c => groups[c]).map(cat => {
+          const items = groups[cat];
+          const catProjected = items.reduce((s, t) => s + t.projectedMinutes, 0);
+          const catExecuted = items.reduce((s, t) => s + t.executedMinutes, 0);
+          const catAcc = catProjected > 0 ? Math.round((catProjected / Math.max(catExecuted, 1)) * 100) : 0;
+          return `
+            <div class="report-category-header">
+              <div class="report-cat-dot" style="background:${CATEGORY_COLORS[cat]}"></div>
+              <div class="report-cat-name">${cat}</div>
+              <div class="report-cat-stats">${items.length} task${items.length !== 1 ? 's' : ''} &middot; ${formatDuration(catExecuted)} &middot; ${catAcc}% accuracy</div>
+            </div>
+            ${items.map(t => renderReportRow(t)).join('')}`;
+        }).join('');
+      }
+    }
+
+    function renderReportRow(t) {
+      const ratio = t.projectedMinutes > 0 ? t.executedMinutes / t.projectedMinutes : 1;
+      let accColor, accText;
+      if (ratio <= 1) { accColor = 'rgba(16,185,129,0.15)'; accText = 'var(--success)'; }
+      else if (ratio <= 1.5) { accColor = 'rgba(245,158,11,0.15)'; accText = 'var(--warning)'; }
+      else { accColor = 'rgba(239,68,68,0.15)'; accText = 'var(--danger)'; }
+      const pct = t.projectedMinutes > 0 ? Math.round((t.executedMinutes / t.projectedMinutes) * 100) : 0;
+
+      return `
+        <div class="report-task-row">
+          <span class="report-task-cat" style="background:${CATEGORY_COLORS[t.category]}">${t.category}</span>
+          <span class="report-task-title">${t.title}</span>
+          <span class="report-task-duration">${formatDuration(t.projectedMinutes)} est</span>
+          <span class="report-task-duration">${formatDuration(t.executedMinutes)} act</span>
+          <span class="report-task-accuracy" style="background:${accColor};color:${accText}">${pct}%</span>
+          <span class="report-task-date">${t.completedAt}</span>
+        </div>`;
+    }
+
+    // Period buttons
+    document.querySelectorAll('.period-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.period-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        reportPeriod = btn.dataset.period;
+        renderReports();
+      });
+    });
+
+    // Category chips
+    document.querySelectorAll('.report-cat-chip').forEach(chip => {
+      chip.addEventListener('click', () => {
+        document.querySelectorAll('.report-cat-chip').forEach(c => c.classList.remove('active'));
+        chip.classList.add('active');
+        reportCategoryFilter = chip.dataset.cat;
+        renderReports();
+      });
+    });
+
+    // View mode toggle
+    document.querySelectorAll('.view-toggle-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.view-toggle-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        reportViewMode = btn.dataset.mode;
+        renderReports();
+      });
+    });
+
+    // Export CSV
+    document.getElementById('btn-export-report').addEventListener('click', () => {
+      const filtered = filterReportTasks();
+      if (filtered.length === 0) { showToast('&#9888;', 'No data to export'); return; }
+      const header = 'Title,Category,Projected (min),Executed (min),Accuracy %,Completed';
+      const rows = filtered.map(t => {
+        const pct = t.projectedMinutes > 0 ? Math.round((t.executedMinutes / t.projectedMinutes) * 100) : 0;
+        return `"${t.title}",${t.category},${t.projectedMinutes},${t.executedMinutes},${pct},${t.completedAt}`;
+      });
+      const csv = [header, ...rows].join('\n');
+      navigator.clipboard.writeText(csv).then(() => {
+        showToast('&#128202;', `Report copied to clipboard (${filtered.length} tasks)`);
+      }).catch(() => {
+        const blob = new Blob([csv], { type: 'text/csv' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url; a.download = `smart-todo-report-${reportPeriod}.csv`;
+        a.click(); URL.revokeObjectURL(url);
+        showToast('&#128202;', `Report downloaded (${filtered.length} tasks)`);
+      });
+    });
+
+    renderReports();
 
     // ===== API Keys =====
     let apiKeys = [

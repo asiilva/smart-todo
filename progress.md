@@ -93,6 +93,9 @@
 | Daily planner UI (timeline view) | ⬜ | |
 | Day summary bar (hours by category) | ⬜ | |
 | Insights dashboard UI | ⬜ | |
+| Reports endpoint (GET /api/reports/completed) | ⬜ | Period, category, group_by filters |
+| Reports page UI (period/category filter, list/grouped views, export) | ⬜ | |
+| Reports tests | ⬜ | |
 | Estimation + planner tests | ⬜ | |
 
 ## Phase 6: Telegram Integration — ⬜

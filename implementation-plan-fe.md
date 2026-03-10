@@ -222,9 +222,29 @@
 - [ ] Date range filter
 - [ ] Empty state when no completed tasks
 
-### 5.4 Tests
-- [ ] Unit tests for: DailyPlanner, TimeBlock, DaySummaryBar, InsightsChart
-- [ ] Cypress E2E: open planner, see overbooking warning, view insights
+### 5.4 Reports Page
+- [ ] `GET /reports` — Activity reports page (new tab in navigation)
+- [ ] Period selector: Today, This Week, This Month buttons + custom date range picker
+- [ ] Category filter: multi-select chips (work, exercise, family, personal, errand, learning)
+- [ ] View mode toggle: Full List | Grouped by Category
+- [ ] **Summary stats bar** (always visible):
+  - Total tasks completed
+  - Total time spent (formatted hours/minutes)
+  - Projected vs actual comparison
+  - Overall accuracy percentage
+- [ ] **Full list view**:
+  - Chronological list of completed tasks
+  - Each row: task title, category badge, projected duration, executed duration, accuracy ratio badge, completed date
+- [ ] **Grouped by category view**:
+  - Category section headers with subtotals (task count, total hours, accuracy)
+  - Tasks listed under each category header
+  - Category color coding matching board colors
+- [ ] **Empty state** when no completed tasks in selected period
+- [ ] **Export button**: copy report to clipboard or download as CSV
+
+### 5.5 Tests
+- [ ] Unit tests for: DailyPlanner, TimeBlock, DaySummaryBar, InsightsChart, ReportsList, ReportsSummary, ReportsCategoryGroup
+- [ ] Cypress E2E: open planner, see overbooking warning, view insights, open reports, filter by period and category, toggle view mode
 
 ---
 

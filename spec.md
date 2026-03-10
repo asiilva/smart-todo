@@ -112,6 +112,17 @@ An AI-powered task board that:
 - Breakdown by category (e.g., "You underestimate exercise tasks by 20%")
 - Trend chart: is the AI getting better at estimating for this user?
 
+### 3.6b Reports
+- **Activity report** showing completed tasks for a selected period
+- **Period filters**: today, this week, this month, custom date range
+- **Category filter**: filter by one or more categories (work, exercise, family, personal, errand, learning)
+- **View modes**:
+  - **Full list**: flat chronological list of all completed tasks with duration stats
+  - **Grouped by category**: tasks organized under category headers with per-category subtotals
+- **Summary stats**: total tasks completed, total time spent, projected vs actual comparison, accuracy percentage
+- **Per-category stats** (in grouped view): task count, total hours, avg accuracy per category
+- **Export**: option to copy or download report as CSV
+
 ### 3.7 Web Push Notifications
 - When a user starts a timer on a task, the system monitors elapsed time against the task's **projected_duration_minutes**
 - At **60%** of projected time, the system sends a browser push notification:
@@ -277,6 +288,14 @@ The `AIProvider` interface exposes:
 **Insights**
 - `GET /api/insights/accuracy` (projected vs executed stats)
 - `GET /api/insights/accuracy?category=work` (filtered by category)
+
+**Reports**
+- `GET /api/reports/completed?period=day&date=2026-03-10` (completed tasks for a day)
+- `GET /api/reports/completed?period=week&date=2026-03-10` (completed tasks for the week containing the date)
+- `GET /api/reports/completed?period=month&date=2026-03-10` (completed tasks for the month)
+- `GET /api/reports/completed?from=2026-03-01&to=2026-03-10` (custom date range)
+- `GET /api/reports/completed?period=day&date=2026-03-10&category=work,exercise` (filter by categories)
+- `GET /api/reports/completed?period=day&date=2026-03-10&group_by=category` (grouped response)
 
 **Notifications**
 - `POST /api/notifications/subscribe` (register push subscription from browser)

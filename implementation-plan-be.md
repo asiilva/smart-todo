@@ -171,6 +171,23 @@
 - [ ] Unit tests for insights service
 - [ ] Integration tests
 
+### 5.4 Reports Module
+- [ ] `GET /api/reports/completed` — return completed tasks for a period with summary stats
+- [ ] Query params:
+  - `period` — `day`, `week`, `month` (determines date range from the given `date`)
+  - `date` — reference date (defaults to today)
+  - `from` / `to` — custom date range (overrides `period`)
+  - `category` — comma-separated category filter (e.g., `work,exercise`)
+  - `group_by` — `category` (optional; groups results under category headers with subtotals)
+- [ ] Response includes:
+  - `tasks[]` — completed tasks with title, category, projected_duration, executed_duration, completed_at
+  - `summary` — total_tasks, total_projected_minutes, total_executed_minutes, accuracy_percentage
+  - `categories[]` (when `group_by=category`) — per-category: name, task_count, total_projected, total_executed, accuracy
+- [ ] Calculate period boundaries (day = single date, week = Mon–Sun, month = 1st–last)
+- [ ] Filter tasks by `completed_at` within period and optional category filter
+- [ ] Unit tests for reports service
+- [ ] Integration tests for reports endpoint
+
 ---
 
 ## Phase 6: Telegram Bot

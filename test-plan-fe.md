@@ -107,6 +107,19 @@
 - Empty state shown when no completed tasks exist
 - Trend line chart shows weekly accuracy buckets
 
+### 2.4b Reports Components
+- Reports page renders with period selector buttons (Today, This Week, This Month)
+- Clicking period button fetches data for that period and updates list
+- Category filter chips toggle on/off and filter displayed tasks
+- View mode toggle switches between Full List and Grouped by Category
+- Summary stats bar shows total tasks, total time, projected vs actual, accuracy percentage
+- Full list view renders tasks in chronological order with title, category badge, durations, accuracy badge
+- Grouped view renders category headers with subtotals (task count, hours, accuracy)
+- Grouped view lists tasks under correct category header
+- Empty state shown when no completed tasks in selected period
+- Export button triggers CSV download or clipboard copy
+- Accuracy badge: green when executed ≤ projected, yellow when 1-1.5x, red when > 1.5x
+
 ### 2.5 Profile Components
 - Profile form renders text description textarea
 - Resume upload component accepts PDF/DOCX only
@@ -204,6 +217,17 @@
 - User filters by category → chart updates
 - User changes date range → chart updates
 - Stats cards show meaningful messages
+
+### 3.5b Reports Flow
+- User opens `/reports` → sees today's completed tasks with summary stats
+- User clicks "This Week" → list updates to show week's completed tasks
+- User clicks "This Month" → list updates to show month's completed tasks
+- User selects "Work" and "Exercise" category chips → only those categories shown
+- User toggles to "Grouped by Category" → tasks organized under category headers with subtotals
+- User toggles back to "Full List" → flat chronological list restored
+- Summary stats update when filters change
+- Empty state shown when period has no completed tasks
+- User clicks export → CSV data copied or downloaded
 
 ### 3.6 Notification Flow
 - User logs in for the first time and sees notification permission prompt

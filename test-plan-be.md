@@ -128,6 +128,19 @@
 - Return per-category breakdown
 - Only include tasks that have both projected and executed durations
 
+### 2.7b Reports Service
+- Return completed tasks filtered by day period (single date boundary)
+- Return completed tasks filtered by week period (Mon–Sun boundary)
+- Return completed tasks filtered by month period (1st–last day boundary)
+- Return completed tasks filtered by custom date range (from/to)
+- Filter by single category
+- Filter by multiple comma-separated categories
+- Return flat task list when no group_by specified
+- Return tasks grouped by category with per-category subtotals when group_by=category
+- Calculate summary: total_tasks, total_projected, total_executed, accuracy_percentage
+- Handle empty result (no completed tasks in period)
+- Only include tasks that have completed_at within the requested range
+
 ---
 
 ## 3. Integration Tests
@@ -177,6 +190,17 @@
 - `GET /api/insights/accuracy` — returns stats when completed tasks exist
 - `GET /api/insights/accuracy?category=work` — filtered results
 - `GET /api/insights/accuracy` — empty result when no completed tasks
+
+### 3.7b Reports Endpoints
+- `GET /api/reports/completed?period=day&date=2026-03-10` — returns today's completed tasks with summary (200)
+- `GET /api/reports/completed?period=week&date=2026-03-10` — returns week's completed tasks (200)
+- `GET /api/reports/completed?period=month&date=2026-03-10` — returns month's completed tasks (200)
+- `GET /api/reports/completed?from=2026-03-01&to=2026-03-10` — returns custom range (200)
+- `GET /api/reports/completed?period=day&category=work,exercise` — filtered by categories (200)
+- `GET /api/reports/completed?period=day&group_by=category` — returns grouped response (200)
+- `GET /api/reports/completed` — defaults to today when no period/date given (200)
+- `GET /api/reports/completed?period=day` — empty result when no completed tasks (200, empty tasks array)
+- `GET /api/reports/completed` — unauthenticated (401)
 
 ### 3.8 Notification Endpoints
 - `POST /api/notifications/subscribe` — success (201, saves push subscription), missing fields (400), duplicate subscription (409 or upsert), unauthenticated (401)
