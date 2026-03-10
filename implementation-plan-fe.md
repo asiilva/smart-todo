@@ -139,12 +139,18 @@
 - [ ] Delete task (with confirmation)
 
 ### 4.5b Completion Celebration
-- [ ] Canvas-based fireworks animation that plays when a task is moved to "Done"
+- [ ] **Celebration modal** — full-screen overlay with animated modal when a task is moved to "Done"
+  - Randomized congratulatory title and message (pool of 5+ variations)
+  - Large emoji icons at the top
+  - Completed task name highlighted
+  - Stats row: estimated time, actual time (color-coded by accuracy), tasks done today count
+  - "Keep Going!" dismiss button
+  - Entrance animations: pop-in modal, bouncing emojis, staggered fade-up for text/stats
+  - Animated gradient border
+- [ ] **Fireworks canvas** behind the modal — multi-burst particle animation with trails and gravity
 - [ ] Triggered from: drag-and-drop to Done column, column change to Done in detail modal
-- [ ] Multiple colorful particle bursts with trails and gravity
-- [ ] Animation is non-blocking (canvas overlay with pointer-events: none)
-- [ ] Auto-cleans up after animation completes
-- [ ] Celebratory toast message: "Task completed! Great job!"
+- [ ] Dismiss by clicking "Keep Going!" button or clicking outside the modal
+- [ ] Responsive layout for mobile
 
 ### 4.6 Board Filtering & Search
 - [ ] Filter bar: by category, priority, assignee, label

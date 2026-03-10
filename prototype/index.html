@@ -682,6 +682,101 @@
       position: fixed; inset: 0; z-index: 400; pointer-events: none;
     }
 
+    /* ===== Celebration Modal ===== */
+    .celebration-overlay {
+      display: none; position: fixed; inset: 0; z-index: 350;
+      background: rgba(0,0,0,0.7); backdrop-filter: blur(6px);
+      align-items: center; justify-content: center;
+    }
+    .celebration-overlay.active { display: flex; }
+    .celebration-modal {
+      text-align: center; padding: 48px 56px;
+      background: linear-gradient(135deg, var(--bg-surface) 0%, #1a2744 100%);
+      border-radius: 20px; border: 1px solid rgba(59,130,246,0.3);
+      box-shadow: 0 0 60px rgba(59,130,246,0.15), 0 20px 60px rgba(0,0,0,0.5);
+      animation: celebrationPop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+      max-width: 480px; width: 90vw; position: relative; overflow: hidden;
+    }
+    .celebration-modal::before {
+      content: ''; position: absolute; inset: -2px;
+      background: linear-gradient(135deg, var(--accent), var(--success), var(--warning), var(--accent));
+      border-radius: 21px; z-index: -1;
+      background-size: 300% 300%;
+      animation: celebrationBorder 3s ease infinite;
+    }
+    .celebration-modal::after {
+      content: ''; position: absolute; inset: 0;
+      background: linear-gradient(135deg, var(--bg-surface) 0%, #1a2744 100%);
+      border-radius: 19px; z-index: -1;
+    }
+    @keyframes celebrationPop {
+      0% { opacity: 0; transform: scale(0.5) translateY(30px); }
+      100% { opacity: 1; transform: scale(1) translateY(0); }
+    }
+    @keyframes celebrationBorder {
+      0%, 100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+    }
+    .celebration-emoji {
+      font-size: 64px; margin-bottom: 16px;
+      animation: celebrationBounce 0.6s ease 0.3s both;
+    }
+    @keyframes celebrationBounce {
+      0% { opacity: 0; transform: scale(0) rotate(-10deg); }
+      50% { transform: scale(1.3) rotate(5deg); }
+      100% { opacity: 1; transform: scale(1) rotate(0); }
+    }
+    .celebration-title {
+      font-size: 28px; font-weight: 800; margin-bottom: 8px;
+      background: linear-gradient(135deg, #fff, var(--accent));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: celebrationFadeUp 0.5s ease 0.4s both;
+    }
+    .celebration-task-name {
+      font-size: 16px; color: var(--success); font-weight: 600;
+      margin-bottom: 16px;
+      animation: celebrationFadeUp 0.5s ease 0.5s both;
+    }
+    .celebration-message {
+      font-size: 14px; color: var(--text-muted); line-height: 1.6;
+      margin-bottom: 24px;
+      animation: celebrationFadeUp 0.5s ease 0.6s both;
+    }
+    .celebration-stats {
+      display: flex; justify-content: center; gap: 24px; margin-bottom: 28px;
+      animation: celebrationFadeUp 0.5s ease 0.7s both;
+    }
+    .celebration-stat {
+      text-align: center;
+    }
+    .celebration-stat-value {
+      font-size: 22px; font-weight: 800;
+    }
+    .celebration-stat-label {
+      font-size: 11px; color: var(--text-dim); margin-top: 2px;
+      text-transform: uppercase; letter-spacing: 0.5px;
+    }
+    .celebration-btn {
+      padding: 12px 36px; border-radius: var(--radius); border: none;
+      background: var(--accent); color: white; font-size: 15px; font-weight: 700;
+      cursor: pointer; transition: all 0.2s;
+      animation: celebrationFadeUp 0.5s ease 0.8s both;
+    }
+    .celebration-btn:hover { background: var(--accent-hover); transform: translateY(-1px); }
+    @keyframes celebrationFadeUp {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 480px) {
+      .celebration-modal { padding: 32px 24px; }
+      .celebration-emoji { font-size: 48px; }
+      .celebration-title { font-size: 22px; }
+      .celebration-stats { gap: 16px; }
+      .celebration-stat-value { font-size: 18px; }
+    }
+
     /* ===== Drag ghost ===== */
     .drag-ghost {
       position: fixed; z-index: 500; pointer-events: none;
@@ -1129,6 +1224,18 @@
           <button class="btn-save-task" id="detail-save">Save Changes</button>
         </div>
       </div>
+    </div>
+  </div>
+
+  <!-- Celebration Modal -->
+  <div class="celebration-overlay" id="celebration-overlay">
+    <div class="celebration-modal">
+      <div class="celebration-emoji" id="celebration-emoji"></div>
+      <div class="celebration-title" id="celebration-title"></div>
+      <div class="celebration-task-name" id="celebration-task-name"></div>
+      <div class="celebration-message" id="celebration-message"></div>
+      <div class="celebration-stats" id="celebration-stats"></div>
+      <button class="celebration-btn" id="celebration-btn">Keep Going!</button>
     </div>
   </div>
 
@@ -1692,8 +1799,7 @@
 
       if (oldColumn !== newColumn) {
         if (newColumn === 'done') {
-          showToast('&#127881;', `"${task.title}" completed! Great job!`);
-          launchFireworks();
+          showCelebration(task);
         } else {
           showToast('&#8596;', `Moved "${task.title}" to ${columns.find(c => c.id === newColumn).name}`);
         }
@@ -1715,29 +1821,28 @@
       const particles = [];
       const colors = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899', '#06b6d4', '#ffffff'];
 
-      // Launch multiple bursts
-      const burstCount = 3;
+      const burstCount = 5;
       for (let b = 0; b < burstCount; b++) {
-        const cx = canvas.width * (0.25 + Math.random() * 0.5);
-        const cy = canvas.height * (0.2 + Math.random() * 0.3);
-        const count = 40 + Math.floor(Math.random() * 30);
+        const cx = canvas.width * (0.15 + Math.random() * 0.7);
+        const cy = canvas.height * (0.15 + Math.random() * 0.4);
+        const count = 50 + Math.floor(Math.random() * 40);
 
         setTimeout(() => {
           for (let i = 0; i < count; i++) {
             const angle = (Math.PI * 2 * i) / count + (Math.random() - 0.5) * 0.5;
-            const speed = 2 + Math.random() * 5;
+            const speed = 2 + Math.random() * 6;
             particles.push({
               x: cx, y: cy,
               vx: Math.cos(angle) * speed,
               vy: Math.sin(angle) * speed,
               life: 1,
-              decay: 0.008 + Math.random() * 0.012,
+              decay: 0.006 + Math.random() * 0.01,
               size: 2 + Math.random() * 3,
               color: colors[Math.floor(Math.random() * colors.length)],
               trail: []
             });
           }
-        }, b * 300);
+        }, b * 400);
       }
 
       let animFrame;
@@ -1751,11 +1856,10 @@
 
           p.x += p.vx;
           p.y += p.vy;
-          p.vy += 0.06; // gravity
-          p.vx *= 0.99; // drag
+          p.vy += 0.06;
+          p.vx *= 0.99;
           p.life -= p.decay;
 
-          // Draw trail
           for (let t = 0; t < p.trail.length; t++) {
             const tp = p.trail[t];
             const alpha = (t / p.trail.length) * tp.life * 0.4;
@@ -1765,7 +1869,6 @@
             ctx.fill();
           }
 
-          // Draw particle
           ctx.beginPath();
           ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
           ctx.fillStyle = p.color;
@@ -1785,6 +1888,65 @@
       }
       animate();
     }
+
+    // ===== Celebration Modal =====
+    const celebrationMessages = [
+      { title: 'Task Crushed!', emoji: '&#127881;&#127775;&#128640;', msg: 'You just knocked another one out of the park. Your future self is grateful!' },
+      { title: 'Done & Dusted!', emoji: '&#9989;&#128170;&#10024;', msg: 'One less thing on your plate. Keep the momentum going!' },
+      { title: 'Nailed It!', emoji: '&#127942;&#128293;&#127881;', msg: 'That task didn\'t stand a chance. You\'re on a roll!' },
+      { title: 'Achievement Unlocked!', emoji: '&#128142;&#127775;&#128640;', msg: 'Consistency is your superpower. Another one bites the dust!' },
+      { title: 'Boom! Done!', emoji: '&#128165;&#127881;&#11088;', msg: 'You\'re making serious progress today. Keep it up!' },
+    ];
+
+    function showCelebration(task) {
+      const pick = celebrationMessages[Math.floor(Math.random() * celebrationMessages.length)];
+
+      document.getElementById('celebration-emoji').innerHTML = pick.emoji;
+      document.getElementById('celebration-title').textContent = pick.title;
+      document.getElementById('celebration-task-name').textContent = `"${task.title}"`;
+      document.getElementById('celebration-message').textContent = pick.msg;
+
+      // Stats
+      let currentExecuted = task.executedMinutes;
+      if (task.timerRunning && task.timerStart) {
+        currentExecuted += Math.floor((Date.now() - task.timerStart) / 60000);
+      }
+      const ratio = task.projectedMinutes > 0 ? Math.round((currentExecuted / task.projectedMinutes) * 100) : 0;
+      const doneToday = tasks.filter(t => t.column === 'done' && t.scheduledDate === TODAY).length;
+
+      let ratioColor = 'var(--success)';
+      let ratioLabel = 'On track';
+      if (ratio > 150) { ratioColor = 'var(--danger)'; ratioLabel = 'Over estimate'; }
+      else if (ratio > 100) { ratioColor = 'var(--warning)'; ratioLabel = 'Slightly over'; }
+      else if (ratio === 0) { ratioLabel = 'No time tracked'; }
+
+      document.getElementById('celebration-stats').innerHTML = `
+        <div class="celebration-stat">
+          <div class="celebration-stat-value" style="color:var(--accent)">${formatDuration(task.projectedMinutes)}</div>
+          <div class="celebration-stat-label">Estimated</div>
+        </div>
+        <div class="celebration-stat">
+          <div class="celebration-stat-value" style="color:${ratioColor}">${currentExecuted > 0 ? formatDuration(currentExecuted) : '—'}</div>
+          <div class="celebration-stat-label">${ratioLabel}</div>
+        </div>
+        <div class="celebration-stat">
+          <div class="celebration-stat-value" style="color:var(--success)">${doneToday}</div>
+          <div class="celebration-stat-label">Done today</div>
+        </div>
+      `;
+
+      document.getElementById('celebration-overlay').classList.add('active');
+      launchFireworks();
+    }
+
+    document.getElementById('celebration-btn').addEventListener('click', () => {
+      document.getElementById('celebration-overlay').classList.remove('active');
+    });
+    document.getElementById('celebration-overlay').addEventListener('click', (e) => {
+      if (e.target === document.getElementById('celebration-overlay')) {
+        document.getElementById('celebration-overlay').classList.remove('active');
+      }
+    });
 
     // ===== Timer Logic =====
     function toggleTimer(taskId) {
@@ -2116,9 +2278,9 @@
       task.description = document.getElementById('detail-desc').value.trim();
       task.notes = document.getElementById('detail-notes').value.trim();
 
-      // Fireworks when moved to done
+      // Celebration when moved to done
       if (task.column === 'done' && oldColumn !== 'done') {
-        launchFireworks();
+        showCelebration(task);
       }
 
       // Update badge/dot in the modal

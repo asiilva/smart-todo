@@ -170,10 +170,11 @@
 - User edits title, description, and notes → saves → changes reflected on board
 - User changes task column from detail modal → board updates
 - User deletes a task (with confirmation)
-- Dragging task to Done column triggers fireworks celebration animation
-- Changing column to Done in task detail modal triggers fireworks celebration animation
-- Fireworks animation does not block user interaction (pointer-events: none)
-- Fireworks canvas is removed after animation completes
+- Dragging task to Done column triggers celebration modal with fireworks
+- Changing column to Done in task detail modal triggers celebration modal with fireworks
+- Celebration modal displays randomized title, task name, and stats (estimated, actual, done today)
+- Celebration modal dismisses on "Keep Going!" button click or overlay click
+- Fireworks canvas renders behind the modal and cleans up after animation
 - User filters by category → only matching tasks shown
 - User uses "Today" filter → only today's tasks shown
 
