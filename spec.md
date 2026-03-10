@@ -64,7 +64,7 @@ An AI-powered task board that:
   - **projected_duration_minutes** (AI-generated estimate of how long it will take)
   - **executed_duration_minutes** (actual time spent, tracked by user)
   - Priority (`low`, `medium`, `high`, `critical`)
-  - Category (`work`, `exercise`, `family`, `personal`, `errand`, `learning`)
+  - Category (`work`, `exercise`, `family`, `personal`, `errand`, `learning` — default set; users can create custom categories with a name and color)
   - Assignee
   - Column/status
   - Position (row order within column)
@@ -232,6 +232,9 @@ The `AIProvider` interface exposes:
 **api_keys**
 - id, user_id, organization_id, name, key_prefix, key_hash, scopes (JSONB), last_used_at, expires_at, revoked_at, created_at, updated_at
 
+**categories**
+- id, organization_id, name, color (hex), is_default (boolean), created_at
+
 **telegram_links**
 - id, user_id, telegram_chat_id, telegram_username, linked_at
 
@@ -255,6 +258,12 @@ The `AIProvider` interface exposes:
 - `PUT /api/users/me`
 - `POST /api/users/me/profile` (upload resume / set tech description)
 - `GET /api/users/me/profile`
+
+**Categories**
+- `GET /api/categories` (list categories for organization — defaults + custom)
+- `POST /api/categories` (create custom category with name and color)
+- `PUT /api/categories/:id` (update custom category name or color)
+- `DELETE /api/categories/:id` (delete custom category — cannot delete defaults)
 
 **Boards**
 - `GET /api/boards`

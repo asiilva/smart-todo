@@ -83,6 +83,12 @@
 - Filter bar filters tasks by priority
 - Search input filters by title/description
 - "Today" quick filter shows only today's tasks
+- "+" button in filter bar opens create category modal
+- Create category modal renders name input and color palette
+- Creating a category adds it to filter bar, task creation select, detail select, and report chips
+- Create category modal validates name is required
+- Create category modal validates color is selected
+- Duplicate category name shows error
 
 ### 2.3 Daily Planner Components
 - Planner renders timeline for selected date
@@ -199,6 +205,10 @@
 - Fireworks canvas renders behind the modal and cleans up after animation
 - User filters by category → only matching tasks shown
 - User uses "Today" filter → only today's tasks shown
+- User clicks "+" button → create category modal opens
+- User enters name and picks color → new category chip appears in filter bar
+- New category appears in task creation modal category select
+- New category appears in report category chips
 
 ### 3.4 Daily Planner Flow
 - User opens `/planner` → sees today's timeline

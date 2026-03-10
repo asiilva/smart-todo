@@ -93,6 +93,18 @@
 
 ## Phase 4: Tasks, Boards & Time Tracking
 
+### 4.0 Categories Module
+- [ ] Create `categories` TypeORM entity (id, organization_id, name, color, is_default, created_at)
+- [ ] Run migration for categories table
+- [ ] Seed default categories: work (#3b82f6), exercise (#10b981), family (#f59e0b), personal (#8b5cf6), errand (#6b7280), learning (#ec4899)
+- [ ] `GET /api/categories` — list all categories for the user's organization (defaults + custom)
+- [ ] `POST /api/categories` — create custom category (name + color hex; validate unique name per org)
+- [ ] `PUT /api/categories/:id` — update custom category name or color (reject if is_default)
+- [ ] `DELETE /api/categories/:id` — delete custom category (reject if is_default; optionally reassign tasks)
+- [ ] Validate category exists when creating/updating tasks
+- [ ] Unit tests for categories service
+- [ ] Integration tests for categories endpoints
+
 ### 4.1 Board & Task Module
 - [ ] `GET /api/boards` — list boards for organization
 - [ ] `POST /api/boards` — create board (auto-create default columns: Backlog, To Do, In Progress, Review, Done)

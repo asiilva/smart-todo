@@ -73,8 +73,20 @@
 - Reorder tasks within column (update positions of affected tasks)
 - Move task between columns (update old + new column positions)
 - Prevent assigning to user outside organization
-- Validate category enum values
+- Validate category exists in organization's categories
 - Set scheduled_date defaults to today if not provided
+
+### 2.4a Categories Service
+- Return default categories for a new organization (6 defaults seeded)
+- Create custom category with name and color
+- Reject duplicate category name within same organization
+- Reject creating category without name or color
+- Update custom category name
+- Update custom category color
+- Reject updating a default category
+- Delete custom category
+- Reject deleting a default category
+- Return all categories (defaults + custom) for an organization
 
 ### 2.4b Attachment Service
 - Store attachment metadata (file_name, file_url, file_size_bytes, mime_type, uploaded_by)
@@ -161,6 +173,12 @@
 ### 3.3 Profile Endpoints
 - `POST /api/users/me/profile` — text only (200), with PDF (200), with DOCX (200), unsupported file (400)
 - `GET /api/users/me/profile` — exists (200), not yet created (404)
+
+### 3.3b Categories Endpoints
+- `GET /api/categories` — returns default + custom categories for organization (200), unauthenticated (401)
+- `POST /api/categories` — success with name + color (201), duplicate name (409), missing name (400), missing color (400), unauthenticated (401)
+- `PUT /api/categories/:id` — update custom category (200), reject update on default (403), not found (404)
+- `DELETE /api/categories/:id` — delete custom category (204), reject delete on default (403), not found (404)
 
 ### 3.4 Board & Task Endpoints
 - `POST /api/boards` — success (creates default columns), unauthorized (401)

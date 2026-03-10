@@ -236,6 +236,8 @@
     }
     .filter-chip.active { background: var(--accent); border-color: var(--accent); color: white; }
     .filter-chip:hover:not(.active) { border-color: var(--text-muted); color: var(--text); }
+    .filter-chip.add-cat { border-style: dashed; color: var(--text-dim); font-size: 14px; padding: 4px 10px; }
+    .filter-chip.add-cat:hover { border-color: var(--accent); color: var(--accent); }
     .board-columns {
       display: flex; gap: 12px; padding: 0 24px 24px;
       flex: 1; overflow-x: auto; overflow-y: hidden;
@@ -529,6 +531,29 @@
       .apikey-actions { width: 100%; }
       .btn-revoke { flex: 1; text-align: center; }
     }
+
+    /* ===== New Category Modal ===== */
+    .new-cat-modal {
+      display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+      background: var(--bg-surface); border: 1px solid var(--border); border-radius: var(--radius-lg);
+      padding: 20px; z-index: 600; min-width: 300px; box-shadow: var(--shadow);
+    }
+    .new-cat-modal.active { display: block; }
+    .new-cat-modal-backdrop {
+      display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 599;
+    }
+    .new-cat-modal-backdrop.active { display: block; }
+    .new-cat-modal-title { font-size: 16px; font-weight: 700; margin-bottom: 16px; }
+    .new-cat-colors { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
+    .new-cat-color {
+      width: 28px; height: 28px; border-radius: 50%; cursor: pointer; border: 2px solid transparent;
+      transition: all 0.15s;
+    }
+    .new-cat-color:hover { transform: scale(1.15); }
+    .new-cat-color.selected { border-color: white; box-shadow: 0 0 0 2px var(--accent); }
+    .new-cat-actions { display: flex; gap: 8px; margin-top: 16px; }
+    .new-cat-actions .btn-cancel { flex: 1; padding: 8px; border-radius: var(--radius); border: 1px solid var(--border); background: transparent; color: var(--text-muted); font-size: 13px; cursor: pointer; }
+    .new-cat-actions .btn-create { flex: 1; padding: 8px; border-radius: var(--radius); border: none; background: var(--accent); color: white; font-size: 13px; font-weight: 600; cursor: pointer; }
 
     /* ===== Reports View ===== */
     #reports-view { flex-direction: column; overflow-y: auto; padding: 24px; }
@@ -1126,16 +1151,7 @@
           <div class="board-title">My Board</div>
           <button class="btn-new-task" id="btn-new-task">+ New Task</button>
         </div>
-        <div class="board-filters">
-          <button class="filter-chip active" data-filter="all">All</button>
-          <button class="filter-chip" data-filter="today">Today</button>
-          <button class="filter-chip" data-filter="work">Work</button>
-          <button class="filter-chip" data-filter="exercise">Exercise</button>
-          <button class="filter-chip" data-filter="family">Family</button>
-          <button class="filter-chip" data-filter="personal">Personal</button>
-          <button class="filter-chip" data-filter="errand">Errand</button>
-          <button class="filter-chip" data-filter="learning">Learning</button>
-        </div>
+        <div class="board-filters" id="board-filters"></div>
         <div class="board-columns" id="board-columns"></div>
       </div>
 
@@ -1196,15 +1212,7 @@
             <button class="period-btn" data-period="week">This Week</button>
             <button class="period-btn" data-period="month">This Month</button>
           </div>
-          <div class="reports-category-chips" id="reports-category-chips">
-            <button class="report-cat-chip active" data-cat="all">All</button>
-            <button class="report-cat-chip" data-cat="work">Work</button>
-            <button class="report-cat-chip" data-cat="exercise">Exercise</button>
-            <button class="report-cat-chip" data-cat="family">Family</button>
-            <button class="report-cat-chip" data-cat="personal">Personal</button>
-            <button class="report-cat-chip" data-cat="errand">Errand</button>
-            <button class="report-cat-chip" data-cat="learning">Learning</button>
-          </div>
+          <div class="reports-category-chips" id="reports-category-chips"></div>
           <div class="reports-view-toggle">
             <button class="view-toggle-btn active" data-mode="list">Full List</button>
             <button class="view-toggle-btn" data-mode="grouped">Grouped by Category</button>
@@ -1218,6 +1226,24 @@
         <div class="reports-body" id="reports-body"></div>
       </div>
 
+    </div>
+  </div>
+
+  <!-- New Category Modal -->
+  <div class="new-cat-modal-backdrop" id="new-cat-backdrop"></div>
+  <div class="new-cat-modal" id="new-cat-modal">
+    <div class="new-cat-modal-title">Create Category</div>
+    <div class="form-group">
+      <label class="form-label">Name</label>
+      <input class="form-input" id="new-cat-name" type="text" placeholder="e.g. Health, Side Project..." maxlength="20">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Color</label>
+      <div class="new-cat-colors" id="new-cat-colors"></div>
+    </div>
+    <div class="new-cat-actions">
+      <button class="btn-cancel" id="btn-new-cat-cancel">Cancel</button>
+      <button class="btn-create" id="btn-new-cat-create">Create</button>
     </div>
   </div>
 
@@ -1236,14 +1262,7 @@
       <div class="form-row">
         <div class="form-group">
           <label class="form-label">Category</label>
-          <select class="form-select" id="task-category">
-            <option value="work">Work</option>
-            <option value="exercise">Exercise</option>
-            <option value="family">Family</option>
-            <option value="personal">Personal</option>
-            <option value="errand">Errand</option>
-            <option value="learning">Learning</option>
-          </select>
+          <select class="form-select" id="task-category"></select>
         </div>
         <div class="form-group">
           <label class="form-label">Priority</label>
@@ -1356,14 +1375,7 @@
         <div class="task-detail-row">
           <div class="task-detail-field">
             <label>Category</label>
-            <select class="form-select" id="detail-category">
-              <option value="work">Work</option>
-              <option value="exercise">Exercise</option>
-              <option value="family">Family</option>
-              <option value="personal">Personal</option>
-              <option value="errand">Errand</option>
-              <option value="learning">Learning</option>
-            </select>
+            <select class="form-select" id="detail-category"></select>
           </div>
           <div class="task-detail-field">
             <label>Priority</label>
@@ -1442,6 +1454,109 @@
       work: '#3b82f6', exercise: '#10b981', family: '#f59e0b',
       personal: '#8b5cf6', errand: '#6b7280', learning: '#ec4899'
     };
+
+    const PALETTE = ['#3b82f6','#10b981','#f59e0b','#8b5cf6','#6b7280','#ec4899','#ef4444','#14b8a6','#f97316','#06b6d4','#84cc16','#a855f7'];
+
+    function getCategoryNames() {
+      return Object.keys(CATEGORY_COLORS);
+    }
+
+    function renderBoardFilters() {
+      const el = document.getElementById('board-filters');
+      el.innerHTML = `
+        <button class="filter-chip ${activeFilter === 'all' ? 'active' : ''}" data-filter="all">All</button>
+        <button class="filter-chip ${activeFilter === 'today' ? 'active' : ''}" data-filter="today">Today</button>
+        ${getCategoryNames().map(cat =>
+          `<button class="filter-chip ${activeFilter === cat ? 'active' : ''}" data-filter="${cat}">${cat.charAt(0).toUpperCase() + cat.slice(1)}</button>`
+        ).join('')}
+        <button class="filter-chip add-cat" id="btn-add-category" title="New category">+</button>`;
+
+      el.querySelectorAll('.filter-chip:not(.add-cat)').forEach(chip => {
+        chip.addEventListener('click', () => {
+          activeFilter = chip.dataset.filter;
+          renderBoardFilters();
+          renderBoard();
+        });
+      });
+      el.querySelector('#btn-add-category').addEventListener('click', openNewCategoryModal);
+    }
+
+    function renderReportCategoryChips() {
+      const el = document.getElementById('reports-category-chips');
+      el.innerHTML = `
+        <button class="report-cat-chip ${reportCategoryFilter === 'all' ? 'active' : ''}" data-cat="all">All</button>
+        ${getCategoryNames().map(cat =>
+          `<button class="report-cat-chip ${reportCategoryFilter === cat ? 'active' : ''}" data-cat="${cat}">${cat.charAt(0).toUpperCase() + cat.slice(1)}</button>`
+        ).join('')}`;
+      el.querySelectorAll('.report-cat-chip').forEach(chip => {
+        chip.addEventListener('click', () => {
+          reportCategoryFilter = chip.dataset.cat;
+          renderReportCategoryChips();
+          renderReports();
+        });
+      });
+    }
+
+    function renderCategorySelectOptions(selectId) {
+      const select = document.getElementById(selectId);
+      if (!select) return;
+      const current = select.value;
+      select.innerHTML = getCategoryNames().map(cat =>
+        `<option value="${cat}">${cat.charAt(0).toUpperCase() + cat.slice(1)}</option>`
+      ).join('');
+      if (current && getCategoryNames().includes(current)) select.value = current;
+    }
+
+    function refreshAllCategoryUI() {
+      renderBoardFilters();
+      renderReportCategoryChips();
+      renderCategorySelectOptions('task-category');
+      renderCategorySelectOptions('detail-category');
+    }
+
+    // New Category modal logic
+    let selectedNewCatColor = null;
+
+    function openNewCategoryModal() {
+      document.getElementById('new-cat-name').value = '';
+      selectedNewCatColor = null;
+      const colorsEl = document.getElementById('new-cat-colors');
+      const usedColors = Object.values(CATEGORY_COLORS);
+      colorsEl.innerHTML = PALETTE.map(c => {
+        const used = usedColors.includes(c);
+        return `<div class="new-cat-color" data-color="${c}" style="background:${c};${used ? 'opacity:0.3;' : ''}" title="${used ? 'Already used' : c}"></div>`;
+      }).join('');
+      colorsEl.querySelectorAll('.new-cat-color').forEach(dot => {
+        dot.addEventListener('click', () => {
+          colorsEl.querySelectorAll('.new-cat-color').forEach(d => d.classList.remove('selected'));
+          dot.classList.add('selected');
+          selectedNewCatColor = dot.dataset.color;
+        });
+      });
+      document.getElementById('new-cat-modal').classList.add('active');
+      document.getElementById('new-cat-backdrop').classList.add('active');
+      document.getElementById('new-cat-name').focus();
+    }
+
+    function closeNewCategoryModal() {
+      document.getElementById('new-cat-modal').classList.remove('active');
+      document.getElementById('new-cat-backdrop').classList.remove('active');
+    }
+
+    document.getElementById('btn-new-cat-cancel').addEventListener('click', closeNewCategoryModal);
+    document.getElementById('new-cat-backdrop').addEventListener('click', closeNewCategoryModal);
+
+    document.getElementById('btn-new-cat-create').addEventListener('click', () => {
+      const name = document.getElementById('new-cat-name').value.trim().toLowerCase();
+      if (!name) { document.getElementById('new-cat-name').focus(); return; }
+      if (CATEGORY_COLORS[name]) { showToast('&#9888;', `Category "${name}" already exists`); return; }
+      if (!selectedNewCatColor) { showToast('&#9888;', 'Please select a color'); return; }
+
+      CATEGORY_COLORS[name] = selectedNewCatColor;
+      closeNewCategoryModal();
+      refreshAllCategoryUI();
+      showToast('&#10003;', `Category "${name.charAt(0).toUpperCase() + name.slice(1)}" created`);
+    });
 
     let tasks = [
       { id: 1, title: 'Build auth API endpoints', column: 'in-progress',
@@ -1605,6 +1720,8 @@
       document.getElementById('auth-page').classList.add('hidden');
       document.getElementById('app-container').classList.add('visible');
       requestNotificationPermission();
+      renderCategorySelectOptions('task-category');
+      renderCategorySelectOptions('detail-category');
       renderBoard();
       renderPlanner();
       renderApiKeys();
@@ -2403,15 +2520,8 @@
       });
     });
 
-    // ===== Filters =====
-    document.querySelectorAll('.filter-chip').forEach(chip => {
-      chip.addEventListener('click', () => {
-        document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
-        chip.classList.add('active');
-        activeFilter = chip.dataset.filter;
-        renderBoard();
-      });
-    });
+    // ===== Filters (dynamic) =====
+    renderBoardFilters();
 
     // ===== Modal =====
     const modal = document.getElementById('modal-overlay');
@@ -2735,7 +2845,7 @@
           if (!groups[t.category]) groups[t.category] = [];
           groups[t.category].push(t);
         });
-        const catOrder = ['work', 'exercise', 'family', 'personal', 'errand', 'learning'];
+        const catOrder = getCategoryNames();
         bodyEl.innerHTML = catOrder.filter(c => groups[c]).map(cat => {
           const items = groups[cat];
           const catProjected = items.reduce((s, t) => s + t.projectedMinutes, 0);
@@ -2781,15 +2891,8 @@
       });
     });
 
-    // Category chips
-    document.querySelectorAll('.report-cat-chip').forEach(chip => {
-      chip.addEventListener('click', () => {
-        document.querySelectorAll('.report-cat-chip').forEach(c => c.classList.remove('active'));
-        chip.classList.add('active');
-        reportCategoryFilter = chip.dataset.cat;
-        renderReports();
-      });
-    });
+    // Category chips (dynamic)
+    renderReportCategoryChips();
 
     // View mode toggle
     document.querySelectorAll('.view-toggle-btn').forEach(btn => {

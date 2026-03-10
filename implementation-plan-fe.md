@@ -163,6 +163,11 @@
 - [ ] Filter bar: by category, priority, assignee, label
 - [ ] Search by title/description
 - [ ] "Today" quick filter (show only tasks scheduled for today)
+- [ ] **"+" button** at end of filter bar to create a custom category
+- [ ] Category creation modal: name input + color picker (palette of preset colors)
+- [ ] New category appears immediately in filter bar, task creation/detail selects, and report chips
+- [ ] Fetch categories from `GET /api/categories` on board load
+- [ ] Create category via `POST /api/categories` from modal
 
 ### 4.7 Web Push Notifications
 - [ ] Register service worker (`/public/sw.js`) on app load for push event handling
