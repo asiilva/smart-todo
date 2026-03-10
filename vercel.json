@@ -1,0 +1,6 @@
+{
+  "outputDirectory": "prototype",
+  "rewrites": [
+    { "source": "/(.*)", "destination": "/index.html" }
+  ]
+}
