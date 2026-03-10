@@ -36,6 +36,10 @@
 | Handle OAuth callback redirect on frontend | ⬜ | Read JWT from URL params or cookie |
 | Auth pages (web) | ⬜ | |
 | Auth tests — backend (unit + integration) | ⬜ | Includes Google OAuth tests |
+| API key management endpoints (CRUD) | ⬜ | POST/GET/PUT/DELETE /api/api-keys |
+| API key auth middleware + scope enforcement | ⬜ | Bearer sk_live_... or X-API-Key header |
+| API key rate limiting | ⬜ | Per-key rate limits, separate from JWT |
+| API key tests (unit + integration) | ⬜ | |
 | Auth tests — frontend (unit + E2E) | ⬜ | Includes signup form validation + Google OAuth button tests |
 
 ## Phase 3: User Profiles & Tech Profiling — ⬜

@@ -150,7 +150,7 @@ An AI-powered task board that:
 - **Language**: TypeScript
 - **Database**: PostgreSQL 15+
 - **ORM**: TypeORM
-- **Authentication**: JWT (jsonwebtoken + bcrypt), Passport.js with passport-google-oauth20 for Google OAuth 2.0
+- **Authentication**: JWT (jsonwebtoken + bcrypt), Passport.js with passport-google-oauth20 for Google OAuth 2.0, API keys for external app/AI integrations
 - **File Upload**: Multer (resume uploads)
 - **Telegram Bot**: node-telegram-bot-api or grammy
 - **Push Notifications**: web-push (VAPID-based Web Push API)
@@ -212,6 +212,9 @@ The `AIProvider` interface exposes:
 **notification_preferences**
 - id, user_id, push_enabled (boolean), duration_warning_enabled (boolean), duration_exceeded_enabled (boolean), created_at, updated_at
 
+**api_keys**
+- id, user_id, organization_id, name, key_prefix, key_hash, scopes (JSONB), last_used_at, expires_at, revoked_at, created_at, updated_at
+
 **telegram_links**
 - id, user_id, telegram_chat_id, telegram_username, linked_at
 
@@ -270,6 +273,12 @@ The `AIProvider` interface exposes:
 - `GET /api/notifications/preferences` (get notification preferences)
 - `PUT /api/notifications/preferences` (update notification preferences)
 
+**API Keys**
+- `POST /api/api-keys` (create API key — returns full key once)
+- `GET /api/api-keys` (list user's API keys — prefix only, never full key)
+- `PUT /api/api-keys/:id` (update key name, scopes, expiration)
+- `DELETE /api/api-keys/:id` (revoke API key)
+
 **Telegram**
 - `POST /api/telegram/link` (generate linking code)
 - `POST /api/telegram/webhook` (Telegram webhook endpoint)
@@ -278,7 +287,7 @@ The `AIProvider` interface exposes:
 
 ## 5. Non-Functional Requirements
 
-- **Security**: Passwords hashed with bcrypt, JWT with short-lived access tokens (15min) and refresh tokens (7 days), input sanitization, rate limiting
+- **Security**: Passwords hashed with bcrypt, JWT with short-lived access tokens (15min) and refresh tokens (7 days), API keys for external integrations (hashed, scoped, rate-limited), input sanitization, rate limiting
 - **Performance**: Board loads in < 1s, AI estimation responds in < 5s
 - **Scalability**: Stateless backend, connection pooling for PostgreSQL
 - **Observability**: Structured logging (pino/winston), error tracking

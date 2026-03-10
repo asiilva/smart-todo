@@ -6,6 +6,7 @@
 > - [implementation-plan-ai.md](./implementation-plan-ai.md) — AI/LLM agent (provider abstraction, estimation, prompts)
 > - [implementation-plan-telegram.md](./implementation-plan-telegram.md) — Telegram agent (bot, webhook, message handlers)
 > - [implementation-plan-google-oauth.md](./implementation-plan-google-oauth.md) — Google OAuth agent (Passport.js, OAuth endpoints, account linking)
+> - [implementation-plan-api-keys.md](./implementation-plan-api-keys.md) — API keys agent (key management, external app auth, scopes)
 >
 > **Phase 1** (scaffolding) runs sequentially to set up the monorepo.
 > **Phases 2-4**: BE and FE agents work **in parallel** once shared types are defined.

@@ -8,6 +8,7 @@
 > - [implementation-plan-ai.md](./implementation-plan-ai.md) — AI provider, estimation, prompts
 > - [implementation-plan-telegram.md](./implementation-plan-telegram.md) — Telegram bot, webhook, handlers
 > - [implementation-plan-google-oauth.md](./implementation-plan-google-oauth.md) — Google OAuth 2.0 (signup/login via Google)
+> - [implementation-plan-api-keys.md](./implementation-plan-api-keys.md) — API keys for external app integration
 
 ---
 

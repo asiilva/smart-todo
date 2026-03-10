@@ -8,6 +8,7 @@
 > - [test-plan-ai.md](./test-plan-ai.md) — AI provider, estimation, prompt tests
 > - [test-plan-telegram.md](./test-plan-telegram.md) — Telegram bot, webhook, handler tests
 > - [test-plan-google-oauth.md](./test-plan-google-oauth.md) — Google OAuth service and endpoint tests
+> - [test-plan-api-keys.md](./test-plan-api-keys.md) — API key authentication and management tests
 
 ---
 
