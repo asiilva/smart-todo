@@ -59,6 +59,12 @@
   - Yellow when executed is 1-1.5x projected
   - Red when executed > 1.5x projected
   - Gray when not started
+- Clicking a task card opens the task detail modal
+- Task detail modal displays all fields: title, description, notes, category, priority, column, scheduled date
+- Task detail modal shows projected vs executed duration and ratio
+- Editing fields in detail modal and clicking Save updates the task
+- Notes field accepts and persists free-form text
+- Delete button in detail modal removes the task (with confirmation)
 - Task creation form validates required fields (title)
 - Task creation form includes category selector and scheduled_date picker
 - Drag-and-drop between columns updates task column and position (mock @dnd-kit/core + @dnd-kit/sortable)
@@ -159,7 +165,9 @@
 - User starts timer on a task → sees running time
 - User stops timer → executed_duration updates on card
 - Duration comparison badge changes color based on ratio
-- User opens task detail panel → edits description → saves
+- User clicks task card → detail modal opens with all fields
+- User edits title, description, and notes → saves → changes reflected on board
+- User changes task column from detail modal → board updates
 - User deletes a task (with confirmation)
 - User filters by category → only matching tasks shown
 - User uses "Today" filter → only today's tasks shown

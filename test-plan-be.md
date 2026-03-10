@@ -68,7 +68,7 @@
 - Update existing profile on re-upload
 
 ### 2.4 Task Service
-- Create task with valid data (projected_duration, category, scheduled_date)
+- Create task with valid data (projected_duration, category, scheduled_date, notes)
 - Assign position correctly (append to end of column)
 - Reorder tasks within column (update positions of affected tasks)
 - Move task between columns (update old + new column positions)
@@ -144,7 +144,7 @@
 - `POST /api/boards` — success (creates default columns), unauthorized (401)
 - `GET /api/boards/:id` — returns columns and tasks ordered by position
 - `POST /api/boards/:boardId/tasks` — success (triggers AI estimation, sets projected_duration), missing title (400)
-- `PUT /api/tasks/:id` — update fields (200), unauthorized user (403)
+- `PUT /api/tasks/:id` — update fields including notes (200), unauthorized user (403)
 - `PATCH /api/tasks/:id/move` — move between columns (200), reorder within column (200)
 - `DELETE /api/tasks/:id` — success (204), not found (404)
 

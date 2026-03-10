@@ -29,7 +29,7 @@
   - `tech_profiles` (id, user_id, raw_text, resume_url, structured_profile JSONB, created_at, updated_at)
   - `boards` (id, organization_id, name, created_at, updated_at)
   - `columns` (id, board_id, name, position, created_at, updated_at)
-  - `tasks` (id, column_id, title, description, projected_duration_minutes, executed_duration_minutes, priority, category, assignee_id, position, labels JSONB, scheduled_date, due_date, started_at, completed_at, created_at, updated_at)
+  - `tasks` (id, column_id, title, description, notes, projected_duration_minutes, executed_duration_minutes, priority, category, assignee_id, position, labels JSONB, scheduled_date, due_date, started_at, completed_at, created_at, updated_at)
   - `time_entries` (id, task_id, user_id, started_at, stopped_at, duration_minutes)
   - `task_history` (id, task_id, field_changed, old_value, new_value, changed_by, created_at)
   - `daily_settings` (id, user_id, available_from, available_until, created_at, updated_at)

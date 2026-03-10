@@ -530,6 +530,79 @@
       .btn-revoke { flex: 1; text-align: center; }
     }
 
+    /* ===== Task Detail Modal ===== */
+    .task-detail-header {
+      display: flex; align-items: flex-start; gap: 12px; margin-bottom: 20px;
+    }
+    .task-detail-header-info { flex: 1; }
+    .task-detail-title-input {
+      width: 100%; font-size: 18px; font-weight: 700; background: transparent;
+      border: 1px solid transparent; border-radius: var(--radius); padding: 6px 8px;
+      color: var(--text); font-family: inherit; transition: border-color 0.2s;
+    }
+    .task-detail-title-input:hover { border-color: var(--border); }
+    .task-detail-title-input:focus { outline: none; border-color: var(--accent); background: var(--bg); }
+    .task-detail-meta {
+      display: flex; align-items: center; gap: 8px; margin-top: 8px; flex-wrap: wrap;
+    }
+    .task-detail-close {
+      width: 32px; height: 32px; border-radius: 50%; border: none;
+      background: var(--bg); color: var(--text-muted); font-size: 18px;
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
+      transition: all 0.2s; flex-shrink: 0;
+    }
+    .task-detail-close:hover { background: var(--bg-hover); color: var(--text); }
+    .task-detail-body { display: flex; flex-direction: column; gap: 16px; }
+    .task-detail-row {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
+    }
+    .task-detail-field label {
+      display: block; font-size: 11px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.3px; color: var(--text-dim); margin-bottom: 6px;
+    }
+    .task-detail-durations {
+      display: flex; gap: 16px; padding: 12px; background: var(--bg);
+      border-radius: var(--radius); border: 1px solid var(--border);
+    }
+    .task-detail-duration-item { flex: 1; text-align: center; }
+    .task-detail-duration-value { font-size: 20px; font-weight: 800; }
+    .task-detail-duration-label { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+    .task-detail-notes {
+      width: 100%; min-height: 100px; resize: vertical;
+      padding: 10px 12px; border-radius: var(--radius);
+      border: 1px solid var(--border); background: var(--bg);
+      color: var(--text); font-size: 13px; font-family: inherit;
+      line-height: 1.5; transition: border-color 0.2s;
+    }
+    .task-detail-notes:focus { outline: none; border-color: var(--accent); }
+    .task-detail-notes::placeholder { color: var(--text-dim); }
+    .task-detail-footer {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-top: 8px; padding-top: 16px; border-top: 1px solid var(--border);
+    }
+    .btn-delete-task {
+      padding: 6px 14px; border-radius: var(--radius); border: 1px solid rgba(239,68,68,0.3);
+      background: rgba(239,68,68,0.1); color: var(--danger); font-size: 12px; font-weight: 600;
+      cursor: pointer; transition: all 0.2s;
+    }
+    .btn-delete-task:hover { background: rgba(239,68,68,0.2); border-color: rgba(239,68,68,0.5); }
+    .btn-save-task {
+      padding: 8px 20px; border-radius: var(--radius); border: none;
+      background: var(--accent); color: white; font-size: 13px; font-weight: 600;
+      cursor: pointer; transition: background 0.2s;
+    }
+    .btn-save-task:hover { background: var(--accent-hover); }
+    .task-detail-saved {
+      font-size: 12px; color: var(--success); opacity: 0;
+      transition: opacity 0.3s;
+    }
+    .task-detail-saved.visible { opacity: 1; }
+
+    @media (max-width: 480px) {
+      .task-detail-row { grid-template-columns: 1fr; }
+      .task-detail-durations { flex-direction: column; gap: 8px; }
+    }
+
     /* ===== Modal ===== */
     .modal-overlay {
       display: none; position: fixed; inset: 0; z-index: 200;
@@ -968,6 +1041,92 @@
     </div>
   </div>
 
+  <!-- Task Detail Modal -->
+  <div class="modal-overlay" id="task-detail-overlay">
+    <div class="modal" style="width:540px;">
+      <div class="task-detail-header">
+        <div class="task-detail-header-info">
+          <input class="task-detail-title-input" id="detail-title" type="text">
+          <div class="task-detail-meta">
+            <span class="category-badge" id="detail-category-badge"></span>
+            <span class="priority-dot" id="detail-priority-dot"></span>
+            <span style="font-size:12px;color:var(--text-dim)" id="detail-column-label"></span>
+          </div>
+        </div>
+        <button class="task-detail-close" id="detail-close">&times;</button>
+      </div>
+      <div class="task-detail-body">
+        <div class="task-detail-durations" id="detail-durations">
+          <div class="task-detail-duration-item">
+            <div class="task-detail-duration-value" id="detail-projected" style="color:var(--accent)"></div>
+            <div class="task-detail-duration-label">Projected</div>
+          </div>
+          <div class="task-detail-duration-item">
+            <div class="task-detail-duration-value" id="detail-executed"></div>
+            <div class="task-detail-duration-label">Executed</div>
+          </div>
+          <div class="task-detail-duration-item">
+            <div class="task-detail-duration-value" id="detail-ratio"></div>
+            <div class="task-detail-duration-label">Ratio</div>
+          </div>
+        </div>
+        <div class="task-detail-row">
+          <div class="task-detail-field">
+            <label>Category</label>
+            <select class="form-select" id="detail-category">
+              <option value="work">Work</option>
+              <option value="exercise">Exercise</option>
+              <option value="family">Family</option>
+              <option value="personal">Personal</option>
+              <option value="errand">Errand</option>
+              <option value="learning">Learning</option>
+            </select>
+          </div>
+          <div class="task-detail-field">
+            <label>Priority</label>
+            <select class="form-select" id="detail-priority">
+              <option value="low">Low</option>
+              <option value="medium">Medium</option>
+              <option value="high">High</option>
+              <option value="critical">Critical</option>
+            </select>
+          </div>
+        </div>
+        <div class="task-detail-row">
+          <div class="task-detail-field">
+            <label>Scheduled Date</label>
+            <input class="form-input" id="detail-date" type="date">
+          </div>
+          <div class="task-detail-field">
+            <label>Column</label>
+            <select class="form-select" id="detail-column">
+              <option value="backlog">Backlog</option>
+              <option value="todo">To Do</option>
+              <option value="in-progress">In Progress</option>
+              <option value="review">Review</option>
+              <option value="done">Done</option>
+            </select>
+          </div>
+        </div>
+        <div class="task-detail-field">
+          <label>Description</label>
+          <textarea class="form-textarea" id="detail-desc" placeholder="Add a description..." style="min-height:60px;"></textarea>
+        </div>
+        <div class="task-detail-field">
+          <label>Notes</label>
+          <textarea class="task-detail-notes" id="detail-notes" placeholder="Add notes, links, reminders, or any useful information..."></textarea>
+        </div>
+      </div>
+      <div class="task-detail-footer">
+        <button class="btn-delete-task" id="detail-delete">Delete Task</button>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <span class="task-detail-saved" id="detail-saved">Saved!</span>
+          <button class="btn-save-task" id="detail-save">Save Changes</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- Toast Container -->
   <div class="toast-container" id="toast-container"></div>
 
@@ -983,56 +1142,72 @@
       { id: 1, title: 'Build auth API endpoints', column: 'in-progress',
         category: 'work', priority: 'high',
         projectedMinutes: 120, executedMinutes: 45,
+        description: 'Implement register, login, and refresh token endpoints with JWT.',
+        notes: 'Using bcrypt with 12 salt rounds. Remember to add rate limiting later.',
         scheduledDate: TODAY, timerRunning: true, timerStart: Date.now() - 45 * 60000,
         notified60: false, notified100: false },
       { id: 2, title: 'Fix payment webhook bug', column: 'in-progress',
         category: 'work', priority: 'critical',
         projectedMinutes: 60, executedMinutes: 105,
+        description: 'Webhook is returning 500 on Stripe signature verification.',
+        notes: 'Root cause: webhook secret was rotated but env var not updated. Need to add secret rotation docs.',
         scheduledDate: TODAY, timerRunning: false, timerStart: null,
         notified60: true, notified100: true },
       { id: 3, title: 'Evening run — 5km', column: 'todo',
         category: 'exercise', priority: 'medium',
         projectedMinutes: 40, executedMinutes: 0,
+        description: '', notes: 'Route: park loop x2. Bring water bottle.',
         scheduledDate: TODAY, timerRunning: false, timerStart: null,
         notified60: false, notified100: false },
       { id: 4, title: 'Help daughter with homework', column: 'todo',
         category: 'family', priority: 'high',
         projectedMinutes: 60, executedMinutes: 0,
+        description: 'Math homework — fractions and decimals.',
+        notes: '',
         scheduledDate: TODAY, timerRunning: false, timerStart: null,
         notified60: false, notified100: false },
       { id: 5, title: 'Write unit tests for task service', column: 'in-progress',
         category: 'work', priority: 'medium',
         projectedMinutes: 90, executedMinutes: 10,
+        description: 'Cover CRUD operations, position logic, and column moves.',
+        notes: 'Use testcontainers for integration tests. Check test-plan-be.md section 2.4.',
         scheduledDate: TODAY, timerRunning: true, timerStart: Date.now() - 10 * 60000,
         notified60: false, notified100: false },
       { id: 6, title: 'Read DDIA chapter 5', column: 'backlog',
         category: 'learning', priority: 'low',
         projectedMinutes: 45, executedMinutes: 0,
+        description: 'Chapter 5: Replication', notes: '',
         scheduledDate: null, timerRunning: false, timerStart: null,
         notified60: false, notified100: false },
       { id: 7, title: 'Grocery shopping', column: 'backlog',
         category: 'errand', priority: 'low',
         projectedMinutes: 30, executedMinutes: 0,
+        description: '', notes: 'Milk, eggs, bread, chicken, broccoli, rice.',
         scheduledDate: null, timerRunning: false, timerStart: null,
         notified60: false, notified100: false },
       { id: 8, title: 'Review PR #142 — User profile', column: 'review',
         category: 'work', priority: 'medium',
         projectedMinutes: 30, executedMinutes: 25,
+        description: 'Review the profile upload and tech profile generation PR.',
+        notes: 'Check file size limits and error handling for unsupported formats.',
         scheduledDate: TODAY, timerRunning: false, timerStart: null,
         notified60: false, notified100: false },
       { id: 9, title: 'Morning meditation', column: 'done',
         category: 'personal', priority: 'low',
         projectedMinutes: 15, executedMinutes: 18,
+        description: '', notes: '',
         scheduledDate: TODAY, timerRunning: false, timerStart: null,
         notified60: false, notified100: false },
       { id: 10, title: 'Daily standup', column: 'done',
         category: 'work', priority: 'medium',
         projectedMinutes: 15, executedMinutes: 12,
+        description: '', notes: 'Discussed blockers on webhook bug. Team aligned on priority.',
         scheduledDate: TODAY, timerRunning: false, timerStart: null,
         notified60: false, notified100: false },
       { id: 11, title: 'Family dinner', column: 'todo',
         category: 'family', priority: 'high',
         projectedMinutes: 120, executedMinutes: 0,
+        description: 'Cook pasta and salad.', notes: '',
         scheduledDate: TODAY, timerRunning: false, timerStart: null,
         notified60: false, notified100: false }
     ];
@@ -1418,6 +1593,12 @@
         });
       }
 
+      // Click to open task detail
+      card.addEventListener('click', (e) => {
+        if (e.defaultPrevented) return;
+        openTaskDetail(task.id);
+      });
+
       // Drag events
       card.addEventListener('dragstart', handleDragStart);
       card.addEventListener('dragend', handleDragEnd);
@@ -1760,6 +1941,8 @@
         tasks.push({
           id: nextId++, title, column: 'todo', category, priority,
           projectedMinutes: estimatedMinutes, executedMinutes: 0,
+          description: document.getElementById('task-desc').value.trim(),
+          notes: '',
           scheduledDate: date, timerRunning: false, timerStart: null,
           notified60: false, notified100: false
         });
@@ -1771,6 +1954,111 @@
         showToast('&#10003;', `Task created — AI estimated ${formatDuration(estimatedMinutes)}`);
       }, 1500);
     });
+    // ===== Task Detail Modal =====
+    let detailTaskId = null;
+    const detailOverlay = document.getElementById('task-detail-overlay');
+
+    function openTaskDetail(taskId) {
+      const task = tasks.find(t => t.id === taskId);
+      if (!task) return;
+      detailTaskId = taskId;
+
+      document.getElementById('detail-title').value = task.title;
+      document.getElementById('detail-category').value = task.category;
+      document.getElementById('detail-priority').value = task.priority;
+      document.getElementById('detail-column').value = task.column;
+      document.getElementById('detail-date').value = task.scheduledDate || '';
+      document.getElementById('detail-desc').value = task.description || '';
+      document.getElementById('detail-notes').value = task.notes || '';
+
+      // Category badge
+      const badge = document.getElementById('detail-category-badge');
+      badge.textContent = task.category;
+      badge.style.background = CATEGORY_COLORS[task.category];
+
+      // Priority dot
+      const dot = document.getElementById('detail-priority-dot');
+      dot.className = `priority-dot priority-${task.priority}`;
+
+      // Column label
+      const colName = columns.find(c => c.id === task.column);
+      document.getElementById('detail-column-label').textContent = colName ? colName.name : task.column;
+
+      // Durations
+      let currentExecuted = task.executedMinutes;
+      if (task.timerRunning && task.timerStart) {
+        currentExecuted += Math.floor((Date.now() - task.timerStart) / 60000);
+      }
+      document.getElementById('detail-projected').textContent = formatDuration(task.projectedMinutes);
+      document.getElementById('detail-executed').textContent = formatDuration(currentExecuted);
+
+      const ratio = currentExecuted > 0 ? Math.round((currentExecuted / task.projectedMinutes) * 100) : 0;
+      const ratioEl = document.getElementById('detail-ratio');
+      ratioEl.textContent = ratio + '%';
+      if (ratio <= 100) ratioEl.style.color = 'var(--success)';
+      else if (ratio <= 150) ratioEl.style.color = 'var(--warning)';
+      else ratioEl.style.color = 'var(--danger)';
+
+      // Reset saved indicator
+      document.getElementById('detail-saved').classList.remove('visible');
+
+      detailOverlay.classList.add('active');
+    }
+
+    // Close
+    document.getElementById('detail-close').addEventListener('click', () => detailOverlay.classList.remove('active'));
+    detailOverlay.addEventListener('click', (e) => { if (e.target === detailOverlay) detailOverlay.classList.remove('active'); });
+
+    // Save
+    document.getElementById('detail-save').addEventListener('click', () => {
+      const task = tasks.find(t => t.id === detailTaskId);
+      if (!task) return;
+
+      task.title = document.getElementById('detail-title').value.trim() || task.title;
+      task.category = document.getElementById('detail-category').value;
+      task.priority = document.getElementById('detail-priority').value;
+      task.column = document.getElementById('detail-column').value;
+      task.scheduledDate = document.getElementById('detail-date').value || null;
+      task.description = document.getElementById('detail-desc').value.trim();
+      task.notes = document.getElementById('detail-notes').value.trim();
+
+      // Update badge/dot in the modal
+      const badge = document.getElementById('detail-category-badge');
+      badge.textContent = task.category;
+      badge.style.background = CATEGORY_COLORS[task.category];
+      document.getElementById('detail-priority-dot').className = `priority-dot priority-${task.priority}`;
+      const colName = columns.find(c => c.id === task.column);
+      document.getElementById('detail-column-label').textContent = colName ? colName.name : task.column;
+
+      // Show saved indicator
+      const savedEl = document.getElementById('detail-saved');
+      savedEl.classList.add('visible');
+      setTimeout(() => savedEl.classList.remove('visible'), 2000);
+
+      renderBoard();
+      renderPlanner();
+      showToast('&#10003;', `Task "${task.title}" updated`);
+    });
+
+    // Delete
+    document.getElementById('detail-delete').addEventListener('click', () => {
+      const task = tasks.find(t => t.id === detailTaskId);
+      if (!task) return;
+      if (!confirm(`Delete "${task.title}"? This cannot be undone.`)) return;
+
+      // Stop timer if running
+      if (task.timerRunning) {
+        clearInterval(timerIntervals[task.id]);
+        delete timerIntervals[task.id];
+      }
+
+      tasks = tasks.filter(t => t.id !== detailTaskId);
+      detailOverlay.classList.remove('active');
+      renderBoard();
+      renderPlanner();
+      showToast('&#128465;', `Task "${task.title}" deleted`);
+    });
+
     // ===== API Keys =====
     let apiKeys = [
       {

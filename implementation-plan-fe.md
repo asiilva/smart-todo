@@ -128,11 +128,14 @@
 - [ ] Quick-add: just type a title and hit enter (AI fills the rest)
 
 ### 4.5 Task Detail Panel
-- [ ] Slide-over or modal with full task details
-- [ ] Editable fields: title, description, priority, category, scheduled_date, due_date, labels
-- [ ] Read-only: projected_duration (with "Re-estimate" button), executed_duration
+- [ ] Click on a task card to open detail modal/slide-over
+- [ ] Editable fields: title, description, notes, priority, category, scheduled_date, due_date, column, labels
+- [ ] **Notes field**: free-form textarea for links, reminders, or any useful information
+- [ ] Read-only: projected_duration (with "Re-estimate" button), executed_duration, ratio badge
+- [ ] Duration comparison display (projected vs executed vs ratio)
 - [ ] Time entries list (start/stop history)
 - [ ] Task history/activity log
+- [ ] Save changes with visual confirmation
 - [ ] Delete task (with confirmation)
 
 ### 4.6 Board Filtering & Search

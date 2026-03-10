@@ -68,6 +68,7 @@ An AI-powered task board that:
   - Assignee
   - Column/status
   - Position (row order within column)
+  - Notes (free-form text field for links, reminders, or any useful information)
   - Labels/tags
   - Scheduled date (which day this task is planned for)
   - Due date (optional hard deadline)
@@ -191,7 +192,7 @@ The `AIProvider` interface exposes:
 - id, board_id, name, position, created_at, updated_at
 
 **tasks**
-- id, column_id, title, description, projected_duration_minutes, executed_duration_minutes, priority, category, assignee_id, position, labels (JSONB), scheduled_date, due_date, started_at, completed_at, created_at, updated_at
+- id, column_id, title, description, notes (text), projected_duration_minutes, executed_duration_minutes, priority, category, assignee_id, position, labels (JSONB), scheduled_date, due_date, started_at, completed_at, created_at, updated_at
 
 **time_entries**
 - id, task_id, user_id, started_at, stopped_at, duration_minutes
