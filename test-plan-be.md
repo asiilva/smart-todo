@@ -4,9 +4,10 @@
 > Designed to be used by a dedicated agent working on `/apps/api`.
 > Reference: [test-plan.md](./test-plan.md) for full context.
 >
-> **AI and Telegram tests are in separate docs:**
+> **These test concerns are in separate docs:**
 > - [test-plan-ai.md](./test-plan-ai.md) — AI provider, estimation, prompt tests
 > - [test-plan-telegram.md](./test-plan-telegram.md) — Telegram bot, webhook, handler tests
+> - [test-plan-google-oauth.md](./test-plan-google-oauth.md) — Google OAuth service and endpoint tests
 
 ---
 
@@ -14,7 +15,7 @@
 
 ### Setup
 - Use `testcontainers` for PostgreSQL in integration tests
-- Run Prisma migrations before test suite
+- Run TypeORM migrations before test suite
 - Seed database with test data per test file
 - Clean up between test suites (truncate tables)
 - Mock AI provider responses for deterministic tests
@@ -45,12 +46,9 @@
 - Registration rejects missing required fields (name, email, password, organization name)
 
 ### 2.1b Google OAuth Service
-- Create new user from Google profile when no user exists with that google_id or email
-- Log in existing user when user with matching google_id is found
-- Link accounts when user with same email exists but no google_id — set google_id on existing user
-- Populate name and email from Google profile for new users
-- Issue JWT after successful Google OAuth (new user or existing user)
-- Reject invalid or expired OAuth authorization codes
+
+> Fully covered in [test-plan-google-oauth.md](./test-plan-google-oauth.md).
+> Includes findOrCreateUser scenarios, account linking, token issuance, and strategy config tests.
 
 ### 2.2 Organization Service
 - Create organization with owner role assigned
@@ -81,6 +79,7 @@
 - Start timer creates a time_entry with started_at = now
 - Stop timer sets stopped_at and calculates duration_minutes
 - Cannot start timer if one is already running for the same task
+- **Can** start timers on multiple different tasks simultaneously (parallel task execution)
 - Cannot stop timer if none is running
 - executed_duration_minutes equals SUM of all completed time_entries
 - Multiple start/stop sessions accumulate correctly
@@ -128,8 +127,7 @@
 - `POST /api/auth/register` — success (creates user + org, returns JWT), duplicate email (409), missing fields (400), weak password under 8 chars (400), password mismatch (400)
 - `POST /api/auth/login` — success (returns tokens), wrong password (401), nonexistent user (401)
 - `POST /api/auth/refresh` — success (returns new token pair), expired token (401), invalid token (401)
-- `GET /api/auth/google` — redirects to Google consent screen with correct scope and client_id
-- `GET /api/auth/google/callback` — new Google user created (creates user + org, returns JWT, redirects to frontend), existing Google user logged in (returns JWT), invalid OAuth code (400), Google user with same email as existing email/password user (accounts linked, google_id set)
+- Google OAuth endpoint tests → [test-plan-google-oauth.md](./test-plan-google-oauth.md)
 
 ### 3.2 Organization Endpoints
 - `POST /api/organizations` — success, missing name (400)

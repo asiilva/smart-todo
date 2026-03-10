@@ -77,6 +77,7 @@ An AI-powered task board that:
 - Task CRUD operations
 - Filtering and search
 - **Time tracking**: start/stop timer on a task to track executed_duration
+- **Parallel task execution**: multiple tasks can have running timers simultaneously (AI-assisted multitasking — e.g., monitoring a deploy while writing code)
 
 ### 3.4 Daily Planner View
 - Shows all tasks scheduled for a given day
@@ -148,7 +149,7 @@ An AI-powered task board that:
 - **Framework**: Express.js or Fastify
 - **Language**: TypeScript
 - **Database**: PostgreSQL 15+
-- **ORM**: Prisma
+- **ORM**: TypeORM
 - **Authentication**: JWT (jsonwebtoken + bcrypt), Passport.js with passport-google-oauth20 for Google OAuth 2.0
 - **File Upload**: Multer (resume uploads)
 - **Telegram Bot**: node-telegram-bot-api or grammy

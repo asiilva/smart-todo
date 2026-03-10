@@ -835,10 +835,10 @@
         projectedMinutes: 60, executedMinutes: 0,
         scheduledDate: TODAY, timerRunning: false, timerStart: null,
         notified80: false, notified100: false },
-      { id: 5, title: 'Write unit tests for task service', column: 'todo',
+      { id: 5, title: 'Write unit tests for task service', column: 'in-progress',
         category: 'work', priority: 'medium',
-        projectedMinutes: 90, executedMinutes: 0,
-        scheduledDate: TODAY, timerRunning: false, timerStart: null,
+        projectedMinutes: 90, executedMinutes: 10,
+        scheduledDate: TODAY, timerRunning: true, timerStart: Date.now() - 10 * 60000,
         notified80: false, notified100: false },
       { id: 6, title: 'Read DDIA chapter 5', column: 'backlog',
         category: 'learning', priority: 'low',
@@ -1360,17 +1360,7 @@
         delete timerIntervals[taskId];
         showToast('&#9209;', `Timer stopped for "${task.title}" — ${formatDuration(task.executedMinutes)} total`);
       } else {
-        // Stop any other running timer first
-        tasks.forEach(t => {
-          if (t.timerRunning && t.id !== taskId) {
-            t.timerRunning = false;
-            const el = Math.floor((Date.now() - t.timerStart) / 60000);
-            t.executedMinutes += el;
-            t.timerStart = null;
-            clearInterval(timerIntervals[t.id]);
-            delete timerIntervals[t.id];
-          }
-        });
+        // Multiple tasks can have running timers simultaneously (parallel task execution)
         task.timerRunning = true;
         task.timerStart = Date.now();
         task.notified80 = false;

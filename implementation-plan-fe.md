@@ -98,8 +98,9 @@
   - Yellow: executed is 1-1.5x projected
   - Red: executed > 1.5x projected
   - Gray: not started yet
-- [ ] Start/stop timer button (play/pause icon)
+- [ ] Start/stop timer button (play/stop icon)
   - Show running time when active
+  - Multiple tasks can have running timers simultaneously (parallel task execution)
   - Update executed_duration on stop
 - [ ] Scheduled date indicator
 - [ ] Click to open task detail panel

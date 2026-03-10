@@ -15,7 +15,7 @@
 | TypeScript config | ⬜ | |
 | ESLint + Prettier | ⬜ | |
 | Docker Compose (PostgreSQL) | ⬜ | |
-| Prisma schema + migration | ⬜ | |
+| TypeORM entities + migration | ⬜ | |
 | Seed script | ⬜ | |
 | CI pipeline | ⬜ | |
 

@@ -4,9 +4,10 @@
 > Designed to be used by a dedicated agent working on `/apps/api`.
 > Reference: [implementation-plan.md](./implementation-plan.md) for full context.
 >
-> **AI and Telegram are in separate docs for parallel agent execution:**
+> **These concerns are in separate docs for parallel agent execution:**
 > - [implementation-plan-ai.md](./implementation-plan-ai.md) — AI provider, estimation, prompts
 > - [implementation-plan-telegram.md](./implementation-plan-telegram.md) — Telegram bot, webhook, handlers
+> - [implementation-plan-google-oauth.md](./implementation-plan-google-oauth.md) — Google OAuth 2.0 (signup/login via Google)
 
 ---
 
@@ -20,8 +21,8 @@
 - [ ] Create Docker Compose for local PostgreSQL
 
 ### 1.2 Database Setup
-- [ ] Install and configure Prisma
-- [ ] Create initial schema:
+- [ ] Install and configure TypeORM
+- [ ] Create TypeORM entities:
   - `organizations` (id, name, slug, created_at, updated_at)
   - `users` (id, email, password_hash, name, google_id nullable unique, organization_id, role, created_at, updated_at)
   - `tech_profiles` (id, user_id, raw_text, resume_url, structured_profile JSONB, created_at, updated_at)
@@ -56,19 +57,9 @@
 - [ ] Input validation with zod schemas (password min 8 chars, email format, required fields)
 
 ### 2.2 Google OAuth 2.0
-- [ ] Install and configure Passport.js with `passport-google-oauth20` strategy
-- [ ] Add Google OAuth config: `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, `GOOGLE_CALLBACK_URL` to `.env`
-- [ ] `GET /api/auth/google` — redirect user to Google OAuth 2.0 consent screen (scope: profile, email)
-- [ ] `GET /api/auth/google/callback` — handle OAuth callback:
-  - Exchange authorization code for access token
-  - Extract user profile from Google (name, email, google_id)
-  - If user with this `google_id` exists: log them in, issue JWT
-  - If no user with this `google_id` but a user with the same email exists: link accounts (set `google_id` on existing user), issue JWT
-  - If no user exists: create new user with name and email from Google profile, set `google_id`, create a default organization, issue JWT
-  - Redirect to frontend with JWT (via URL parameter or secure cookie)
-- [ ] Add `google_id` (nullable, unique) field to users table
-- [ ] Unit tests for Google OAuth service (new user, existing user, account linking)
-- [ ] Integration tests for Google OAuth endpoints
+
+> Fully covered in [implementation-plan-google-oauth.md](./implementation-plan-google-oauth.md).
+> A separate agent handles Passport.js setup, OAuth endpoints, and user resolution logic.
 
 ### 2.3 Auth Tests
 - [ ] Unit tests for auth service
@@ -114,7 +105,7 @@
 - [ ] Integration tests for board/task endpoints
 
 ### 4.2 Time Tracking Module
-- [ ] `POST /api/tasks/:id/timer/start` — create time_entry with started_at (reject if already running)
+- [ ] `POST /api/tasks/:id/timer/start` — create time_entry with started_at (reject if already running **for the same task**; multiple tasks can have running timers simultaneously)
 - [ ] `POST /api/tasks/:id/timer/stop` — set stopped_at, calculate duration_minutes, update task.executed_duration_minutes
 - [ ] `GET /api/tasks/:id/time-entries` — list time sessions for a task
 - [ ] Auto-calculate `executed_duration_minutes` as SUM of all completed time_entries
@@ -124,7 +115,7 @@
 ### 4.3 Web Push Notification Module
 - [ ] Generate VAPID key pair (`web-push.generateVAPIDKeys()`) and store in `.env`
 - [ ] Install and configure `web-push` library
-- [ ] Add Prisma schema:
+- [ ] Add TypeORM entities:
   - `push_subscriptions` (id, user_id, endpoint, p256dh_key, auth_key, created_at)
   - `notification_preferences` (id, user_id, push_enabled, duration_warning_enabled, duration_exceeded_enabled, created_at, updated_at)
 - [ ] Run migration for new tables

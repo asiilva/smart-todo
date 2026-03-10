@@ -63,9 +63,10 @@
 - Task creation form includes category selector and scheduled_date picker
 - Drag-and-drop between columns updates task column and position (mock @dnd-kit/core + @dnd-kit/sortable)
 - Drag-and-drop reorder within column updates task position (mock @dnd-kit/sortable)
-- Start timer button shows play icon → toggles to pause on click
+- Start timer button shows play icon → toggles to stop on click
 - Stop timer button updates executed_duration
 - Running timer shows elapsed time
+- Multiple tasks can have running timers simultaneously (parallel task execution)
 - Filter bar filters tasks by category
 - Filter bar filters tasks by priority
 - Search input filters by title/description

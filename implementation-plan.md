@@ -5,6 +5,7 @@
 > - [implementation-plan-fe.md](./implementation-plan-fe.md) — Frontend agent (Next.js UI)
 > - [implementation-plan-ai.md](./implementation-plan-ai.md) — AI/LLM agent (provider abstraction, estimation, prompts)
 > - [implementation-plan-telegram.md](./implementation-plan-telegram.md) — Telegram agent (bot, webhook, message handlers)
+> - [implementation-plan-google-oauth.md](./implementation-plan-google-oauth.md) — Google OAuth agent (Passport.js, OAuth endpoints, account linking)
 >
 > **Phase 1** (scaffolding) runs sequentially to set up the monorepo.
 > **Phases 2-4**: BE and FE agents work **in parallel** once shared types are defined.
@@ -27,8 +28,8 @@
 - [ ] Initialize git with conventional commits
 
 ### 1.2 Database Setup
-- [ ] Install and configure Prisma in `/apps/api`
-- [ ] Create initial schema (organizations, users, tech_profiles, boards, columns, tasks, task_history, telegram_links)
+- [ ] Install and configure TypeORM in `/apps/api`
+- [ ] Create TypeORM entities (organizations, users, tech_profiles, boards, columns, tasks, task_history, telegram_links)
 - [ ] Write seed script (default board columns, test organization)
 - [ ] Run initial migration
 
@@ -114,7 +115,7 @@
 - [ ] Integration tests for board/task endpoints
 
 ### 4.2 Time Tracking Module (API)
-- [ ] `POST /api/tasks/:id/timer/start` — start timer (create time_entry)
+- [ ] `POST /api/tasks/:id/timer/start` — start timer (create time_entry; multiple tasks can have running timers simultaneously)
 - [ ] `POST /api/tasks/:id/timer/stop` — stop timer (complete time_entry, update executed_duration)
 - [ ] `GET /api/tasks/:id/time-entries` — list time sessions for a task
 - [ ] Auto-calculate `executed_duration_minutes` from time entries

@@ -5,6 +5,7 @@
 > - [test-plan-fe.md](./test-plan-fe.md) — Frontend tests (Jest + RTL + Cypress)
 > - [test-plan-ai.md](./test-plan-ai.md) — AI/LLM provider and estimation tests
 > - [test-plan-telegram.md](./test-plan-telegram.md) — Telegram bot and webhook tests
+> - [test-plan-google-oauth.md](./test-plan-google-oauth.md) — Google OAuth service and endpoint tests
 
 ---
 
@@ -69,6 +70,7 @@
 - Start timer creates a time_entry with started_at
 - Stop timer sets stopped_at and calculates duration
 - Cannot start timer if one is already running for the same task
+- **Can** start timers on multiple different tasks simultaneously
 - executed_duration_minutes is sum of all time_entries
 - Stopping timer on task in "Done" column keeps entry valid
 
@@ -230,7 +232,7 @@
 
 ### 6.1 API Test Setup
 - Use `testcontainers` for PostgreSQL in integration tests
-- Run Prisma migrations before test suite
+- Run TypeORM migrations before test suite
 - Seed database with test data per test file
 - Clean up between test suites (truncate tables)
 - Mock AI provider responses for deterministic tests
