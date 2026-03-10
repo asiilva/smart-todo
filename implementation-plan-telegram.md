@@ -5,6 +5,8 @@
 > Reference: [implementation-plan.md](./implementation-plan.md) for full context.
 >
 > **Dependencies**: Requires Phase 2 (auth/users), Phase 4 (task service), and AI provider (for text parsing and audio transcription).
+>
+> **Related**: [implementation-plan-telegram-notifications.md](./implementation-plan-telegram-notifications.md) — Telegram duration alerts (60%/100% timer warnings via Telegram messages).
 
 ---
 

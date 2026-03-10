@@ -7,6 +7,7 @@
 > - [implementation-plan-telegram.md](./implementation-plan-telegram.md) — Telegram agent (bot, webhook, message handlers)
 > - [implementation-plan-google-oauth.md](./implementation-plan-google-oauth.md) — Google OAuth agent (Passport.js, OAuth endpoints, account linking)
 > - [implementation-plan-api-keys.md](./implementation-plan-api-keys.md) — API keys agent (key management, external app auth, scopes)
+> - [implementation-plan-telegram-notifications.md](./implementation-plan-telegram-notifications.md) — Telegram duration alerts (60%/100% via Telegram)
 >
 > **Phase 1** (scaffolding) runs sequentially to set up the monorepo.
 > **Phases 2-4**: BE and FE agents work **in parallel** once shared types are defined.
@@ -146,7 +147,7 @@
 - [ ] `DELETE /api/notifications/subscribe` — remove push subscription
 - [ ] `GET /api/notifications/preferences` — get user notification preferences
 - [ ] `PUT /api/notifications/preferences` — update preferences (opt-in/opt-out)
-- [ ] Notification service: monitor running timers and send push at 80% and 100% of projected duration
+- [ ] Notification service: monitor running timers and send push at 60% and 100% of projected duration
 - [ ] Register service worker in `/apps/web` for push event handling
 - [ ] Notification permission prompt on first use after login
 - [ ] Notification preferences UI in user settings

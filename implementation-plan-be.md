@@ -126,7 +126,7 @@
 - [ ] `PUT /api/notifications/preferences` — update notification preferences (opt-in/opt-out per type)
 - [ ] Notification service:
   - When a timer is started (`POST /api/tasks/:id/timer/start`), schedule notification checks
-  - At 80% of `projected_duration_minutes`, send push notification: "Warning: '<task title>' is at 80% of estimated time (<elapsed>min / <projected>min projected)"
+  - At 60% of `projected_duration_minutes`, send push notification: "Warning: '<task title>' is at 60% of estimated time (<elapsed>min / <projected>min projected)"
   - At 100% of `projected_duration_minutes`, send push notification: "Alert: '<task title>' has exceeded the projected time (<projected>min / <projected>min projected)"
   - Skip notifications if user has opted out or no push subscription exists
   - Handle expired/invalid subscriptions gracefully (remove on 410 response)

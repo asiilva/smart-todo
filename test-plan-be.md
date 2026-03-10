@@ -98,9 +98,9 @@
 
 ### 2.8 Notification Service
 - Schedule notification check when timer starts on a task with a projected_duration
-- Calculate 80% threshold correctly (e.g., 48min for a 60min projected task)
+- Calculate 60% threshold correctly (e.g., 36min for a 60min projected task)
 - Calculate 100% threshold correctly
-- Construct correct push payload for duration warning (80%)
+- Construct correct push payload for duration warning (60%)
 - Construct correct push payload for duration exceeded (100%)
 - Skip notification when user has opted out of push notifications
 - Skip notification when user has no push subscription
@@ -170,7 +170,7 @@
 - `DELETE /api/notifications/subscribe` — success (204), no subscription found (404), unauthenticated (401)
 - `GET /api/notifications/preferences` — returns preferences (200), returns defaults when no preferences set (200), unauthenticated (401)
 - `PUT /api/notifications/preferences` — update preferences (200), invalid body (400), unauthenticated (401)
-- Push delivery: starting a timer on a task with projected_duration triggers notification at 80% and 100% elapsed time (mocked web-push, verify `webpush.sendNotification` called with correct payload)
+- Push delivery: starting a timer on a task with projected_duration triggers notification at 60% and 100% elapsed time (mocked web-push, verify `webpush.sendNotification` called with correct payload)
 
 > **Note**: AI provider/estimation tests → [test-plan-ai.md](./test-plan-ai.md)
 > **Note**: Telegram webhook/handler tests → [test-plan-telegram.md](./test-plan-telegram.md)

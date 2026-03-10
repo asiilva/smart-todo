@@ -72,7 +72,8 @@
 | VAPID key generation + web-push setup | ⬜ | |
 | Push subscription endpoints (subscribe/unsubscribe) | ⬜ | |
 | Notification preferences endpoints (GET/PUT) | ⬜ | |
-| Notification service (80%/100% duration alerts) | ⬜ | |
+| Notification service (60%/100% duration alerts) | ⬜ | Web Push + Telegram channels |
+| Telegram notification preferences (opt-in/out per type) | ⬜ | Requires linked Telegram account |
 | Service worker registration (FE) | ⬜ | |
 | Notification permission prompt UI (FE) | ⬜ | |
 | Notification preferences settings page (FE) | ⬜ | |

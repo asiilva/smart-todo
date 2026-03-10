@@ -3,6 +3,8 @@
 > Tests for the Telegram bot, webhook, account linking, and message handlers.
 > Designed to be used by a dedicated agent working on `/apps/api/src/telegram/`.
 > Reference: [test-plan.md](./test-plan.md) for full context.
+>
+> **Related**: [test-plan-telegram-notifications.md](./test-plan-telegram-notifications.md) — Telegram duration alert tests.
 
 ---
 

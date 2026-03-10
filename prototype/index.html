@@ -984,57 +984,57 @@
         category: 'work', priority: 'high',
         projectedMinutes: 120, executedMinutes: 45,
         scheduledDate: TODAY, timerRunning: true, timerStart: Date.now() - 45 * 60000,
-        notified80: false, notified100: false },
+        notified60: false, notified100: false },
       { id: 2, title: 'Fix payment webhook bug', column: 'in-progress',
         category: 'work', priority: 'critical',
         projectedMinutes: 60, executedMinutes: 105,
         scheduledDate: TODAY, timerRunning: false, timerStart: null,
-        notified80: true, notified100: true },
+        notified60: true, notified100: true },
       { id: 3, title: 'Evening run — 5km', column: 'todo',
         category: 'exercise', priority: 'medium',
         projectedMinutes: 40, executedMinutes: 0,
         scheduledDate: TODAY, timerRunning: false, timerStart: null,
-        notified80: false, notified100: false },
+        notified60: false, notified100: false },
       { id: 4, title: 'Help daughter with homework', column: 'todo',
         category: 'family', priority: 'high',
         projectedMinutes: 60, executedMinutes: 0,
         scheduledDate: TODAY, timerRunning: false, timerStart: null,
-        notified80: false, notified100: false },
+        notified60: false, notified100: false },
       { id: 5, title: 'Write unit tests for task service', column: 'in-progress',
         category: 'work', priority: 'medium',
         projectedMinutes: 90, executedMinutes: 10,
         scheduledDate: TODAY, timerRunning: true, timerStart: Date.now() - 10 * 60000,
-        notified80: false, notified100: false },
+        notified60: false, notified100: false },
       { id: 6, title: 'Read DDIA chapter 5', column: 'backlog',
         category: 'learning', priority: 'low',
         projectedMinutes: 45, executedMinutes: 0,
         scheduledDate: null, timerRunning: false, timerStart: null,
-        notified80: false, notified100: false },
+        notified60: false, notified100: false },
       { id: 7, title: 'Grocery shopping', column: 'backlog',
         category: 'errand', priority: 'low',
         projectedMinutes: 30, executedMinutes: 0,
         scheduledDate: null, timerRunning: false, timerStart: null,
-        notified80: false, notified100: false },
+        notified60: false, notified100: false },
       { id: 8, title: 'Review PR #142 — User profile', column: 'review',
         category: 'work', priority: 'medium',
         projectedMinutes: 30, executedMinutes: 25,
         scheduledDate: TODAY, timerRunning: false, timerStart: null,
-        notified80: false, notified100: false },
+        notified60: false, notified100: false },
       { id: 9, title: 'Morning meditation', column: 'done',
         category: 'personal', priority: 'low',
         projectedMinutes: 15, executedMinutes: 18,
         scheduledDate: TODAY, timerRunning: false, timerStart: null,
-        notified80: false, notified100: false },
+        notified60: false, notified100: false },
       { id: 10, title: 'Daily standup', column: 'done',
         category: 'work', priority: 'medium',
         projectedMinutes: 15, executedMinutes: 12,
         scheduledDate: TODAY, timerRunning: false, timerStart: null,
-        notified80: false, notified100: false },
+        notified60: false, notified100: false },
       { id: 11, title: 'Family dinner', column: 'todo',
         category: 'family', priority: 'high',
         projectedMinutes: 120, executedMinutes: 0,
         scheduledDate: TODAY, timerRunning: false, timerStart: null,
-        notified80: false, notified100: false }
+        notified60: false, notified100: false }
     ];
 
     const columns = [
@@ -1326,11 +1326,11 @@
       const current = task.executedMinutes + elapsed;
       const ratio = current / task.projectedMinutes;
 
-      if (ratio >= 0.8 && !task.notified80) {
-        task.notified80 = true;
+      if (ratio >= 0.6 && !task.notified60) {
+        task.notified60 = true;
         sendNotification(
           'Time Warning',
-          `"${task.title}" is at 80% of estimated time (${formatDuration(current)} / ${formatDuration(task.projectedMinutes)})`,
+          `"${task.title}" is at 60% of estimated time (${formatDuration(current)} / ${formatDuration(task.projectedMinutes)})`,
           'warn'
         );
       }
@@ -1529,7 +1529,7 @@
         // Multiple tasks can have running timers simultaneously (parallel task execution)
         task.timerRunning = true;
         task.timerStart = Date.now();
-        task.notified80 = false;
+        task.notified60 = false;
         task.notified100 = false;
         showToast('&#9654;', `Timer started for "${task.title}"`);
 
@@ -1761,7 +1761,7 @@
           id: nextId++, title, column: 'todo', category, priority,
           projectedMinutes: estimatedMinutes, executedMinutes: 0,
           scheduledDate: date, timerRunning: false, timerStart: null,
-          notified80: false, notified100: false
+          notified60: false, notified100: false
         });
 
         modal.classList.remove('active');

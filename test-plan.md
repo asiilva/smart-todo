@@ -7,6 +7,7 @@
 > - [test-plan-telegram.md](./test-plan-telegram.md) — Telegram bot and webhook tests
 > - [test-plan-google-oauth.md](./test-plan-google-oauth.md) — Google OAuth service and endpoint tests
 > - [test-plan-api-keys.md](./test-plan-api-keys.md) — API key authentication and management tests
+> - [test-plan-telegram-notifications.md](./test-plan-telegram-notifications.md) — Telegram duration alert tests
 
 ---
 

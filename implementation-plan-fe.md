@@ -148,7 +148,7 @@
 - [ ] On permission deny: show a dismissible banner explaining how to enable notifications later
 - [ ] Notification preferences page (under user settings):
   - Toggle: enable/disable push notifications
-  - Toggle: duration warning (80%) notifications
+  - Toggle: duration warning (60%) notifications
   - Toggle: duration exceeded (100%) notifications
   - Calls `PUT /api/notifications/preferences`
 - [ ] Handle notification click in service worker (focus/open the relevant task)

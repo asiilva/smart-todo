@@ -111,16 +111,16 @@ An AI-powered task board that:
 
 ### 3.7 Web Push Notifications
 - When a user starts a timer on a task, the system monitors elapsed time against the task's **projected_duration_minutes**
-- At **80%** of projected time, the system sends a browser push notification:
-  - Example: "Warning: 'Fix login bug' is at 80% of estimated time (48min / 60min projected)"
+- At **60%** of projected time, the system sends a browser push notification:
+  - Example: "Warning: 'Fix login bug' is at 60% of estimated time (36min / 60min projected)"
 - At **100%** of projected time, the system sends a second notification:
   - Example: "Alert: 'Fix login bug' has exceeded the projected time (60min / 60min projected)"
-- Uses the **Web Push API** (browser notifications via service workers)
-- Backend sends push notifications using the **web-push** library (VAPID keys)
-- Users must grant notification permission in the browser (prompted on first use after login)
-- Notification preferences are stored per user (opt-in/opt-out)
-- Notification types:
-  - **Duration warning** (80% of projected time reached)
+- **Delivery channels** (independent, user can enable either or both):
+  - **Web Push** — browser notifications via service workers, using the **web-push** library (VAPID keys). Users must grant notification permission in the browser (prompted on first use after login).
+  - **Telegram** — if the user has a linked Telegram account, the bot sends the same duration alerts as Telegram messages. Works even when the user is away from the browser.
+- Notification preferences are stored per user (opt-in/opt-out per channel and per type)
+- Notification types (per channel):
+  - **Duration warning** (60% of projected time reached)
   - **Duration exceeded** (100% of projected time reached)
 
 ### 3.5 Telegram Integration
