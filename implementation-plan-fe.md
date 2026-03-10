@@ -96,11 +96,14 @@
 - [ ] Scheduled date indicator
 - [ ] Click to open task detail panel
 
-### 4.3 Drag & Drop
-- [ ] @dnd-kit setup for board
-- [ ] Drag tasks between columns (updates column + position via API)
-- [ ] Drag to reorder within column
-- [ ] Visual drop indicators
+### 4.3 Drag & Drop (@dnd-kit)
+- [ ] Install and configure @dnd-kit/core and @dnd-kit/sortable
+- [ ] Set up DndContext with sensors (pointer + keyboard) at the board level
+- [ ] Implement SortableContext per column for within-column reordering
+- [ ] Drag tasks between columns (cards are draggable between columns; updates column + position via `PATCH /api/tasks/:id/move`)
+- [ ] Drag to reorder within column (cards are reorderable within a column; updates position via API)
+- [ ] Visual drop indicators (highlight target column and insertion point)
+- [ ] Drag overlay for the card being moved
 
 ### 4.4 Task Creation
 - [ ] "Add task" button per column (or global "+ New Task")
@@ -128,8 +131,24 @@
 - [ ] Search by title/description
 - [ ] "Today" quick filter (show only tasks scheduled for today)
 
-### 4.7 Tests
+### 4.7 Web Push Notifications
+- [ ] Register service worker (`/public/sw.js`) on app load for push event handling
+- [ ] Service worker listens for `push` events and displays browser notifications via `self.registration.showNotification()`
+- [ ] Notification permission prompt: on first use after login, show a UI prompt explaining why notifications are useful, then call `Notification.requestPermission()`
+- [ ] On permission grant: call `serviceWorkerRegistration.pushManager.subscribe()` with VAPID public key, then send the PushSubscription to `POST /api/notifications/subscribe`
+- [ ] On permission deny: show a dismissible banner explaining how to enable notifications later
+- [ ] Notification preferences page (under user settings):
+  - Toggle: enable/disable push notifications
+  - Toggle: duration warning (80%) notifications
+  - Toggle: duration exceeded (100%) notifications
+  - Calls `PUT /api/notifications/preferences`
+- [ ] Handle notification click in service worker (focus/open the relevant task)
+- [ ] Unsubscribe flow: call `pushSubscription.unsubscribe()` and `DELETE /api/notifications/subscribe`
+
+### 4.8 Tests
 - [ ] Unit tests for: TaskCard, TaskCreationModal, Board, FilterBar
+- [ ] Unit tests for: notification permission prompt component, notification preferences UI
+- [ ] Mock `Notification.requestPermission()` and `serviceWorkerRegistration.pushManager.subscribe()` in tests
 - [ ] Cypress E2E: create task, drag between columns, start/stop timer
 
 ---
@@ -195,10 +214,13 @@
 - [ ] Toast notification system (success/error/info)
 - [ ] Error boundaries with fallback UI
 - [ ] Empty states for: no tasks, no boards, no insights data
-- [ ] Responsive design:
-  - Mobile: stack columns vertically, swipe between them
-  - Tablet: horizontal scroll with 2-3 visible columns
-  - Desktop: full board view
+- [ ] Responsive design (mobile-first, must be fully usable on phones):
+  - **Mobile (<=480px)**: columns stack vertically, single-column layout, collapsible column headers, touch-friendly tap targets (min 44px), native date pickers, full-width modals, planner sidebar stacks below timeline
+  - **Tablet (481-768px)**: horizontal scroll with 2-3 visible columns, planner sidebar stacks below timeline
+  - **Desktop (>768px)**: full board view with all columns, planner with sidebar
+  - All features must work on mobile: board, planner, task creation, timer, notifications
+  - Touch interactions: tap to open tasks, tap timer button, long-press for context menu
+  - Tailwind responsive utilities (`sm:`, `md:`, `lg:`) for breakpoint management
 
 ### 7.2 Accessibility
 - [ ] Keyboard navigation for board (arrow keys to move between tasks)

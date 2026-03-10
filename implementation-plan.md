@@ -9,6 +9,7 @@
 > **Phase 1** (scaffolding) runs sequentially to set up the monorepo.
 > **Phases 2-4**: BE and FE agents work **in parallel** once shared types are defined.
 > **Phase 3+**: AI agent can start once the provider interface types exist.
+> **Phase 4+**: Notifications agent can start once time tracking + tasks are in place (BE: web-push setup, notification service; FE: service worker, permission flow).
 > **Phase 5-6**: Telegram agent can start once tasks + AI provider are in place.
 > **Phase 7** (polish) runs in parallel by nature.
 
@@ -123,7 +124,7 @@
 ### 4.3 Kanban Board UI (Web)
 - [ ] Board page layout (columns side by side)
 - [ ] Task card component (show projected_duration, executed_duration, category badge)
-- [ ] Drag-and-drop between columns (@dnd-kit)
+- [ ] Drag-and-drop between columns (@dnd-kit/core + @dnd-kit/sortable — cards draggable between columns and reorderable within columns)
 - [ ] Drag-and-drop reorder within column
 - [ ] Task creation modal/dialog (with category selector and scheduled_date)
 - [ ] Task detail view/edit panel
@@ -132,6 +133,23 @@
 - [ ] Filtering (by assignee, priority, label, category)
 - [ ] Unit tests for board components
 - [ ] Cypress E2E: create task, drag between columns, start/stop timer
+
+---
+
+### 4.4 Web Push Notifications (BE + FE)
+- [ ] Generate VAPID key pair and store in environment config
+- [ ] Install `web-push` library in `/apps/api`
+- [ ] Database tables: `push_subscriptions`, `notification_preferences`
+- [ ] `POST /api/notifications/subscribe` — save browser push subscription
+- [ ] `DELETE /api/notifications/subscribe` — remove push subscription
+- [ ] `GET /api/notifications/preferences` — get user notification preferences
+- [ ] `PUT /api/notifications/preferences` — update preferences (opt-in/opt-out)
+- [ ] Notification service: monitor running timers and send push at 80% and 100% of projected duration
+- [ ] Register service worker in `/apps/web` for push event handling
+- [ ] Notification permission prompt on first use after login
+- [ ] Notification preferences UI in user settings
+- [ ] Unit tests for notification service
+- [ ] Integration tests for notification endpoints
 
 ---
 
@@ -239,7 +257,8 @@ Phase 1 (Scaffolding)
         ├── Phase 3 (Profiles & Tech Profiling)
         │     └── Phase 5 (AI ETA Estimation)
         │           └── Phase 6 (Telegram Integration)
-        └── Phase 4 (Kanban Board)
+        └── Phase 4 (Kanban Board + Notifications)
+              ├── Phase 4.4 (Web Push Notifications — depends on time tracking)
               └── Phase 5 (AI ETA Estimation)
 Phase 7 (Polish) — can run in parallel from Phase 4 onward
 ```

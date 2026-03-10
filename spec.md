@@ -67,7 +67,7 @@ An AI-powered task board that:
   - Due date (optional hard deadline)
   - Started at / Completed at (timestamps for time tracking)
   - Created at / Updated at
-- Drag-and-drop repositioning
+- Drag-and-drop repositioning (cards are draggable between columns and reorderable within columns using @dnd-kit)
 - Task CRUD operations
 - Filtering and search
 - **Time tracking**: start/stop timer on a task to track executed_duration
@@ -102,6 +102,20 @@ An AI-powered task board that:
 - Breakdown by category (e.g., "You underestimate exercise tasks by 20%")
 - Trend chart: is the AI getting better at estimating for this user?
 
+### 3.7 Web Push Notifications
+- When a user starts a timer on a task, the system monitors elapsed time against the task's **projected_duration_minutes**
+- At **80%** of projected time, the system sends a browser push notification:
+  - Example: "Warning: 'Fix login bug' is at 80% of estimated time (48min / 60min projected)"
+- At **100%** of projected time, the system sends a second notification:
+  - Example: "Alert: 'Fix login bug' has exceeded the projected time (60min / 60min projected)"
+- Uses the **Web Push API** (browser notifications via service workers)
+- Backend sends push notifications using the **web-push** library (VAPID keys)
+- Users must grant notification permission in the browser (prompted on first use after login)
+- Notification preferences are stored per user (opt-in/opt-out)
+- Notification types:
+  - **Duration warning** (80% of projected time reached)
+  - **Duration exceeded** (100% of projected time reached)
+
 ### 3.5 Telegram Integration
 - Users link their Telegram account to Smart Todo
 - Supported input methods:
@@ -132,6 +146,7 @@ An AI-powered task board that:
 - **Authentication**: JWT (jsonwebtoken + bcrypt)
 - **File Upload**: Multer (resume uploads)
 - **Telegram Bot**: node-telegram-bot-api or grammy
+- **Push Notifications**: web-push (VAPID-based Web Push API)
 - **Testing**: Jest (unit/integration)
 
 ### 4.3 AI Integration (Factory Pattern)
@@ -184,6 +199,12 @@ The `AIProvider` interface exposes:
 **protected_time_blocks**
 - id, user_id, title, category, day_of_week (nullable, for recurring), specific_date (nullable, for one-off), start_time, end_time, recurring (boolean), created_at
 
+**push_subscriptions**
+- id, user_id, endpoint, p256dh_key, auth_key, created_at
+
+**notification_preferences**
+- id, user_id, push_enabled (boolean), duration_warning_enabled (boolean), duration_exceeded_enabled (boolean), created_at, updated_at
+
 **telegram_links**
 - id, user_id, telegram_chat_id, telegram_username, linked_at
 
@@ -234,6 +255,12 @@ The `AIProvider` interface exposes:
 - `GET /api/insights/accuracy` (projected vs executed stats)
 - `GET /api/insights/accuracy?category=work` (filtered by category)
 
+**Notifications**
+- `POST /api/notifications/subscribe` (register push subscription from browser)
+- `DELETE /api/notifications/subscribe` (unregister push subscription)
+- `GET /api/notifications/preferences` (get notification preferences)
+- `PUT /api/notifications/preferences` (update notification preferences)
+
 **Telegram**
 - `POST /api/telegram/link` (generate linking code)
 - `POST /api/telegram/webhook` (Telegram webhook endpoint)
@@ -246,4 +273,12 @@ The `AIProvider` interface exposes:
 - **Performance**: Board loads in < 1s, AI estimation responds in < 5s
 - **Scalability**: Stateless backend, connection pooling for PostgreSQL
 - **Observability**: Structured logging (pino/winston), error tracking
+- **Push Notifications**: Notifications delivered via Web Push API with VAPID authentication; service worker registered on the frontend to receive push events; users must explicitly grant permission
+- **Responsive Design**: The application must be fully usable on mobile phones, tablets, and desktops. Key breakpoints:
+  - **Desktop** (>768px): Full board view with columns side by side, planner with sidebar
+  - **Tablet** (481-768px): Horizontal scroll on board columns, planner sidebar stacks below timeline
+  - **Mobile** (<=480px): Columns stack vertically, single-column layout, touch-friendly tap targets (min 44px), swipe-friendly navigation
+  - All features (board, planner, task creation, timer, notifications) must work on mobile
+  - Touch interactions: tap to open tasks, tap timer button, native date pickers
+  - Mobile board: columns stack vertically with collapsible headers
 - **CI/CD**: GitHub Actions for lint, test, build

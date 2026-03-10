@@ -49,7 +49,8 @@
   - Gray when not started
 - Task creation form validates required fields (title)
 - Task creation form includes category selector and scheduled_date picker
-- Drag-and-drop updates task position (mock @dnd-kit)
+- Drag-and-drop between columns updates task column and position (mock @dnd-kit/core + @dnd-kit/sortable)
+- Drag-and-drop reorder within column updates task position (mock @dnd-kit/sortable)
 - Start timer button shows play icon → toggles to pause on click
 - Stop timer button updates executed_duration
 - Running timer shows elapsed time
@@ -92,6 +93,19 @@
 - Onboarding completion redirects to `/board`
 - Daily availability time pickers work correctly
 - Protected time block form validates start < end
+
+### 2.7 Notification Components
+- Notification permission prompt renders with explanation text and "Enable Notifications" button
+- Clicking "Enable Notifications" calls `Notification.requestPermission()`
+- On permission granted: calls `pushManager.subscribe()` with VAPID public key and sends subscription to API
+- On permission denied: shows dismissible banner explaining how to enable later
+- Notification preferences page renders toggle switches for each notification type
+- Toggling push_enabled off disables all notification toggles
+- Toggling duration_warning_enabled calls `PUT /api/notifications/preferences` with correct payload
+- Toggling duration_exceeded_enabled calls `PUT /api/notifications/preferences` with correct payload
+- Preferences page loads current preferences from `GET /api/notifications/preferences`
+- Unsubscribe button calls `pushSubscription.unsubscribe()` and `DELETE /api/notifications/subscribe`
+- Service worker registration is called on app load (mock `navigator.serviceWorker.register`)
 
 ### 2.6 Telegram Components
 - Link page displays generated linking code
@@ -151,7 +165,15 @@
 - User changes date range → chart updates
 - Stats cards show meaningful messages
 
-### 3.6 Organization Management
+### 3.6 Notification Flow
+- User logs in for the first time and sees notification permission prompt
+- User grants permission → prompt disappears, subscription saved
+- User denies permission → informational banner appears
+- User opens settings → notification preferences page shows correct toggle states
+- User disables duration warning → toggle updates, API called
+- User re-enables duration warning → toggle updates, API called
+
+### 3.7 Organization Management
 - Owner invites a new member by email
 - Admin removes a member
 - Member cannot access admin/settings pages

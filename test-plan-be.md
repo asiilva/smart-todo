@@ -85,6 +85,20 @@
 - Handle date with no tasks (return empty with full availability)
 - Handle date with no protected blocks
 
+### 2.8 Notification Service
+- Schedule notification check when timer starts on a task with a projected_duration
+- Calculate 80% threshold correctly (e.g., 48min for a 60min projected task)
+- Calculate 100% threshold correctly
+- Construct correct push payload for duration warning (80%)
+- Construct correct push payload for duration exceeded (100%)
+- Skip notification when user has opted out of push notifications
+- Skip notification when user has no push subscription
+- Skip duration warning notification when `duration_warning_enabled` is false
+- Skip duration exceeded notification when `duration_exceeded_enabled` is false
+- Do not send duplicate notifications for the same timer session
+- Handle tasks with no projected_duration (skip notification scheduling)
+- Remove expired push subscriptions on 410 response from push service
+
 ### 2.7 Insights Service
 - Calculate average projected/executed ratio
 - Filter accuracy stats by category
@@ -138,6 +152,13 @@
 - `GET /api/insights/accuracy` — returns stats when completed tasks exist
 - `GET /api/insights/accuracy?category=work` — filtered results
 - `GET /api/insights/accuracy` — empty result when no completed tasks
+
+### 3.8 Notification Endpoints
+- `POST /api/notifications/subscribe` — success (201, saves push subscription), missing fields (400), duplicate subscription (409 or upsert), unauthenticated (401)
+- `DELETE /api/notifications/subscribe` — success (204), no subscription found (404), unauthenticated (401)
+- `GET /api/notifications/preferences` — returns preferences (200), returns defaults when no preferences set (200), unauthenticated (401)
+- `PUT /api/notifications/preferences` — update preferences (200), invalid body (400), unauthenticated (401)
+- Push delivery: starting a timer on a task with projected_duration triggers notification at 80% and 100% elapsed time (mocked web-push, verify `webpush.sendNotification` called with correct payload)
 
 > **Note**: AI provider/estimation tests → [test-plan-ai.md](./test-plan-ai.md)
 > **Note**: Telegram webhook/handler tests → [test-plan-telegram.md](./test-plan-telegram.md)

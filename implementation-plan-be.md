@@ -104,6 +104,27 @@
 - [ ] Unit tests for time tracking service
 - [ ] Integration tests for timer endpoints
 
+### 4.3 Web Push Notification Module
+- [ ] Generate VAPID key pair (`web-push.generateVAPIDKeys()`) and store in `.env`
+- [ ] Install and configure `web-push` library
+- [ ] Add Prisma schema:
+  - `push_subscriptions` (id, user_id, endpoint, p256dh_key, auth_key, created_at)
+  - `notification_preferences` (id, user_id, push_enabled, duration_warning_enabled, duration_exceeded_enabled, created_at, updated_at)
+- [ ] Run migration for new tables
+- [ ] `POST /api/notifications/subscribe` — save browser PushSubscription (endpoint, keys) for authenticated user
+- [ ] `DELETE /api/notifications/subscribe` — remove push subscription for authenticated user
+- [ ] `GET /api/notifications/preferences` — return user's notification preferences
+- [ ] `PUT /api/notifications/preferences` — update notification preferences (opt-in/opt-out per type)
+- [ ] Notification service:
+  - When a timer is started (`POST /api/tasks/:id/timer/start`), schedule notification checks
+  - At 80% of `projected_duration_minutes`, send push notification: "Warning: '<task title>' is at 80% of estimated time (<elapsed>min / <projected>min projected)"
+  - At 100% of `projected_duration_minutes`, send push notification: "Alert: '<task title>' has exceeded the projected time (<projected>min / <projected>min projected)"
+  - Skip notifications if user has opted out or no push subscription exists
+  - Handle expired/invalid subscriptions gracefully (remove on 410 response)
+- [ ] Input validation with zod schemas for notification endpoints
+- [ ] Unit tests for notification service (timer threshold logic, push payload construction)
+- [ ] Integration tests for notification endpoints (subscribe, unsubscribe, preferences CRUD)
+
 ---
 
 ## Phase 5: Daily Planner & Insights

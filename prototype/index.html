@@ -1,0 +1,1397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Smart Todo — Prototype</title>
+  <style>
+    /* ===== CSS Variables ===== */
+    :root {
+      --bg: #0f172a;
+      --bg-surface: #1e293b;
+      --bg-card: #334155;
+      --bg-hover: #3b4a63;
+      --text: #f1f5f9;
+      --text-muted: #94a3b8;
+      --text-dim: #64748b;
+      --border: #475569;
+      --accent: #3b82f6;
+      --accent-hover: #2563eb;
+      --danger: #ef4444;
+      --warning: #f59e0b;
+      --success: #10b981;
+
+      --cat-work: #3b82f6;
+      --cat-exercise: #10b981;
+      --cat-family: #f59e0b;
+      --cat-personal: #8b5cf6;
+      --cat-errand: #6b7280;
+      --cat-learning: #ec4899;
+
+      --radius: 8px;
+      --radius-lg: 12px;
+      --shadow: 0 4px 12px rgba(0,0,0,0.3);
+    }
+
+    /* ===== Reset & Base ===== */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ===== Login Page ===== */
+    .login-page {
+      display: flex; align-items: center; justify-content: center;
+      min-height: 100vh; padding: 20px;
+    }
+    .login-page.hidden { display: none; }
+    .login-container {
+      width: 400px; max-width: 100%;
+    }
+    .login-brand {
+      display: flex; align-items: center; justify-content: center; gap: 12px;
+      margin-bottom: 8px;
+    }
+    .login-brand .logo {
+      width: 40px; height: 40px; border-radius: 10px;
+      background: var(--accent); display: flex; align-items: center; justify-content: center;
+      font-size: 20px; color: white;
+    }
+    .login-brand-name { font-size: 28px; font-weight: 800; }
+    .login-subtitle {
+      text-align: center; color: var(--text-muted); font-size: 14px;
+      margin-bottom: 32px;
+    }
+    .login-card {
+      background: var(--bg-surface); border-radius: var(--radius-lg);
+      padding: 32px; border: 1px solid var(--border);
+    }
+    .login-card .form-group { margin-bottom: 20px; }
+    .login-card .form-label {
+      display: block; font-size: 13px; font-weight: 600;
+      color: var(--text-muted); margin-bottom: 6px;
+    }
+    .login-card .form-input {
+      width: 100%; padding: 12px 14px; border-radius: var(--radius);
+      border: 1px solid var(--border); background: var(--bg);
+      color: var(--text); font-size: 14px; font-family: inherit;
+      transition: border-color 0.2s;
+    }
+    .login-card .form-input:focus { outline: none; border-color: var(--accent); }
+    .login-card .form-input::placeholder { color: var(--text-dim); }
+    .login-error {
+      display: none; background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.3);
+      border-radius: var(--radius); padding: 10px 14px; margin-bottom: 16px;
+      font-size: 13px; color: var(--danger);
+    }
+    .login-error.visible { display: block; }
+    .btn-login {
+      width: 100%; padding: 12px; border-radius: var(--radius); border: none;
+      background: var(--accent); color: white; font-size: 15px; font-weight: 700;
+      cursor: pointer; transition: background 0.2s;
+    }
+    .btn-login:hover { background: var(--accent-hover); }
+    .login-footer {
+      text-align: center; margin-top: 16px; font-size: 13px; color: var(--text-dim);
+    }
+    .login-footer a {
+      color: var(--accent); text-decoration: none; font-weight: 600;
+    }
+    .login-hint {
+      text-align: center; margin-top: 24px; font-size: 12px; color: var(--text-dim);
+      background: var(--bg-surface); padding: 12px; border-radius: var(--radius);
+      border: 1px dashed var(--border);
+    }
+
+    /* ===== App (hidden until login) ===== */
+    .app-container { display: none; }
+    .app-container.visible { display: block; }
+
+    /* ===== Navigation ===== */
+    .nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      height: 56px;
+      background: var(--bg-surface);
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 24px;
+    }
+    .nav-brand {
+      display: flex; align-items: center; gap: 10px;
+      font-size: 18px; font-weight: 700;
+    }
+    .nav-brand .logo {
+      width: 28px; height: 28px; border-radius: 6px;
+      background: var(--accent); display: flex; align-items: center; justify-content: center;
+      font-size: 14px; color: white;
+    }
+    .nav-tabs {
+      display: flex; gap: 4px;
+      background: var(--bg); border-radius: 8px; padding: 3px;
+    }
+    .nav-tab {
+      padding: 6px 20px; border-radius: 6px; border: none;
+      background: transparent; color: var(--text-muted);
+      font-size: 13px; font-weight: 600; cursor: pointer;
+      transition: all 0.2s;
+    }
+    .nav-tab.active { background: var(--accent); color: white; }
+    .nav-tab:hover:not(.active) { color: var(--text); }
+    .nav-right { display: flex; align-items: center; gap: 12px; }
+    .notif-btn {
+      position: relative; width: 32px; height: 32px; border-radius: 50%; border: none;
+      background: var(--bg); color: var(--text-muted); font-size: 16px;
+      cursor: pointer; transition: all 0.2s;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .notif-btn:hover { color: var(--text); background: var(--bg-hover); }
+    .notif-btn .notif-dot {
+      position: absolute; top: 4px; right: 4px;
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--danger); display: none;
+    }
+    .notif-btn .notif-dot.active { display: block; }
+    .nav-user {
+      display: flex; align-items: center; gap: 10px; font-size: 14px;
+    }
+    .avatar {
+      width: 32px; height: 32px; border-radius: 50%;
+      background: var(--accent); display: flex; align-items: center; justify-content: center;
+      font-size: 12px; font-weight: 700; color: white;
+    }
+    .btn-logout {
+      background: none; border: none; color: var(--text-dim); font-size: 12px;
+      cursor: pointer; text-decoration: underline;
+    }
+    .btn-logout:hover { color: var(--text-muted); }
+
+    /* ===== Main Content ===== */
+    .main { padding-top: 56px; height: 100vh; }
+    .view { display: none; height: calc(100vh - 56px); }
+    .view.active { display: flex; }
+
+    /* ===== Board View ===== */
+    #board-view { flex-direction: column; overflow: hidden; }
+    .board-header {
+      padding: 16px 24px 12px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .board-title { font-size: 20px; font-weight: 700; }
+    .btn-new-task {
+      padding: 8px 16px; border-radius: var(--radius); border: none;
+      background: var(--accent); color: white; font-size: 13px; font-weight: 600;
+      cursor: pointer; transition: background 0.2s;
+    }
+    .btn-new-task:hover { background: var(--accent-hover); }
+    .board-filters {
+      padding: 0 24px 12px;
+      display: flex; gap: 6px; flex-wrap: wrap;
+    }
+    .filter-chip {
+      padding: 4px 12px; border-radius: 20px; border: 1px solid var(--border);
+      background: transparent; color: var(--text-muted); font-size: 12px;
+      cursor: pointer; transition: all 0.2s;
+    }
+    .filter-chip.active { background: var(--accent); border-color: var(--accent); color: white; }
+    .filter-chip:hover:not(.active) { border-color: var(--text-muted); color: var(--text); }
+    .board-columns {
+      display: flex; gap: 12px; padding: 0 24px 24px;
+      flex: 1; overflow-x: auto; overflow-y: hidden;
+    }
+    .column {
+      min-width: 280px; width: 280px; flex-shrink: 0;
+      background: var(--bg-surface); border-radius: var(--radius-lg);
+      display: flex; flex-direction: column; max-height: 100%;
+    }
+    .column-header {
+      padding: 12px 14px; display: flex; align-items: center; justify-content: space-between;
+      border-bottom: 1px solid var(--border);
+    }
+    .column-name {
+      font-size: 13px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.5px; color: var(--text-muted);
+    }
+    .column-count {
+      font-size: 11px; color: var(--text-dim);
+      background: var(--bg); padding: 2px 8px; border-radius: 10px;
+    }
+    .column-body {
+      padding: 8px; flex: 1; overflow-y: auto;
+      display: flex; flex-direction: column; gap: 8px;
+      min-height: 60px;
+    }
+    .column-body.drag-over {
+      background: rgba(59,130,246,0.05);
+      outline: 2px dashed rgba(59,130,246,0.3);
+      outline-offset: -4px;
+      border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+    }
+    .drop-placeholder {
+      height: 4px; background: var(--accent); border-radius: 2px;
+      margin: -2px 0; transition: height 0.15s;
+    }
+
+    /* ===== Task Card ===== */
+    .task-card {
+      background: var(--bg-card); border-radius: var(--radius);
+      padding: 12px; cursor: grab;
+      border: 1px solid transparent;
+      transition: all 0.15s;
+      user-select: none;
+    }
+    .task-card:hover { border-color: var(--border); background: var(--bg-hover); }
+    .task-card.dragging {
+      opacity: 0.5; transform: scale(0.98);
+      border-color: var(--accent);
+    }
+    .task-card-top { display: flex; align-items: center; gap: 6px; margin-bottom: 8px; }
+    .category-badge {
+      font-size: 10px; font-weight: 700; text-transform: uppercase;
+      padding: 2px 8px; border-radius: 4px; color: white;
+      letter-spacing: 0.3px;
+    }
+    .priority-dot {
+      width: 8px; height: 8px; border-radius: 50%; margin-left: auto; flex-shrink: 0;
+    }
+    .priority-critical { background: var(--danger); box-shadow: 0 0 6px var(--danger); }
+    .priority-high { background: var(--warning); }
+    .priority-medium { background: var(--accent); }
+    .priority-low { background: var(--text-dim); }
+    .task-title { font-size: 14px; font-weight: 600; line-height: 1.3; margin-bottom: 10px; }
+    .task-footer { display: flex; align-items: center; justify-content: space-between; }
+    .task-durations { display: flex; align-items: center; gap: 8px; font-size: 11px; }
+    .duration-projected { color: var(--text-muted); }
+    .duration-executed { font-weight: 600; }
+    .duration-badge {
+      display: inline-block; padding: 1px 6px; border-radius: 4px; font-size: 10px;
+      font-weight: 700;
+    }
+    .badge-green { background: rgba(16,185,129,0.15); color: var(--success); }
+    .badge-yellow { background: rgba(245,158,11,0.15); color: var(--warning); }
+    .badge-red { background: rgba(239,68,68,0.15); color: var(--danger); }
+    .badge-gray { background: rgba(100,116,139,0.15); color: var(--text-dim); }
+    .timer-btn {
+      width: 30px; height: 30px; border-radius: 50%; border: none;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; font-size: 12px; transition: all 0.2s;
+    }
+    .timer-btn.stopped { background: rgba(16,185,129,0.15); color: var(--success); }
+    .timer-btn.stopped:hover { background: rgba(16,185,129,0.3); }
+    .timer-btn.running {
+      background: rgba(239,68,68,0.15); color: var(--danger);
+      animation: pulse 2s infinite;
+    }
+    .timer-btn.running:hover { background: rgba(239,68,68,0.3); }
+    @keyframes pulse {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(239,68,68,0.3); }
+      50% { box-shadow: 0 0 0 6px rgba(239,68,68,0); }
+    }
+
+    /* ===== Notification Banner ===== */
+    .notif-banner {
+      display: none; position: fixed; top: 64px; right: 24px; z-index: 150;
+      background: var(--bg-surface); border: 1px solid var(--border);
+      border-radius: var(--radius-lg); padding: 16px 20px;
+      box-shadow: var(--shadow); width: 360px;
+      animation: slideIn 0.3s ease-out;
+    }
+    .notif-banner.visible { display: block; }
+    .notif-banner-header {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 12px;
+    }
+    .notif-banner-title { font-size: 13px; font-weight: 700; }
+    .notif-banner-close {
+      background: none; border: none; color: var(--text-dim);
+      cursor: pointer; font-size: 16px;
+    }
+    .notif-item {
+      padding: 8px 0; border-bottom: 1px solid rgba(71,85,105,0.3);
+      font-size: 12px; line-height: 1.4;
+    }
+    .notif-item:last-child { border-bottom: none; }
+    .notif-item-warn { color: var(--warning); }
+    .notif-item-alert { color: var(--danger); }
+    .notif-item-time { color: var(--text-dim); font-size: 11px; margin-top: 2px; }
+
+    /* ===== Planner View ===== */
+    #planner-view { flex-direction: row; }
+    .planner-timeline { flex: 1; overflow-y: auto; padding: 20px 24px; }
+    .planner-header {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 20px;
+    }
+    .planner-date { font-size: 20px; font-weight: 700; }
+    .planner-date-sub { font-size: 13px; color: var(--text-muted); margin-top: 2px; }
+    .planner-nav-btns { display: flex; gap: 6px; }
+    .planner-nav-btn {
+      padding: 6px 14px; border-radius: var(--radius); border: 1px solid var(--border);
+      background: transparent; color: var(--text-muted); font-size: 12px; font-weight: 600;
+      cursor: pointer; transition: all 0.2s;
+    }
+    .planner-nav-btn:hover { border-color: var(--text-muted); color: var(--text); }
+    .planner-nav-btn.today-btn { background: var(--accent); border-color: var(--accent); color: white; }
+    .timeline { position: relative; margin-left: 60px; border-left: 2px solid var(--border); }
+    .time-slot {
+      position: relative; height: 60px;
+      border-bottom: 1px dashed rgba(71,85,105,0.3);
+    }
+    .time-label {
+      position: absolute; left: -60px; top: -8px;
+      font-size: 11px; color: var(--text-dim); width: 50px; text-align: right;
+    }
+    .time-block {
+      position: absolute; left: 12px; right: 12px;
+      border-radius: var(--radius); padding: 8px 12px;
+      font-size: 12px; font-weight: 600; color: white;
+      display: flex; align-items: center; justify-content: space-between;
+      z-index: 2; overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+    .time-block.protected {
+      background-image: repeating-linear-gradient(
+        45deg, transparent, transparent 5px,
+        rgba(255,255,255,0.05) 5px, rgba(255,255,255,0.05) 10px
+      );
+      opacity: 0.85;
+    }
+    .time-block-duration { font-size: 10px; opacity: 0.8; font-weight: 400; }
+
+    /* ===== Planner Sidebar ===== */
+    .planner-sidebar {
+      width: 320px; background: var(--bg-surface);
+      border-left: 1px solid var(--border);
+      padding: 20px; overflow-y: auto;
+    }
+    .sidebar-section { margin-bottom: 24px; }
+    .sidebar-title {
+      font-size: 12px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.5px; color: var(--text-muted); margin-bottom: 12px;
+    }
+    .summary-total { font-size: 24px; font-weight: 800; margin-bottom: 4px; }
+    .summary-available { font-size: 13px; color: var(--text-muted); margin-bottom: 16px; }
+    .summary-bar { margin-bottom: 8px; }
+    .summary-bar-label {
+      display: flex; justify-content: space-between;
+      font-size: 12px; margin-bottom: 4px;
+    }
+    .summary-bar-label span:first-child { font-weight: 600; }
+    .summary-bar-label span:last-child { color: var(--text-muted); }
+    .summary-bar-track {
+      height: 8px; background: var(--bg); border-radius: 4px; overflow: hidden;
+    }
+    .summary-bar-fill { height: 100%; border-radius: 4px; transition: width 0.5s; }
+    .overbook-warning {
+      background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.3);
+      border-radius: var(--radius); padding: 12px; margin-bottom: 16px;
+    }
+    .overbook-warning-title {
+      font-size: 13px; font-weight: 700; color: var(--danger); margin-bottom: 4px;
+    }
+    .overbook-warning-text { font-size: 12px; color: var(--text-muted); line-height: 1.4; }
+    .protected-block-item {
+      display: flex; align-items: center; gap: 10px;
+      padding: 8px 0; border-bottom: 1px solid rgba(71,85,105,0.3);
+    }
+    .protected-block-dot { width: 10px; height: 10px; border-radius: 3px; flex-shrink: 0; }
+    .protected-block-info { flex: 1; }
+    .protected-block-name { font-size: 13px; font-weight: 600; }
+    .protected-block-time { font-size: 11px; color: var(--text-muted); }
+
+    /* ===== Modal ===== */
+    .modal-overlay {
+      display: none; position: fixed; inset: 0; z-index: 200;
+      background: rgba(0,0,0,0.6); backdrop-filter: blur(4px);
+      align-items: center; justify-content: center;
+    }
+    .modal-overlay.active { display: flex; }
+    .modal {
+      background: var(--bg-surface); border-radius: var(--radius-lg);
+      width: 480px; max-width: 90vw; padding: 24px;
+      box-shadow: var(--shadow); border: 1px solid var(--border);
+    }
+    .modal-title { font-size: 18px; font-weight: 700; margin-bottom: 20px; }
+    .form-group { margin-bottom: 16px; }
+    .form-label {
+      display: block; font-size: 12px; font-weight: 600;
+      color: var(--text-muted); margin-bottom: 6px; text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+    .form-input, .form-select, .form-textarea {
+      width: 100%; padding: 10px 12px; border-radius: var(--radius);
+      border: 1px solid var(--border); background: var(--bg);
+      color: var(--text); font-size: 14px; font-family: inherit;
+      transition: border-color 0.2s;
+    }
+    .form-input:focus, .form-select:focus, .form-textarea:focus {
+      outline: none; border-color: var(--accent);
+    }
+    .form-textarea { resize: vertical; min-height: 80px; }
+    .form-row { display: flex; gap: 12px; }
+    .form-row .form-group { flex: 1; }
+    .modal-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 20px; }
+    .btn-cancel {
+      padding: 8px 16px; border-radius: var(--radius); border: 1px solid var(--border);
+      background: transparent; color: var(--text-muted); font-size: 13px; font-weight: 600;
+      cursor: pointer; transition: all 0.2s;
+    }
+    .btn-cancel:hover { color: var(--text); border-color: var(--text-muted); }
+    .btn-create {
+      padding: 8px 20px; border-radius: var(--radius); border: none;
+      background: var(--accent); color: white; font-size: 13px; font-weight: 600;
+      cursor: pointer; transition: background 0.2s;
+    }
+    .btn-create:hover { background: var(--accent-hover); }
+    .ai-estimating {
+      display: none; align-items: center; gap: 8px;
+      font-size: 12px; color: var(--accent); margin-top: 8px;
+    }
+    .ai-estimating.active { display: flex; }
+    .ai-spinner {
+      width: 14px; height: 14px; border: 2px solid rgba(59,130,246,0.2);
+      border-top-color: var(--accent); border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ===== Toast ===== */
+    .toast-container {
+      position: fixed; bottom: 24px; right: 24px; z-index: 300;
+      display: flex; flex-direction: column; gap: 8px;
+    }
+    .toast {
+      background: var(--bg-surface); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 12px 16px;
+      font-size: 13px; box-shadow: var(--shadow);
+      animation: slideIn 0.3s ease-out;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .toast-icon { font-size: 16px; }
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateX(20px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+
+    /* ===== Drag ghost ===== */
+    .drag-ghost {
+      position: fixed; z-index: 500; pointer-events: none;
+      opacity: 0.9; transform: rotate(2deg);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+    }
+
+    /* ===== Scrollbar ===== */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--text-dim); }
+
+    /* ===== Responsive — Tablet (<=768px) ===== */
+    @media (max-width: 768px) {
+      .nav { padding: 0 12px; }
+      .nav-brand span { display: none; }
+      .nav-tab { padding: 6px 14px; font-size: 12px; }
+      .nav-user span { display: none; }
+      .btn-logout { display: none; }
+
+      .board-header { padding: 12px 12px 8px; }
+      .board-filters { padding: 0 12px 8px; gap: 4px; overflow-x: auto; flex-wrap: nowrap; }
+      .filter-chip { flex-shrink: 0; }
+      .board-columns { padding: 0 12px 12px; gap: 8px; }
+      .column { min-width: 240px; width: 240px; }
+
+      #planner-view { flex-direction: column; }
+      .planner-sidebar {
+        width: 100%; border-left: none; border-top: 1px solid var(--border);
+        max-height: 40vh;
+      }
+      .planner-timeline { padding: 12px; }
+
+      .notif-banner { width: calc(100vw - 24px); right: 12px; }
+      .modal { padding: 20px; }
+    }
+
+    /* ===== Responsive — Mobile (<=480px) ===== */
+    @media (max-width: 480px) {
+      .nav { height: 48px; }
+      .nav-brand .logo { width: 24px; height: 24px; font-size: 12px; }
+      .nav-tabs { gap: 2px; }
+      .nav-tab { padding: 5px 10px; font-size: 11px; }
+      .nav-right { gap: 6px; }
+
+      .main { padding-top: 48px; }
+      .view { height: calc(100vh - 48px); }
+
+      .board-header { flex-direction: column; align-items: flex-start; gap: 8px; }
+      .btn-new-task { width: 100%; text-align: center; }
+      .board-columns {
+        flex-direction: column; overflow-x: hidden; overflow-y: auto;
+        gap: 12px; padding: 0 8px 16px;
+      }
+      .column {
+        min-width: 100%; width: 100%; max-height: none;
+      }
+      .column-body { max-height: 300px; }
+
+      .task-card { padding: 10px; }
+      .task-title { font-size: 13px; }
+      .task-durations { flex-wrap: wrap; gap: 4px; }
+
+      .planner-header { flex-direction: column; align-items: flex-start; gap: 8px; }
+      .planner-nav-btns { width: 100%; }
+      .planner-nav-btn { flex: 1; text-align: center; padding: 8px 6px; }
+      .timeline { margin-left: 40px; }
+      .time-label { left: -42px; font-size: 10px; width: 36px; }
+      .time-block { font-size: 11px; padding: 6px 8px; }
+
+      .planner-sidebar { padding: 12px; }
+
+      .login-container { padding: 0 12px; }
+      .login-brand-name { font-size: 22px; }
+      .login-card { padding: 20px; }
+
+      .modal { width: calc(100vw - 24px); max-height: 90vh; overflow-y: auto; }
+      .form-row { flex-direction: column; gap: 0; }
+
+      .notif-banner { width: calc(100vw - 16px); right: 8px; top: 56px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ===== Login Page ===== -->
+  <div class="login-page" id="login-page">
+    <div class="login-container">
+      <div class="login-brand">
+        <div class="logo">&#10003;</div>
+        <span class="login-brand-name">Smart Todo</span>
+      </div>
+      <p class="login-subtitle">Plan your day realistically. Make time for what matters.</p>
+      <div class="login-card">
+        <div class="login-error" id="login-error">Invalid email or password.</div>
+        <div class="form-group">
+          <label class="form-label">Email</label>
+          <input class="form-input" id="login-email" type="email" placeholder="alan@example.com">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Password</label>
+          <input class="form-input" id="login-password" type="password" placeholder="Enter your password">
+        </div>
+        <button class="btn-login" id="btn-login">Sign In</button>
+        <p class="login-footer">Don't have an account? <a href="#">Sign up</a></p>
+      </div>
+      <div class="login-hint">
+        Prototype: use <strong>alan@test.com</strong> / <strong>123456</strong>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== App Container (hidden until login) ===== -->
+  <div class="app-container" id="app-container">
+
+    <!-- Navigation -->
+    <nav class="nav">
+      <div class="nav-brand">
+        <div class="logo">&#10003;</div>
+        <span>Smart Todo</span>
+      </div>
+      <div class="nav-tabs">
+        <button class="nav-tab active" data-view="board-view">Board</button>
+        <button class="nav-tab" data-view="planner-view">Planner</button>
+      </div>
+      <div class="nav-right">
+        <button class="notif-btn" id="notif-btn" title="Notifications">
+          &#128276;
+          <span class="notif-dot" id="notif-dot"></span>
+        </button>
+        <div class="nav-user">
+          <span id="user-name">Alan Silva</span>
+          <div class="avatar" id="user-avatar">AS</div>
+        </div>
+        <button class="btn-logout" id="btn-logout">Logout</button>
+      </div>
+    </nav>
+
+    <!-- Notification Banner -->
+    <div class="notif-banner" id="notif-banner">
+      <div class="notif-banner-header">
+        <span class="notif-banner-title">Notifications</span>
+        <button class="notif-banner-close" id="notif-banner-close">&times;</button>
+      </div>
+      <div id="notif-list">
+        <div style="font-size:12px;color:var(--text-dim);padding:8px 0;">No notifications yet</div>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main">
+
+      <!-- Board View -->
+      <div id="board-view" class="view active">
+        <div class="board-header">
+          <div class="board-title">My Board</div>
+          <button class="btn-new-task" id="btn-new-task">+ New Task</button>
+        </div>
+        <div class="board-filters">
+          <button class="filter-chip active" data-filter="all">All</button>
+          <button class="filter-chip" data-filter="today">Today</button>
+          <button class="filter-chip" data-filter="work">Work</button>
+          <button class="filter-chip" data-filter="exercise">Exercise</button>
+          <button class="filter-chip" data-filter="family">Family</button>
+          <button class="filter-chip" data-filter="personal">Personal</button>
+          <button class="filter-chip" data-filter="errand">Errand</button>
+          <button class="filter-chip" data-filter="learning">Learning</button>
+        </div>
+        <div class="board-columns" id="board-columns"></div>
+      </div>
+
+      <!-- Planner View -->
+      <div id="planner-view" class="view">
+        <div class="planner-timeline">
+          <div class="planner-header">
+            <div>
+              <div class="planner-date" id="planner-date"></div>
+              <div class="planner-date-sub" id="planner-date-sub"></div>
+            </div>
+            <div class="planner-nav-btns">
+              <button class="planner-nav-btn">&larr; Prev</button>
+              <button class="planner-nav-btn today-btn">Today</button>
+              <button class="planner-nav-btn">Next &rarr;</button>
+            </div>
+          </div>
+          <div class="timeline" id="timeline"></div>
+        </div>
+        <div class="planner-sidebar" id="planner-sidebar"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Task Creation Modal -->
+  <div class="modal-overlay" id="modal-overlay">
+    <div class="modal">
+      <div class="modal-title">Create New Task</div>
+      <div class="form-group">
+        <label class="form-label">Title</label>
+        <input class="form-input" id="task-title" type="text" placeholder="What do you need to do?">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Description</label>
+        <textarea class="form-textarea" id="task-desc" placeholder="Add details (optional)..."></textarea>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Category</label>
+          <select class="form-select" id="task-category">
+            <option value="work">Work</option>
+            <option value="exercise">Exercise</option>
+            <option value="family">Family</option>
+            <option value="personal">Personal</option>
+            <option value="errand">Errand</option>
+            <option value="learning">Learning</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Priority</label>
+          <select class="form-select" id="task-priority">
+            <option value="medium">Medium</option>
+            <option value="low">Low</option>
+            <option value="high">High</option>
+            <option value="critical">Critical</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Scheduled Date</label>
+        <input class="form-input" id="task-date" type="date">
+      </div>
+      <div class="ai-estimating" id="ai-estimating">
+        <div class="ai-spinner"></div>
+        <span>AI is estimating duration...</span>
+      </div>
+      <div class="modal-actions">
+        <button class="btn-cancel" id="btn-cancel">Cancel</button>
+        <button class="btn-create" id="btn-create">Create Task</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <script>
+    // ===== Mock Data =====
+    const TODAY = '2026-03-09';
+    const CATEGORY_COLORS = {
+      work: '#3b82f6', exercise: '#10b981', family: '#f59e0b',
+      personal: '#8b5cf6', errand: '#6b7280', learning: '#ec4899'
+    };
+
+    let tasks = [
+      { id: 1, title: 'Build auth API endpoints', column: 'in-progress',
+        category: 'work', priority: 'high',
+        projectedMinutes: 120, executedMinutes: 45,
+        scheduledDate: TODAY, timerRunning: true, timerStart: Date.now() - 45 * 60000,
+        notified80: false, notified100: false },
+      { id: 2, title: 'Fix payment webhook bug', column: 'in-progress',
+        category: 'work', priority: 'critical',
+        projectedMinutes: 60, executedMinutes: 105,
+        scheduledDate: TODAY, timerRunning: false, timerStart: null,
+        notified80: true, notified100: true },
+      { id: 3, title: 'Evening run — 5km', column: 'todo',
+        category: 'exercise', priority: 'medium',
+        projectedMinutes: 40, executedMinutes: 0,
+        scheduledDate: TODAY, timerRunning: false, timerStart: null,
+        notified80: false, notified100: false },
+      { id: 4, title: 'Help daughter with homework', column: 'todo',
+        category: 'family', priority: 'high',
+        projectedMinutes: 60, executedMinutes: 0,
+        scheduledDate: TODAY, timerRunning: false, timerStart: null,
+        notified80: false, notified100: false },
+      { id: 5, title: 'Write unit tests for task service', column: 'todo',
+        category: 'work', priority: 'medium',
+        projectedMinutes: 90, executedMinutes: 0,
+        scheduledDate: TODAY, timerRunning: false, timerStart: null,
+        notified80: false, notified100: false },
+      { id: 6, title: 'Read DDIA chapter 5', column: 'backlog',
+        category: 'learning', priority: 'low',
+        projectedMinutes: 45, executedMinutes: 0,
+        scheduledDate: null, timerRunning: false, timerStart: null,
+        notified80: false, notified100: false },
+      { id: 7, title: 'Grocery shopping', column: 'backlog',
+        category: 'errand', priority: 'low',
+        projectedMinutes: 30, executedMinutes: 0,
+        scheduledDate: null, timerRunning: false, timerStart: null,
+        notified80: false, notified100: false },
+      { id: 8, title: 'Review PR #142 — User profile', column: 'review',
+        category: 'work', priority: 'medium',
+        projectedMinutes: 30, executedMinutes: 25,
+        scheduledDate: TODAY, timerRunning: false, timerStart: null,
+        notified80: false, notified100: false },
+      { id: 9, title: 'Morning meditation', column: 'done',
+        category: 'personal', priority: 'low',
+        projectedMinutes: 15, executedMinutes: 18,
+        scheduledDate: TODAY, timerRunning: false, timerStart: null,
+        notified80: false, notified100: false },
+      { id: 10, title: 'Daily standup', column: 'done',
+        category: 'work', priority: 'medium',
+        projectedMinutes: 15, executedMinutes: 12,
+        scheduledDate: TODAY, timerRunning: false, timerStart: null,
+        notified80: false, notified100: false },
+      { id: 11, title: 'Family dinner', column: 'todo',
+        category: 'family', priority: 'high',
+        projectedMinutes: 120, executedMinutes: 0,
+        scheduledDate: TODAY, timerRunning: false, timerStart: null,
+        notified80: false, notified100: false }
+    ];
+
+    const columns = [
+      { id: 'backlog', name: 'Backlog' },
+      { id: 'todo', name: 'To Do' },
+      { id: 'in-progress', name: 'In Progress' },
+      { id: 'review', name: 'Review' },
+      { id: 'done', name: 'Done' }
+    ];
+
+    const protectedBlocks = [
+      { title: 'Gym', category: 'exercise', startTime: '06:00', endTime: '07:00' },
+      { title: 'Family dinner', category: 'family', startTime: '18:00', endTime: '20:00' }
+    ];
+
+    const dailySettings = { availableFrom: '07:00', availableUntil: '22:00' };
+
+    let nextId = 12;
+    let activeFilter = 'all';
+    let timerIntervals = {};
+    let notifications = [];
+    let notifPermission = 'default';
+
+    // ===== Helpers =====
+    function formatDuration(minutes) {
+      if (minutes < 60) return `${minutes}m`;
+      const h = Math.floor(minutes / 60);
+      const m = minutes % 60;
+      return m > 0 ? `${h}h ${m}m` : `${h}h`;
+    }
+
+    function getDurationBadge(projected, executed) {
+      if (executed === 0) return { class: 'badge-gray', text: 'Not started' };
+      const ratio = executed / projected;
+      if (ratio <= 1) return { class: 'badge-green', text: `${Math.round(ratio * 100)}%` };
+      if (ratio <= 1.5) return { class: 'badge-yellow', text: `${Math.round(ratio * 100)}%` };
+      return { class: 'badge-red', text: `${Math.round(ratio * 100)}%` };
+    }
+
+    function timeToMinutes(t) {
+      const [h, m] = t.split(':').map(Number);
+      return h * 60 + m;
+    }
+
+    function showToast(icon, message) {
+      const container = document.getElementById('toast-container');
+      const toast = document.createElement('div');
+      toast.className = 'toast';
+      toast.innerHTML = `<span class="toast-icon">${icon}</span><span>${message}</span>`;
+      container.appendChild(toast);
+      setTimeout(() => toast.remove(), 3000);
+    }
+
+    // ===== Login =====
+    document.getElementById('btn-login').addEventListener('click', doLogin);
+    document.getElementById('login-password').addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') doLogin();
+    });
+    document.getElementById('login-email').addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') document.getElementById('login-password').focus();
+    });
+
+    function doLogin() {
+      const email = document.getElementById('login-email').value.trim();
+      const pass = document.getElementById('login-password').value;
+      const errEl = document.getElementById('login-error');
+
+      if (email === 'alan@test.com' && pass === '123456') {
+        errEl.classList.remove('visible');
+        document.getElementById('login-page').classList.add('hidden');
+        document.getElementById('app-container').classList.add('visible');
+        requestNotificationPermission();
+        renderBoard();
+        renderPlanner();
+        initTimers();
+      } else {
+        errEl.classList.add('visible');
+      }
+    }
+
+    document.getElementById('btn-logout').addEventListener('click', () => {
+      // Stop all timers
+      Object.keys(timerIntervals).forEach(id => clearInterval(timerIntervals[id]));
+      timerIntervals = {};
+      document.getElementById('app-container').classList.remove('visible');
+      document.getElementById('login-page').classList.remove('hidden');
+      document.getElementById('login-password').value = '';
+    });
+
+    // ===== Notifications =====
+    function requestNotificationPermission() {
+      if (!('Notification' in window)) return;
+      if (Notification.permission === 'granted') {
+        notifPermission = 'granted';
+        showToast('&#128276;', 'Notifications enabled — we\'ll alert you when tasks approach their estimated time');
+      } else if (Notification.permission !== 'denied') {
+        Notification.requestPermission().then(perm => {
+          notifPermission = perm;
+          if (perm === 'granted') {
+            showToast('&#128276;', 'Notifications enabled!');
+          }
+        });
+      }
+    }
+
+    function sendNotification(title, body, type) {
+      // In-app notification
+      const now = new Date();
+      const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      notifications.unshift({ title, body, type, time: timeStr });
+      renderNotifList();
+      document.getElementById('notif-dot').classList.add('active');
+
+      // Browser push notification
+      if (notifPermission === 'granted') {
+        new Notification(title, { body, icon: '&#10003;' });
+      }
+
+      // Also show as toast
+      const icon = type === 'warn' ? '&#9888;' : '&#128680;';
+      showToast(icon, body);
+    }
+
+    function renderNotifList() {
+      const list = document.getElementById('notif-list');
+      if (notifications.length === 0) {
+        list.innerHTML = '<div style="font-size:12px;color:var(--text-dim);padding:8px 0;">No notifications yet</div>';
+        return;
+      }
+      list.innerHTML = notifications.slice(0, 10).map(n => `
+        <div class="notif-item">
+          <div class="notif-item-${n.type}">${n.body}</div>
+          <div class="notif-item-time">${n.time}</div>
+        </div>
+      `).join('');
+    }
+
+    document.getElementById('notif-btn').addEventListener('click', () => {
+      const banner = document.getElementById('notif-banner');
+      banner.classList.toggle('visible');
+      document.getElementById('notif-dot').classList.remove('active');
+    });
+    document.getElementById('notif-banner-close').addEventListener('click', () => {
+      document.getElementById('notif-banner').classList.remove('visible');
+    });
+
+    function checkTimerNotifications(task) {
+      if (!task.timerRunning || !task.timerStart) return;
+      const elapsed = Math.floor((Date.now() - task.timerStart) / 60000);
+      const current = task.executedMinutes + elapsed;
+      const ratio = current / task.projectedMinutes;
+
+      if (ratio >= 0.8 && !task.notified80) {
+        task.notified80 = true;
+        sendNotification(
+          'Time Warning',
+          `"${task.title}" is at 80% of estimated time (${formatDuration(current)} / ${formatDuration(task.projectedMinutes)})`,
+          'warn'
+        );
+      }
+      if (ratio >= 1.0 && !task.notified100) {
+        task.notified100 = true;
+        sendNotification(
+          'Time Exceeded',
+          `"${task.title}" has exceeded projected time (${formatDuration(current)} / ${formatDuration(task.projectedMinutes)})`,
+          'alert'
+        );
+      }
+    }
+
+    // ===== Board Rendering =====
+    function renderBoard() {
+      const container = document.getElementById('board-columns');
+      container.innerHTML = '';
+
+      columns.forEach(col => {
+        let colTasks = tasks.filter(t => t.column === col.id);
+        if (activeFilter === 'today') {
+          colTasks = colTasks.filter(t => t.scheduledDate === TODAY);
+        } else if (activeFilter !== 'all') {
+          colTasks = colTasks.filter(t => t.category === activeFilter);
+        }
+
+        const totalProjected = colTasks.reduce((s, t) => s + t.projectedMinutes, 0);
+
+        const colEl = document.createElement('div');
+        colEl.className = 'column';
+        colEl.innerHTML = `
+          <div class="column-header">
+            <span class="column-name">${col.name}</span>
+            <span class="column-count">${colTasks.length} &middot; ${formatDuration(totalProjected)}</span>
+          </div>
+          <div class="column-body" data-column="${col.id}"></div>
+        `;
+        container.appendChild(colEl);
+
+        const body = colEl.querySelector('.column-body');
+
+        // Drop zone events
+        body.addEventListener('dragover', handleDragOver);
+        body.addEventListener('dragleave', handleDragLeave);
+        body.addEventListener('drop', handleDrop);
+
+        colTasks.forEach(task => body.appendChild(createTaskCard(task)));
+      });
+    }
+
+    function createTaskCard(task) {
+      const badge = getDurationBadge(task.projectedMinutes, task.executedMinutes);
+      const card = document.createElement('div');
+      card.className = 'task-card';
+      card.draggable = true;
+      card.dataset.taskId = task.id;
+
+      card.innerHTML = `
+        <div class="task-card-top">
+          <span class="category-badge" style="background:${CATEGORY_COLORS[task.category]}">${task.category}</span>
+          <span class="priority-dot priority-${task.priority}"></span>
+        </div>
+        <div class="task-title">${task.title}</div>
+        <div class="task-footer">
+          <div class="task-durations">
+            <span class="duration-projected">Est: ${formatDuration(task.projectedMinutes)}</span>
+            <span class="duration-executed" id="exec-${task.id}">Act: ${formatDuration(task.executedMinutes)}</span>
+            <span class="duration-badge ${badge.class}" id="badge-${task.id}">${badge.text}</span>
+          </div>
+          ${task.column !== 'done' && task.column !== 'backlog' ? `
+            <button class="timer-btn ${task.timerRunning ? 'running' : 'stopped'}"
+              data-task-id="${task.id}" title="${task.timerRunning ? 'Stop timer' : 'Start timer'}">
+              ${task.timerRunning ? '&#9632;' : '&#9654;'}
+            </button>
+          ` : ''}
+        </div>
+      `;
+
+      // Timer button
+      const timerBtn = card.querySelector('.timer-btn');
+      if (timerBtn) {
+        timerBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          toggleTimer(task.id);
+        });
+      }
+
+      // Drag events
+      card.addEventListener('dragstart', handleDragStart);
+      card.addEventListener('dragend', handleDragEnd);
+
+      return card;
+    }
+
+    // ===== Drag and Drop =====
+    let draggedTaskId = null;
+
+    function handleDragStart(e) {
+      draggedTaskId = parseInt(e.target.dataset.taskId);
+      e.target.classList.add('dragging');
+      e.dataTransfer.effectAllowed = 'move';
+      // Need a tiny delay so the browser captures the element before we style it
+      requestAnimationFrame(() => e.target.style.opacity = '0.4');
+    }
+
+    function handleDragEnd(e) {
+      e.target.classList.remove('dragging');
+      e.target.style.opacity = '';
+      draggedTaskId = null;
+      // Clean up all drag-over states
+      document.querySelectorAll('.column-body').forEach(b => b.classList.remove('drag-over'));
+      document.querySelectorAll('.drop-placeholder').forEach(p => p.remove());
+    }
+
+    function handleDragOver(e) {
+      e.preventDefault();
+      e.dataTransfer.dropEffect = 'move';
+      const colBody = e.currentTarget;
+      colBody.classList.add('drag-over');
+
+      // Remove existing placeholder
+      document.querySelectorAll('.drop-placeholder').forEach(p => p.remove());
+
+      // Find the card we're hovering over to insert before/after
+      const cards = [...colBody.querySelectorAll('.task-card:not(.dragging)')];
+      const afterCard = cards.find(card => {
+        const rect = card.getBoundingClientRect();
+        return e.clientY < rect.top + rect.height / 2;
+      });
+
+      const placeholder = document.createElement('div');
+      placeholder.className = 'drop-placeholder';
+
+      if (afterCard) {
+        colBody.insertBefore(placeholder, afterCard);
+      } else {
+        colBody.appendChild(placeholder);
+      }
+    }
+
+    function handleDragLeave(e) {
+      // Only remove if we truly left the column body
+      if (!e.currentTarget.contains(e.relatedTarget)) {
+        e.currentTarget.classList.remove('drag-over');
+        e.currentTarget.querySelectorAll('.drop-placeholder').forEach(p => p.remove());
+      }
+    }
+
+    function handleDrop(e) {
+      e.preventDefault();
+      const colBody = e.currentTarget;
+      colBody.classList.remove('drag-over');
+      document.querySelectorAll('.drop-placeholder').forEach(p => p.remove());
+
+      if (draggedTaskId === null) return;
+
+      const newColumn = colBody.dataset.column;
+      const task = tasks.find(t => t.id === draggedTaskId);
+      if (!task) return;
+
+      const oldColumn = task.column;
+      task.column = newColumn;
+
+      // Determine position: find which card we're dropping before
+      const cards = [...colBody.querySelectorAll('.task-card:not(.dragging)')];
+      const afterCard = cards.find(card => {
+        const rect = card.getBoundingClientRect();
+        return e.clientY < rect.top + rect.height / 2;
+      });
+
+      // Reorder tasks array for this column
+      // (For the prototype, column order is just array filter order — simple enough)
+
+      if (oldColumn !== newColumn) {
+        showToast('&#8596;', `Moved "${task.title}" to ${columns.find(c => c.id === newColumn).name}`);
+      }
+
+      renderBoard();
+      renderPlanner();
+    }
+
+    // ===== Timer Logic =====
+    function toggleTimer(taskId) {
+      const task = tasks.find(t => t.id === taskId);
+      if (!task) return;
+
+      if (task.timerRunning) {
+        task.timerRunning = false;
+        const elapsed = Math.floor((Date.now() - task.timerStart) / 60000);
+        task.executedMinutes += elapsed;
+        task.timerStart = null;
+        clearInterval(timerIntervals[taskId]);
+        delete timerIntervals[taskId];
+        showToast('&#9209;', `Timer stopped for "${task.title}" — ${formatDuration(task.executedMinutes)} total`);
+      } else {
+        // Stop any other running timer first
+        tasks.forEach(t => {
+          if (t.timerRunning && t.id !== taskId) {
+            t.timerRunning = false;
+            const el = Math.floor((Date.now() - t.timerStart) / 60000);
+            t.executedMinutes += el;
+            t.timerStart = null;
+            clearInterval(timerIntervals[t.id]);
+            delete timerIntervals[t.id];
+          }
+        });
+        task.timerRunning = true;
+        task.timerStart = Date.now();
+        task.notified80 = false;
+        task.notified100 = false;
+        showToast('&#9654;', `Timer started for "${task.title}"`);
+
+        timerIntervals[taskId] = setInterval(() => {
+          const elapsed = Math.floor((Date.now() - task.timerStart) / 60000);
+          const current = task.executedMinutes + elapsed;
+          const execEl = document.getElementById(`exec-${taskId}`);
+          const badgeEl = document.getElementById(`badge-${taskId}`);
+          if (execEl) execEl.textContent = `Act: ${formatDuration(current)}`;
+          if (badgeEl) {
+            const b = getDurationBadge(task.projectedMinutes, current);
+            badgeEl.className = `duration-badge ${b.class}`;
+            badgeEl.textContent = b.text;
+          }
+          checkTimerNotifications(task);
+        }, 5000);
+      }
+
+      renderBoard();
+    }
+
+    function initTimers() {
+      tasks.filter(t => t.timerRunning).forEach(task => {
+        timerIntervals[task.id] = setInterval(() => {
+          const elapsed = Math.floor((Date.now() - task.timerStart) / 60000);
+          const current = task.executedMinutes + elapsed;
+          const execEl = document.getElementById(`exec-${task.id}`);
+          const badgeEl = document.getElementById(`badge-${task.id}`);
+          if (execEl) execEl.textContent = `Act: ${formatDuration(current)}`;
+          if (badgeEl) {
+            const b = getDurationBadge(task.projectedMinutes, current);
+            badgeEl.className = `duration-badge ${b.class}`;
+            badgeEl.textContent = b.text;
+          }
+          checkTimerNotifications(task);
+        }, 5000);
+      });
+    }
+
+    // ===== Planner Rendering =====
+    function renderPlanner() {
+      const date = new Date(TODAY + 'T12:00:00');
+      document.getElementById('planner-date').textContent =
+        date.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
+      document.getElementById('planner-date-sub').textContent = 'Your daily plan';
+
+      const timeline = document.getElementById('timeline');
+      timeline.innerHTML = '';
+      const startHour = parseInt(dailySettings.availableFrom);
+      const endHour = parseInt(dailySettings.availableUntil);
+
+      for (let h = startHour; h <= endHour; h++) {
+        const slot = document.createElement('div');
+        slot.className = 'time-slot';
+        slot.innerHTML = `<span class="time-label">${String(h).padStart(2, '0')}:00</span>`;
+        timeline.appendChild(slot);
+      }
+
+      protectedBlocks.forEach(block => {
+        const startMin = timeToMinutes(block.startTime) - timeToMinutes(dailySettings.availableFrom);
+        const duration = timeToMinutes(block.endTime) - timeToMinutes(block.startTime);
+        if (startMin < 0) return;
+        const top = (startMin / 60) * 60;
+        const height = (duration / 60) * 60;
+
+        const el = document.createElement('div');
+        el.className = 'time-block protected';
+        el.style.cssText = `top:${top}px;height:${height}px;background-color:${CATEGORY_COLORS[block.category]};`;
+        el.innerHTML = `<span>${block.title}</span><span class="time-block-duration">${block.startTime} — ${block.endTime}</span>`;
+        timeline.appendChild(el);
+      });
+
+      const todayTasks = tasks.filter(t => t.scheduledDate === TODAY && t.column !== 'done');
+      let currentMinute = 0;
+
+      const protectedRanges = protectedBlocks.map(b => ({
+        start: timeToMinutes(b.startTime) - timeToMinutes(dailySettings.availableFrom),
+        end: timeToMinutes(b.endTime) - timeToMinutes(dailySettings.availableFrom)
+      })).sort((a, b) => a.start - b.start);
+
+      todayTasks.forEach(task => {
+        for (const range of protectedRanges) {
+          if (currentMinute >= range.start && currentMinute < range.end) currentMinute = range.end;
+        }
+
+        const top = (currentMinute / 60) * 60;
+        const height = Math.max((task.projectedMinutes / 60) * 60, 28);
+
+        const el = document.createElement('div');
+        el.className = 'time-block';
+        el.style.cssText = `top:${top}px;height:${height}px;background-color:${CATEGORY_COLORS[task.category]};`;
+        el.innerHTML = `<span>${task.title}</span><span class="time-block-duration">${formatDuration(task.projectedMinutes)}</span>`;
+        timeline.appendChild(el);
+
+        currentMinute += task.projectedMinutes;
+
+        for (const range of protectedRanges) {
+          if (currentMinute >= range.start && currentMinute < range.end) currentMinute = range.end;
+        }
+      });
+
+      renderPlannerSidebar();
+    }
+
+    function renderPlannerSidebar() {
+      const sidebar = document.getElementById('planner-sidebar');
+      const allTodayTasks = tasks.filter(t => t.scheduledDate === TODAY);
+
+      const hoursByCategory = {};
+      allTodayTasks.forEach(t => {
+        hoursByCategory[t.category] = (hoursByCategory[t.category] || 0) + t.projectedMinutes;
+      });
+      protectedBlocks.forEach(b => {
+        const dur = timeToMinutes(b.endTime) - timeToMinutes(b.startTime);
+        hoursByCategory[b.category] = (hoursByCategory[b.category] || 0) + dur;
+      });
+
+      const totalProjected = Object.values(hoursByCategory).reduce((s, v) => s + v, 0);
+      const totalAvailable = timeToMinutes(dailySettings.availableUntil) - timeToMinutes(dailySettings.availableFrom);
+      const freeMinutes = Math.max(0, totalAvailable - totalProjected);
+      const isOverbooked = totalProjected > totalAvailable;
+      const overBy = totalProjected - totalAvailable;
+
+      let summaryBarsHTML = '';
+      Object.entries(hoursByCategory)
+        .sort((a, b) => b[1] - a[1])
+        .forEach(([cat, mins]) => {
+          const pct = Math.min(100, (mins / totalAvailable) * 100);
+          summaryBarsHTML += `
+            <div class="summary-bar">
+              <div class="summary-bar-label">
+                <span style="color:${CATEGORY_COLORS[cat]}">${cat.charAt(0).toUpperCase() + cat.slice(1)}</span>
+                <span>${formatDuration(mins)}</span>
+              </div>
+              <div class="summary-bar-track">
+                <div class="summary-bar-fill" style="width:${pct}%;background:${CATEGORY_COLORS[cat]}"></div>
+              </div>
+            </div>`;
+        });
+
+      const freePct = Math.min(100, (freeMinutes / totalAvailable) * 100);
+      summaryBarsHTML += `
+        <div class="summary-bar">
+          <div class="summary-bar-label">
+            <span style="color:var(--success)">Free time</span>
+            <span>${formatDuration(freeMinutes)}</span>
+          </div>
+          <div class="summary-bar-track">
+            <div class="summary-bar-fill" style="width:${freePct}%;background:var(--success)"></div>
+          </div>
+        </div>`;
+
+      sidebar.innerHTML = `
+        <div class="sidebar-section">
+          <div class="sidebar-title">Day Summary</div>
+          <div class="summary-total">${formatDuration(totalProjected)} planned</div>
+          <div class="summary-available">out of ${formatDuration(totalAvailable)} available</div>
+          ${isOverbooked ? `
+            <div class="overbook-warning">
+              <div class="overbook-warning-title">&#9888; Overbooked by ${formatDuration(overBy)}</div>
+              <div class="overbook-warning-text">You have more tasks than available hours. Consider moving some tasks to tomorrow.</div>
+            </div>` : ''}
+          ${summaryBarsHTML}
+        </div>
+        <div class="sidebar-section">
+          <div class="sidebar-title">Protected Time</div>
+          ${protectedBlocks.map(b => `
+            <div class="protected-block-item">
+              <div class="protected-block-dot" style="background:${CATEGORY_COLORS[b.category]}"></div>
+              <div class="protected-block-info">
+                <div class="protected-block-name">${b.title}</div>
+                <div class="protected-block-time">${b.startTime} — ${b.endTime}</div>
+              </div>
+            </div>`).join('')}
+        </div>`;
+    }
+
+    // ===== View Switching =====
+    document.querySelectorAll('.nav-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+        tab.classList.add('active');
+        document.getElementById(tab.dataset.view).classList.add('active');
+      });
+    });
+
+    // ===== Filters =====
+    document.querySelectorAll('.filter-chip').forEach(chip => {
+      chip.addEventListener('click', () => {
+        document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+        chip.classList.add('active');
+        activeFilter = chip.dataset.filter;
+        renderBoard();
+      });
+    });
+
+    // ===== Modal =====
+    const modal = document.getElementById('modal-overlay');
+    document.getElementById('btn-new-task').addEventListener('click', () => {
+      document.getElementById('task-title').value = '';
+      document.getElementById('task-desc').value = '';
+      document.getElementById('task-category').value = 'work';
+      document.getElementById('task-priority').value = 'medium';
+      document.getElementById('task-date').value = TODAY;
+      document.getElementById('ai-estimating').classList.remove('active');
+      modal.classList.add('active');
+      document.getElementById('task-title').focus();
+    });
+    document.getElementById('btn-cancel').addEventListener('click', () => modal.classList.remove('active'));
+    modal.addEventListener('click', (e) => { if (e.target === modal) modal.classList.remove('active'); });
+
+    document.getElementById('btn-create').addEventListener('click', () => {
+      const title = document.getElementById('task-title').value.trim();
+      if (!title) { document.getElementById('task-title').focus(); return; }
+
+      const category = document.getElementById('task-category').value;
+      const priority = document.getElementById('task-priority').value;
+      const date = document.getElementById('task-date').value || TODAY;
+
+      const aiEl = document.getElementById('ai-estimating');
+      aiEl.classList.add('active');
+      document.getElementById('btn-create').disabled = true;
+
+      setTimeout(() => {
+        const estimatedMinutes = [15, 30, 45, 60, 90, 120, 150, 180][Math.floor(Math.random() * 8)];
+
+        tasks.push({
+          id: nextId++, title, column: 'todo', category, priority,
+          projectedMinutes: estimatedMinutes, executedMinutes: 0,
+          scheduledDate: date, timerRunning: false, timerStart: null,
+          notified80: false, notified100: false
+        });
+
+        modal.classList.remove('active');
+        document.getElementById('btn-create').disabled = false;
+        renderBoard();
+        renderPlanner();
+        showToast('&#10003;', `Task created — AI estimated ${formatDuration(estimatedMinutes)}`);
+      }, 1500);
+    });
+  </script>
+</body>
+</html>

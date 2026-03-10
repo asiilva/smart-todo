@@ -56,6 +56,14 @@
 | Duration comparison badge (projected vs executed) | ⬜ | |
 | Filtering + search (by category) | ⬜ | |
 | Board tests (unit + integration + E2E) | ⬜ | |
+| VAPID key generation + web-push setup | ⬜ | |
+| Push subscription endpoints (subscribe/unsubscribe) | ⬜ | |
+| Notification preferences endpoints (GET/PUT) | ⬜ | |
+| Notification service (80%/100% duration alerts) | ⬜ | |
+| Service worker registration (FE) | ⬜ | |
+| Notification permission prompt UI (FE) | ⬜ | |
+| Notification preferences settings page (FE) | ⬜ | |
+| Notification tests (unit + integration) | ⬜ | |
 
 ## Phase 5: AI ETA Estimation & Daily Planner — ⬜
 | Task | Status | Notes |
