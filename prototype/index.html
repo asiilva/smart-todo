@@ -677,6 +677,11 @@
       to { opacity: 1; transform: translateX(0); }
     }
 
+    /* ===== Fireworks Celebration ===== */
+    .fireworks-canvas {
+      position: fixed; inset: 0; z-index: 400; pointer-events: none;
+    }
+
     /* ===== Drag ghost ===== */
     .drag-ghost {
       position: fixed; z-index: 500; pointer-events: none;
@@ -1686,11 +1691,99 @@
       // (For the prototype, column order is just array filter order — simple enough)
 
       if (oldColumn !== newColumn) {
-        showToast('&#8596;', `Moved "${task.title}" to ${columns.find(c => c.id === newColumn).name}`);
+        if (newColumn === 'done') {
+          showToast('&#127881;', `"${task.title}" completed! Great job!`);
+          launchFireworks();
+        } else {
+          showToast('&#8596;', `Moved "${task.title}" to ${columns.find(c => c.id === newColumn).name}`);
+        }
       }
 
       renderBoard();
       renderPlanner();
+    }
+
+    // ===== Fireworks Celebration =====
+    function launchFireworks() {
+      const canvas = document.createElement('canvas');
+      canvas.className = 'fireworks-canvas';
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      document.body.appendChild(canvas);
+      const ctx = canvas.getContext('2d');
+
+      const particles = [];
+      const colors = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899', '#06b6d4', '#ffffff'];
+
+      // Launch multiple bursts
+      const burstCount = 3;
+      for (let b = 0; b < burstCount; b++) {
+        const cx = canvas.width * (0.25 + Math.random() * 0.5);
+        const cy = canvas.height * (0.2 + Math.random() * 0.3);
+        const count = 40 + Math.floor(Math.random() * 30);
+
+        setTimeout(() => {
+          for (let i = 0; i < count; i++) {
+            const angle = (Math.PI * 2 * i) / count + (Math.random() - 0.5) * 0.5;
+            const speed = 2 + Math.random() * 5;
+            particles.push({
+              x: cx, y: cy,
+              vx: Math.cos(angle) * speed,
+              vy: Math.sin(angle) * speed,
+              life: 1,
+              decay: 0.008 + Math.random() * 0.012,
+              size: 2 + Math.random() * 3,
+              color: colors[Math.floor(Math.random() * colors.length)],
+              trail: []
+            });
+          }
+        }, b * 300);
+      }
+
+      let animFrame;
+      function animate() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        for (let i = particles.length - 1; i >= 0; i--) {
+          const p = particles[i];
+          p.trail.push({ x: p.x, y: p.y, life: p.life });
+          if (p.trail.length > 6) p.trail.shift();
+
+          p.x += p.vx;
+          p.y += p.vy;
+          p.vy += 0.06; // gravity
+          p.vx *= 0.99; // drag
+          p.life -= p.decay;
+
+          // Draw trail
+          for (let t = 0; t < p.trail.length; t++) {
+            const tp = p.trail[t];
+            const alpha = (t / p.trail.length) * tp.life * 0.4;
+            ctx.beginPath();
+            ctx.arc(tp.x, tp.y, p.size * 0.5, 0, Math.PI * 2);
+            ctx.fillStyle = p.color + Math.round(alpha * 255).toString(16).padStart(2, '0');
+            ctx.fill();
+          }
+
+          // Draw particle
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+          ctx.fillStyle = p.color;
+          ctx.globalAlpha = p.life;
+          ctx.fill();
+          ctx.globalAlpha = 1;
+
+          if (p.life <= 0) particles.splice(i, 1);
+        }
+
+        if (particles.length > 0) {
+          animFrame = requestAnimationFrame(animate);
+        } else {
+          cancelAnimationFrame(animFrame);
+          canvas.remove();
+        }
+      }
+      animate();
     }
 
     // ===== Timer Logic =====
@@ -2014,6 +2107,7 @@
       const task = tasks.find(t => t.id === detailTaskId);
       if (!task) return;
 
+      const oldColumn = task.column;
       task.title = document.getElementById('detail-title').value.trim() || task.title;
       task.category = document.getElementById('detail-category').value;
       task.priority = document.getElementById('detail-priority').value;
@@ -2021,6 +2115,11 @@
       task.scheduledDate = document.getElementById('detail-date').value || null;
       task.description = document.getElementById('detail-desc').value.trim();
       task.notes = document.getElementById('detail-notes').value.trim();
+
+      // Fireworks when moved to done
+      if (task.column === 'done' && oldColumn !== 'done') {
+        launchFireworks();
+      }
 
       // Update badge/dot in the modal
       const badge = document.getElementById('detail-category-badge');

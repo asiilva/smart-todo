@@ -75,6 +75,7 @@ An AI-powered task board that:
   - Started at / Completed at (timestamps for time tracking)
   - Created at / Updated at
 - Drag-and-drop repositioning (cards are draggable between columns and reorderable within columns using @dnd-kit)
+- **Completion celebration**: when a task is moved to the "Done" column (via drag-and-drop or detail modal), a fireworks animation plays to reward the user and gamify the experience
 - Task CRUD operations
 - Filtering and search
 - **Time tracking**: start/stop timer on a task to track executed_duration

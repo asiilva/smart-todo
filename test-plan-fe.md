@@ -160,6 +160,7 @@
 - Task appears in correct column with projected_duration badge
 - AI estimation loading indicator appears during creation
 - User drags task from "To Do" to "In Progress"
+- User drags task to "Done" → fireworks animation plays
 - Column task counts update after drag
 - User reorders tasks within a column
 - User starts timer on a task → sees running time
@@ -169,6 +170,10 @@
 - User edits title, description, and notes → saves → changes reflected on board
 - User changes task column from detail modal → board updates
 - User deletes a task (with confirmation)
+- Dragging task to Done column triggers fireworks celebration animation
+- Changing column to Done in task detail modal triggers fireworks celebration animation
+- Fireworks animation does not block user interaction (pointer-events: none)
+- Fireworks canvas is removed after animation completes
 - User filters by category → only matching tasks shown
 - User uses "Today" filter → only today's tasks shown
 

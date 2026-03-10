@@ -138,6 +138,14 @@
 - [ ] Save changes with visual confirmation
 - [ ] Delete task (with confirmation)
 
+### 4.5b Completion Celebration
+- [ ] Canvas-based fireworks animation that plays when a task is moved to "Done"
+- [ ] Triggered from: drag-and-drop to Done column, column change to Done in detail modal
+- [ ] Multiple colorful particle bursts with trails and gravity
+- [ ] Animation is non-blocking (canvas overlay with pointer-events: none)
+- [ ] Auto-cleans up after animation completes
+- [ ] Celebratory toast message: "Task completed! Great job!"
+
 ### 4.6 Board Filtering & Search
 - [ ] Filter bar: by category, priority, assignee, label
 - [ ] Search by title/description
