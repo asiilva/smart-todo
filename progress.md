@@ -22,12 +22,21 @@
 ## Phase 2: Authentication & Multi-Tenancy — ⬜
 | Task | Status | Notes |
 |------|--------|-------|
-| Auth endpoints (register/login/refresh) | ⬜ | |
+| Auth endpoints (register/login/refresh) | ⬜ | Register accepts name, email, password, confirm password, org name |
 | JWT middleware | ⬜ | |
+| Google OAuth 2.0 setup (passport-google-oauth20) | ⬜ | GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, GOOGLE_CALLBACK_URL in .env |
+| `GET /api/auth/google` — redirect to Google consent screen | ⬜ | |
+| `GET /api/auth/google/callback` — handle callback, create/find user, issue JWT | ⬜ | Link accounts if same email exists |
+| Add `google_id` field to users table | ⬜ | Nullable, unique |
 | Organization CRUD | ⬜ | |
 | Role-based authorization | ⬜ | |
+| Signup page (`/register`) with form fields + validation | ⬜ | Name, email, password, confirm password, org name; password min 8 chars |
+| "Sign up with Google" button on signup page | ⬜ | Redirects to `GET /api/auth/google` |
+| "Sign in with Google" button on login page | ⬜ | Redirects to `GET /api/auth/google` |
+| Handle OAuth callback redirect on frontend | ⬜ | Read JWT from URL params or cookie |
 | Auth pages (web) | ⬜ | |
-| Auth tests (unit + integration) | ⬜ | |
+| Auth tests — backend (unit + integration) | ⬜ | Includes Google OAuth tests |
+| Auth tests — frontend (unit + E2E) | ⬜ | Includes signup form validation + Google OAuth button tests |
 
 ## Phase 3: User Profiles & Tech Profiling — ⬜
 | Task | Status | Notes |

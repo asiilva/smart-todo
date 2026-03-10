@@ -30,8 +30,20 @@
 - Login form renders email + password fields
 - Login form validates required fields (shows errors)
 - Login form calls API on submit with correct payload
-- Registration form validates email format
-- Registration form validates password strength (min length, etc.)
+- Login page renders "Sign in with Google" button
+- "Sign in with Google" button redirects to `GET /api/auth/google`
+- Signup form renders all fields: name, email, password, confirm password, organization name
+- Signup form validates all fields are required (shows errors for each missing field)
+- Signup form validates email format
+- Signup form validates password minimum 8 characters
+- Signup form validates password and confirm password match (shows error when mismatched)
+- Signup form validates organization name is required
+- Signup form calls `POST /api/auth/register` with correct payload on submit
+- Signup page renders "Sign up with Google" button
+- "Sign up with Google" button redirects to `GET /api/auth/google`
+- After successful signup (email/password), user is redirected to onboarding
+- Auth provider handles OAuth callback redirect: reads JWT from URL params or cookie
+- After successful Google OAuth callback, user is redirected to onboarding (new user) or board (existing user)
 - Auth provider stores token and exposes `user` state
 - Auth provider calls refresh on 401 response
 - Protected route redirects unauthenticated users to `/login`
@@ -119,10 +131,14 @@
 ## 3. Cypress E2E Tests
 
 ### 3.1 Authentication Flow
-- User registers a new account (fills form → submits → redirected to onboarding)
+- User registers a new account via signup form (fills name, email, password, confirm password, org name → submits → redirected to onboarding)
+- User registers via "Sign up with Google" button (clicks → redirected to Google → returns with JWT → redirected to onboarding)
 - User logs in with valid credentials (fills form → submits → redirected to board)
+- User logs in via "Sign in with Google" button (clicks → redirected to Google → returns with JWT → redirected to board)
 - User sees error on invalid credentials
+- User sees validation errors on signup form (missing fields, password mismatch, short password)
 - User is redirected to login when session expires (token removed → navigate → lands on /login)
+- OAuth callback redirect is handled correctly (JWT extracted from URL params or cookie, stored in auth context)
 
 ### 3.2 Onboarding Flow
 - New user sees onboarding after registration

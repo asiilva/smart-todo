@@ -34,7 +34,13 @@ An AI-powered task board that:
 
 ### 3.1 Authentication & Multi-Tenancy
 - JWT-based authentication (access + refresh tokens)
-- User registration with email/password
+- User registration with email/password (name, email, password, confirm password, organization name)
+- Registration/login with Google OAuth 2.0:
+  - "Sign up with Google" button redirects to Google consent screen
+  - Google OAuth callback creates a new user from the Google profile (name, email) or logs in an existing Google user
+  - If a user registered with email/password later signs in with Google using the same email, their accounts are linked (google_id is added to the existing user)
+  - Users created via Google OAuth have their name and email populated from the Google profile
+- After signup (either email/password or Google OAuth), redirect to onboarding flow
 - Users belong to exactly one organization
 - Organization management (create, invite members, remove members)
 - Roles: `owner`, `admin`, `member`
@@ -143,7 +149,7 @@ An AI-powered task board that:
 - **Language**: TypeScript
 - **Database**: PostgreSQL 15+
 - **ORM**: Prisma
-- **Authentication**: JWT (jsonwebtoken + bcrypt)
+- **Authentication**: JWT (jsonwebtoken + bcrypt), Passport.js with passport-google-oauth20 for Google OAuth 2.0
 - **File Upload**: Multer (resume uploads)
 - **Telegram Bot**: node-telegram-bot-api or grammy
 - **Push Notifications**: web-push (VAPID-based Web Push API)
@@ -172,7 +178,7 @@ The `AIProvider` interface exposes:
 - id, name, slug, created_at, updated_at
 
 **users**
-- id, email, password_hash, name, organization_id, role, created_at, updated_at
+- id, email, password_hash, name, google_id (nullable, unique), organization_id, role, created_at, updated_at
 
 **tech_profiles**
 - id, user_id, raw_text, resume_url, structured_profile (JSONB), created_at, updated_at
@@ -214,6 +220,8 @@ The `AIProvider` interface exposes:
 - `POST /api/auth/register`
 - `POST /api/auth/login`
 - `POST /api/auth/refresh`
+- `GET /api/auth/google` — redirect to Google OAuth 2.0 consent screen
+- `GET /api/auth/google/callback` — handle Google OAuth callback, create or find user, issue JWT
 
 **Organizations**
 - `POST /api/organizations`

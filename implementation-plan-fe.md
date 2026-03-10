@@ -32,6 +32,7 @@
   - Store access + refresh tokens (httpOnly cookies or secure localStorage)
   - Expose `user`, `login()`, `register()`, `logout()`, `isAuthenticated`
   - Auto-refresh token on 401 responses
+  - Handle OAuth redirect return: read JWT from URL params or cookie after Google callback redirect
 - [ ] Protected route wrapper (redirect to `/login` if unauthenticated)
 - [ ] Public route wrapper (redirect to `/board` if already authenticated)
 
@@ -40,12 +41,19 @@
   - Email + password form
   - Form validation (required fields, email format)
   - Error display (invalid credentials)
+  - "Sign in with Google" button — redirects to `GET /api/auth/google`
   - Link to registration
-- [ ] `GET /register` — Registration page
-  - Name, email, password, organization name fields
+- [ ] `GET /register` — Signup page
+  - Form fields: name, email, password, confirm password, organization name
+  - Password validation: minimum 8 characters, password and confirm password must match
   - Password strength indicator
-  - Form validation
-  - Auto-login after successful registration → redirect to onboarding
+  - Email format validation
+  - All fields required
+  - "Sign up with Google" button — redirects to `GET /api/auth/google`
+  - On successful registration (either method) → redirect to onboarding flow
+- [ ] Handle OAuth callback redirect:
+  - After Google OAuth callback, frontend reads JWT from URL params or cookie
+  - Store token in auth context and redirect to onboarding (new user) or board (existing user)
 - [ ] Unit tests for auth components
 
 ---

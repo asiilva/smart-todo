@@ -23,7 +23,7 @@
 - [ ] Install and configure Prisma
 - [ ] Create initial schema:
   - `organizations` (id, name, slug, created_at, updated_at)
-  - `users` (id, email, password_hash, name, organization_id, role, created_at, updated_at)
+  - `users` (id, email, password_hash, name, google_id nullable unique, organization_id, role, created_at, updated_at)
   - `tech_profiles` (id, user_id, raw_text, resume_url, structured_profile JSONB, created_at, updated_at)
   - `boards` (id, organization_id, name, created_at, updated_at)
   - `columns` (id, board_id, name, position, created_at, updated_at)
@@ -48,16 +48,33 @@
 ## Phase 2: Authentication & Multi-Tenancy
 
 ### 2.1 Auth Module
-- [ ] `POST /api/auth/register` — create user + organization (or join existing)
+- [ ] `POST /api/auth/register` — create user with name, email, password, confirm password, organization name; hash password, create organization, issue JWT
 - [ ] `POST /api/auth/login` — validate credentials, return access + refresh JWT tokens
 - [ ] `POST /api/auth/refresh` — validate refresh token, rotate and return new pair
 - [ ] Auth middleware (verify JWT, attach user to request context)
 - [ ] Password hashing with bcrypt (salt rounds: 12)
-- [ ] Input validation with zod schemas
+- [ ] Input validation with zod schemas (password min 8 chars, email format, required fields)
+
+### 2.2 Google OAuth 2.0
+- [ ] Install and configure Passport.js with `passport-google-oauth20` strategy
+- [ ] Add Google OAuth config: `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, `GOOGLE_CALLBACK_URL` to `.env`
+- [ ] `GET /api/auth/google` — redirect user to Google OAuth 2.0 consent screen (scope: profile, email)
+- [ ] `GET /api/auth/google/callback` — handle OAuth callback:
+  - Exchange authorization code for access token
+  - Extract user profile from Google (name, email, google_id)
+  - If user with this `google_id` exists: log them in, issue JWT
+  - If no user with this `google_id` but a user with the same email exists: link accounts (set `google_id` on existing user), issue JWT
+  - If no user exists: create new user with name and email from Google profile, set `google_id`, create a default organization, issue JWT
+  - Redirect to frontend with JWT (via URL parameter or secure cookie)
+- [ ] Add `google_id` (nullable, unique) field to users table
+- [ ] Unit tests for Google OAuth service (new user, existing user, account linking)
+- [ ] Integration tests for Google OAuth endpoints
+
+### 2.3 Auth Tests
 - [ ] Unit tests for auth service
 - [ ] Integration tests for auth endpoints
 
-### 2.2 Organization Module
+### 2.4 Organization Module
 - [ ] `POST /api/organizations` — create organization
 - [ ] `GET /api/organizations/:id` — get organization details (members list)
 - [ ] `POST /api/organizations/:id/invite` — invite user by email

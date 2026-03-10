@@ -40,6 +40,17 @@
 - Reject expired tokens
 - Reject malformed tokens
 - Reject tokens with invalid signature
+- Registration rejects weak passwords (less than 8 characters)
+- Registration rejects mismatched password and confirm password
+- Registration rejects missing required fields (name, email, password, organization name)
+
+### 2.1b Google OAuth Service
+- Create new user from Google profile when no user exists with that google_id or email
+- Log in existing user when user with matching google_id is found
+- Link accounts when user with same email exists but no google_id — set google_id on existing user
+- Populate name and email from Google profile for new users
+- Issue JWT after successful Google OAuth (new user or existing user)
+- Reject invalid or expired OAuth authorization codes
 
 ### 2.2 Organization Service
 - Create organization with owner role assigned
@@ -114,9 +125,11 @@
 ## 3. Integration Tests
 
 ### 3.1 Auth Endpoints
-- `POST /api/auth/register` — success (creates user + org), duplicate email (409), missing fields (400)
+- `POST /api/auth/register` — success (creates user + org, returns JWT), duplicate email (409), missing fields (400), weak password under 8 chars (400), password mismatch (400)
 - `POST /api/auth/login` — success (returns tokens), wrong password (401), nonexistent user (401)
 - `POST /api/auth/refresh` — success (returns new token pair), expired token (401), invalid token (401)
+- `GET /api/auth/google` — redirects to Google consent screen with correct scope and client_id
+- `GET /api/auth/google/callback` — new Google user created (creates user + org, returns JWT, redirects to frontend), existing Google user logged in (returns JWT), invalid OAuth code (400), Google user with same email as existing email/password user (accounts linked, google_id set)
 
 ### 3.2 Organization Endpoints
 - `POST /api/organizations` — success, missing name (400)
