@@ -135,6 +135,13 @@
 - [ ] Duration comparison display (projected vs executed vs ratio)
 - [ ] Time entries list (start/stop history)
 - [ ] Task history/activity log
+- [ ] **Attachments section**:
+  - File list showing name, size, type icon, and remove button
+  - Drag-and-drop upload zone (accepts files up to 10MB)
+  - Click-to-upload fallback
+  - Upload calls `POST /api/tasks/:id/attachments`
+  - Remove calls `DELETE /api/tasks/:id/attachments/:attachmentId`
+  - Show attachment count indicator on task cards (paperclip icon + count)
 - [ ] Save changes with visual confirmation
 - [ ] Delete task (with confirmation)
 

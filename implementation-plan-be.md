@@ -105,6 +105,17 @@
 - [ ] Unit tests for board/task services
 - [ ] Integration tests for board/task endpoints
 
+### 4.1b Task Attachments Module
+- [ ] Create `task_attachments` TypeORM entity (id, task_id, file_name, file_url, file_size_bytes, mime_type, uploaded_by, created_at)
+- [ ] Run migration for new table
+- [ ] `POST /api/tasks/:id/attachments` — upload file (Multer, max 10MB, store to local/cloud storage)
+- [ ] `GET /api/tasks/:id/attachments` — list attachments for a task
+- [ ] `DELETE /api/tasks/:id/attachments/:attachmentId` — remove attachment (delete file + DB record)
+- [ ] Validate file size (reject > 10MB), validate task ownership
+- [ ] Return attachment metadata in task detail response (`GET /api/boards/:id` includes attachment count per task)
+- [ ] Unit tests for attachment service
+- [ ] Integration tests for attachment endpoints
+
 ### 4.2 Time Tracking Module
 - [ ] `POST /api/tasks/:id/timer/start` — create time_entry with started_at (reject if already running **for the same task**; multiple tasks can have running timers simultaneously)
 - [ ] `POST /api/tasks/:id/timer/stop` — set stopped_at, calculate duration_minutes, update task.executed_duration_minutes

@@ -65,6 +65,12 @@
 - Editing fields in detail modal and clicking Save updates the task
 - Notes field accepts and persists free-form text
 - Delete button in detail modal removes the task (with confirmation)
+- Attachment section renders list of attachments with file name, size, and type icon
+- Attachment remove button calls `DELETE /api/tasks/:id/attachments/:attachmentId` and removes from list
+- Drag-and-drop upload zone accepts files and calls `POST /api/tasks/:id/attachments`
+- Upload rejects files larger than 10MB (shows error)
+- Task card shows paperclip icon with attachment count when attachments exist
+- Task card hides paperclip icon when no attachments
 - Task creation form validates required fields (title)
 - Task creation form includes category selector and scheduled_date picker
 - Drag-and-drop between columns updates task column and position (mock @dnd-kit/core + @dnd-kit/sortable)
@@ -170,6 +176,9 @@
 - User edits title, description, and notes → saves → changes reflected on board
 - User changes task column from detail modal → board updates
 - User deletes a task (with confirmation)
+- User uploads an attachment in detail modal → attachment appears in list
+- User removes an attachment → attachment disappears from list
+- Task card shows attachment count badge after upload
 - Dragging task to Done column triggers celebration modal with fireworks
 - Changing column to Done in task detail modal triggers celebration modal with fireworks
 - Celebration modal displays randomized title, task name, and stats (estimated, actual, done today)

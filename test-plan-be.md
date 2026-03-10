@@ -76,6 +76,14 @@
 - Validate category enum values
 - Set scheduled_date defaults to today if not provided
 
+### 2.4b Attachment Service
+- Store attachment metadata (file_name, file_url, file_size_bytes, mime_type, uploaded_by)
+- Reject files larger than 10MB
+- Delete attachment removes file from storage and DB record
+- Validate task ownership before allowing upload
+- Validate task ownership before allowing delete
+- Return attachment list for a task
+
 ### 2.5 Time Tracking Service
 - Start timer creates a time_entry with started_at = now
 - Stop timer sets stopped_at and calculates duration_minutes
@@ -147,6 +155,11 @@
 - `PUT /api/tasks/:id` — update fields including notes (200), unauthorized user (403)
 - `PATCH /api/tasks/:id/move` — move between columns (200), reorder within column (200)
 - `DELETE /api/tasks/:id` — success (204), not found (404)
+
+### 3.4b Attachment Endpoints
+- `POST /api/tasks/:id/attachments` — success with valid file (201), file too large >10MB (400), unauthorized (401), task not found (404)
+- `GET /api/tasks/:id/attachments` — returns attachment list (200), empty list (200), unauthorized (401)
+- `DELETE /api/tasks/:id/attachments/:attachmentId` — success (204), not found (404), unauthorized (401/403)
 
 ### 3.5 Time Tracking Endpoints
 - `POST /api/tasks/:id/timer/start` — success (201), already running (409)

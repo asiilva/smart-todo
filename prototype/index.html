@@ -598,6 +598,47 @@
     }
     .task-detail-saved.visible { opacity: 1; }
 
+    /* Attachments */
+    .attachments-section { margin-top: 4px; }
+    .attachments-list { display: flex; flex-direction: column; gap: 6px; margin-bottom: 10px; }
+    .attachment-item {
+      display: flex; align-items: center; gap: 10px;
+      padding: 8px 12px; background: var(--bg); border-radius: var(--radius);
+      border: 1px solid var(--border); font-size: 13px;
+    }
+    .attachment-icon {
+      width: 32px; height: 32px; border-radius: 6px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px; flex-shrink: 0;
+    }
+    .attachment-icon.pdf { background: rgba(239,68,68,0.15); color: var(--danger); }
+    .attachment-icon.img { background: rgba(59,130,246,0.15); color: var(--accent); }
+    .attachment-icon.doc { background: rgba(59,130,246,0.15); color: #2563eb; }
+    .attachment-icon.generic { background: rgba(100,116,139,0.15); color: var(--text-dim); }
+    .attachment-info { flex: 1; min-width: 0; }
+    .attachment-name { font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .attachment-meta { font-size: 11px; color: var(--text-dim); }
+    .attachment-remove {
+      width: 24px; height: 24px; border-radius: 50%; border: none;
+      background: transparent; color: var(--text-dim); font-size: 14px;
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
+      transition: all 0.2s; flex-shrink: 0;
+    }
+    .attachment-remove:hover { background: rgba(239,68,68,0.15); color: var(--danger); }
+    .attachment-dropzone {
+      border: 2px dashed var(--border); border-radius: var(--radius);
+      padding: 16px; text-align: center; cursor: pointer;
+      transition: all 0.2s; color: var(--text-dim); font-size: 13px;
+    }
+    .attachment-dropzone:hover { border-color: var(--accent); color: var(--text-muted); }
+    .attachment-dropzone.dragover { border-color: var(--accent); background: rgba(59,130,246,0.05); color: var(--accent); }
+    .attachment-dropzone-icon { font-size: 20px; margin-bottom: 4px; }
+    .attachment-dropzone-text { font-size: 12px; }
+    .attachment-count {
+      font-size: 10px; color: var(--text-dim); background: var(--bg);
+      padding: 1px 6px; border-radius: 8px; margin-left: 4px;
+    }
+
     @media (max-width: 480px) {
       .task-detail-row { grid-template-columns: 1fr; }
       .task-detail-durations { flex-direction: column; gap: 8px; }
@@ -1216,6 +1257,16 @@
           <label>Notes</label>
           <textarea class="task-detail-notes" id="detail-notes" placeholder="Add notes, links, reminders, or any useful information..."></textarea>
         </div>
+        <div class="task-detail-field attachments-section">
+          <label>Attachments <span class="attachment-count" id="detail-attach-count">0</span></label>
+          <div class="attachments-list" id="detail-attachments"></div>
+          <div class="attachment-dropzone" id="detail-dropzone">
+            <div class="attachment-dropzone-icon">&#128206;</div>
+            <div>Drop files here or <strong style="color:var(--accent)">click to browse</strong></div>
+            <div class="attachment-dropzone-text">PDF, images, documents — up to 10MB each</div>
+          </div>
+          <input type="file" id="detail-file-input" multiple style="display:none">
+        </div>
       </div>
       <div class="task-detail-footer">
         <button class="btn-delete-task" id="detail-delete">Delete Task</button>
@@ -1256,6 +1307,10 @@
         projectedMinutes: 120, executedMinutes: 45,
         description: 'Implement register, login, and refresh token endpoints with JWT.',
         notes: 'Using bcrypt with 12 salt rounds. Remember to add rate limiting later.',
+        attachments: [
+          { name: 'auth-flow-diagram.pdf', size: '245 KB', type: 'pdf', addedAt: '2026-03-09' },
+          { name: 'jwt-reference.png', size: '128 KB', type: 'img', addedAt: '2026-03-09' }
+        ],
         scheduledDate: TODAY, timerRunning: true, timerStart: Date.now() - 45 * 60000,
         notified60: false, notified100: false },
       { id: 2, title: 'Fix payment webhook bug', column: 'in-progress',
@@ -1263,19 +1318,23 @@
         projectedMinutes: 60, executedMinutes: 105,
         description: 'Webhook is returning 500 on Stripe signature verification.',
         notes: 'Root cause: webhook secret was rotated but env var not updated. Need to add secret rotation docs.',
+        attachments: [
+          { name: 'error-screenshot.png', size: '340 KB', type: 'img', addedAt: '2026-03-08' }
+        ],
         scheduledDate: TODAY, timerRunning: false, timerStart: null,
         notified60: true, notified100: true },
       { id: 3, title: 'Evening run — 5km', column: 'todo',
         category: 'exercise', priority: 'medium',
         projectedMinutes: 40, executedMinutes: 0,
         description: '', notes: 'Route: park loop x2. Bring water bottle.',
+        attachments: [],
         scheduledDate: TODAY, timerRunning: false, timerStart: null,
         notified60: false, notified100: false },
       { id: 4, title: 'Help daughter with homework', column: 'todo',
         category: 'family', priority: 'high',
         projectedMinutes: 60, executedMinutes: 0,
         description: 'Math homework — fractions and decimals.',
-        notes: '',
+        notes: '', attachments: [],
         scheduledDate: TODAY, timerRunning: false, timerStart: null,
         notified60: false, notified100: false },
       { id: 5, title: 'Write unit tests for task service', column: 'in-progress',
@@ -1283,43 +1342,46 @@
         projectedMinutes: 90, executedMinutes: 10,
         description: 'Cover CRUD operations, position logic, and column moves.',
         notes: 'Use testcontainers for integration tests. Check test-plan-be.md section 2.4.',
+        attachments: [
+          { name: 'test-plan-be.md', size: '12 KB', type: 'doc', addedAt: '2026-03-09' }
+        ],
         scheduledDate: TODAY, timerRunning: true, timerStart: Date.now() - 10 * 60000,
         notified60: false, notified100: false },
       { id: 6, title: 'Read DDIA chapter 5', column: 'backlog',
         category: 'learning', priority: 'low',
         projectedMinutes: 45, executedMinutes: 0,
-        description: 'Chapter 5: Replication', notes: '',
+        description: 'Chapter 5: Replication', notes: '', attachments: [],
         scheduledDate: null, timerRunning: false, timerStart: null,
         notified60: false, notified100: false },
       { id: 7, title: 'Grocery shopping', column: 'backlog',
         category: 'errand', priority: 'low',
         projectedMinutes: 30, executedMinutes: 0,
-        description: '', notes: 'Milk, eggs, bread, chicken, broccoli, rice.',
+        description: '', notes: 'Milk, eggs, bread, chicken, broccoli, rice.', attachments: [],
         scheduledDate: null, timerRunning: false, timerStart: null,
         notified60: false, notified100: false },
       { id: 8, title: 'Review PR #142 — User profile', column: 'review',
         category: 'work', priority: 'medium',
         projectedMinutes: 30, executedMinutes: 25,
         description: 'Review the profile upload and tech profile generation PR.',
-        notes: 'Check file size limits and error handling for unsupported formats.',
+        notes: 'Check file size limits and error handling for unsupported formats.', attachments: [],
         scheduledDate: TODAY, timerRunning: false, timerStart: null,
         notified60: false, notified100: false },
       { id: 9, title: 'Morning meditation', column: 'done',
         category: 'personal', priority: 'low',
         projectedMinutes: 15, executedMinutes: 18,
-        description: '', notes: '',
+        description: '', notes: '', attachments: [],
         scheduledDate: TODAY, timerRunning: false, timerStart: null,
         notified60: false, notified100: false },
       { id: 10, title: 'Daily standup', column: 'done',
         category: 'work', priority: 'medium',
         projectedMinutes: 15, executedMinutes: 12,
-        description: '', notes: 'Discussed blockers on webhook bug. Team aligned on priority.',
+        description: '', notes: 'Discussed blockers on webhook bug. Team aligned on priority.', attachments: [],
         scheduledDate: TODAY, timerRunning: false, timerStart: null,
         notified60: false, notified100: false },
       { id: 11, title: 'Family dinner', column: 'todo',
         category: 'family', priority: 'high',
         projectedMinutes: 120, executedMinutes: 0,
-        description: 'Cook pasta and salad.', notes: '',
+        description: 'Cook pasta and salad.', notes: '', attachments: [],
         scheduledDate: TODAY, timerRunning: false, timerStart: null,
         notified60: false, notified100: false }
     ];
@@ -1679,6 +1741,7 @@
         <div class="task-card-top">
           <span class="category-badge" style="background:${CATEGORY_COLORS[task.category]}">${task.category}</span>
           <span class="priority-dot priority-${task.priority}"></span>
+          ${task.attachments && task.attachments.length > 0 ? `<span style="margin-left:auto;font-size:11px;color:var(--text-dim);display:flex;align-items:center;gap:3px;">&#128206; ${task.attachments.length}</span>` : ''}
         </div>
         <div class="task-title">${task.title}</div>
         <div class="task-footer">
@@ -1948,6 +2011,51 @@
       }
     });
 
+    // ===== Attachment Upload (simulated) =====
+    const dropzone = document.getElementById('detail-dropzone');
+    const fileInput = document.getElementById('detail-file-input');
+
+    dropzone.addEventListener('click', () => fileInput.click());
+    dropzone.addEventListener('dragover', (e) => { e.preventDefault(); dropzone.classList.add('dragover'); });
+    dropzone.addEventListener('dragleave', () => dropzone.classList.remove('dragover'));
+    dropzone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      dropzone.classList.remove('dragover');
+      handleFiles(e.dataTransfer.files);
+    });
+    fileInput.addEventListener('change', (e) => {
+      handleFiles(e.target.files);
+      fileInput.value = '';
+    });
+
+    function handleFiles(files) {
+      const task = tasks.find(t => t.id === detailTaskId);
+      if (!task) return;
+      if (!task.attachments) task.attachments = [];
+
+      for (const file of files) {
+        const ext = file.name.split('.').pop().toLowerCase();
+        let type = 'generic';
+        if (ext === 'pdf') type = 'pdf';
+        else if (['png', 'jpg', 'jpeg', 'gif', 'webp', 'svg'].includes(ext)) type = 'img';
+        else if (['doc', 'docx', 'txt', 'md', 'csv', 'xls', 'xlsx'].includes(ext)) type = 'doc';
+
+        const sizeKB = Math.round(file.size / 1024);
+        const sizeStr = sizeKB >= 1024 ? `${(sizeKB / 1024).toFixed(1)} MB` : `${sizeKB} KB`;
+
+        task.attachments.push({
+          name: file.name,
+          size: sizeStr,
+          type: type,
+          addedAt: new Date().toISOString().split('T')[0]
+        });
+      }
+
+      renderDetailAttachments(task);
+      renderBoard();
+      showToast('&#128206;', `${files.length} file${files.length > 1 ? 's' : ''} attached`);
+    }
+
     // ===== Timer Logic =====
     function toggleTimer(taskId) {
       const task = tasks.find(t => t.id === taskId);
@@ -2197,7 +2305,7 @@
           id: nextId++, title, column: 'todo', category, priority,
           projectedMinutes: estimatedMinutes, executedMinutes: 0,
           description: document.getElementById('task-desc').value.trim(),
-          notes: '',
+          notes: '', attachments: [],
           scheduledDate: date, timerRunning: false, timerStart: null,
           notified60: false, notified100: false
         });
@@ -2254,10 +2362,55 @@
       else if (ratio <= 150) ratioEl.style.color = 'var(--warning)';
       else ratioEl.style.color = 'var(--danger)';
 
+      // Attachments
+      renderDetailAttachments(task);
+
       // Reset saved indicator
       document.getElementById('detail-saved').classList.remove('visible');
 
       detailOverlay.classList.add('active');
+    }
+
+    function getAttachmentIcon(type) {
+      if (type === 'pdf') return { icon: '&#128196;', cls: 'pdf' };
+      if (type === 'img') return { icon: '&#128247;', cls: 'img' };
+      if (type === 'doc') return { icon: '&#128196;', cls: 'doc' };
+      return { icon: '&#128196;', cls: 'generic' };
+    }
+
+    function renderDetailAttachments(task) {
+      const list = document.getElementById('detail-attachments');
+      const count = document.getElementById('detail-attach-count');
+      const attachments = task.attachments || [];
+      count.textContent = attachments.length;
+
+      if (attachments.length === 0) {
+        list.innerHTML = '';
+        return;
+      }
+
+      list.innerHTML = attachments.map((att, idx) => {
+        const ic = getAttachmentIcon(att.type);
+        return `
+          <div class="attachment-item">
+            <div class="attachment-icon ${ic.cls}">${ic.icon}</div>
+            <div class="attachment-info">
+              <div class="attachment-name">${att.name}</div>
+              <div class="attachment-meta">${att.size} &middot; Added ${att.addedAt}</div>
+            </div>
+            <button class="attachment-remove" data-idx="${idx}" title="Remove">&times;</button>
+          </div>`;
+      }).join('');
+
+      list.querySelectorAll('.attachment-remove').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const idx = parseInt(btn.dataset.idx);
+          const removed = task.attachments.splice(idx, 1)[0];
+          renderDetailAttachments(task);
+          renderBoard();
+          showToast('&#128465;', `Removed "${removed.name}"`);
+        });
+      });
     }
 
     // Close

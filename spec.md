@@ -69,6 +69,7 @@ An AI-powered task board that:
   - Column/status
   - Position (row order within column)
   - Notes (free-form text field for links, reminders, or any useful information)
+  - Attachments (files uploaded to a task — PDFs, images, documents, up to 10MB each)
   - Labels/tags
   - Scheduled date (which day this task is planned for)
   - Due date (optional hard deadline)
@@ -195,6 +196,9 @@ The `AIProvider` interface exposes:
 **tasks**
 - id, column_id, title, description, notes (text), projected_duration_minutes, executed_duration_minutes, priority, category, assignee_id, position, labels (JSONB), scheduled_date, due_date, started_at, completed_at, created_at, updated_at
 
+**task_attachments**
+- id, task_id, file_name, file_url, file_size_bytes, mime_type, uploaded_by, created_at
+
 **time_entries**
 - id, task_id, user_id, started_at, stopped_at, duration_minutes
 - *(tracks individual start/stop sessions for a task)*
@@ -252,6 +256,11 @@ The `AIProvider` interface exposes:
 - `PUT /api/tasks/:id`
 - `PATCH /api/tasks/:id/move` (change column/position)
 - `DELETE /api/tasks/:id`
+
+**Task Attachments**
+- `POST /api/tasks/:id/attachments` (upload file, max 10MB)
+- `GET /api/tasks/:id/attachments` (list attachments)
+- `DELETE /api/tasks/:id/attachments/:attachmentId` (remove attachment)
 
 **Time Tracking**
 - `POST /api/tasks/:id/timer/start`
