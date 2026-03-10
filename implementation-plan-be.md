@@ -174,7 +174,7 @@
 ### 5.4 Reports Module
 - [ ] `GET /api/reports/completed` — return completed tasks for a period with summary stats
 - [ ] Query params:
-  - `period` — `day`, `week`, `month` (determines date range from the given `date`)
+  - `period` — `day`, `yesterday`, `week`, `month` (determines date range from the given `date`)
   - `date` — reference date (defaults to today)
   - `from` / `to` — custom date range (overrides `period`)
   - `category` — comma-separated category filter (e.g., `work,exercise`)

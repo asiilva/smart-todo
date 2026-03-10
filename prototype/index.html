@@ -1192,6 +1192,7 @@
         <div class="reports-controls">
           <div class="reports-period-btns">
             <button class="period-btn active" data-period="day">Today</button>
+            <button class="period-btn" data-period="yesterday">Yesterday</button>
             <button class="period-btn" data-period="week">This Week</button>
             <button class="period-btn" data-period="month">This Month</button>
           </div>
@@ -2658,6 +2659,11 @@
       // Period filter
       if (reportPeriod === 'day') {
         filtered = filtered.filter(t => t.completedAt === ref);
+      } else if (reportPeriod === 'yesterday') {
+        const d = new Date(ref);
+        d.setDate(d.getDate() - 1);
+        const yesterday = d.toISOString().split('T')[0];
+        filtered = filtered.filter(t => t.completedAt === yesterday);
       } else if (reportPeriod === 'week') {
         const d = new Date(ref);
         const day = d.getDay();

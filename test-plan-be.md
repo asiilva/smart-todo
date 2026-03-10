@@ -130,6 +130,7 @@
 
 ### 2.7b Reports Service
 - Return completed tasks filtered by day period (single date boundary)
+- Return completed tasks filtered by yesterday period (previous day boundary)
 - Return completed tasks filtered by week period (Mon–Sun boundary)
 - Return completed tasks filtered by month period (1st–last day boundary)
 - Return completed tasks filtered by custom date range (from/to)

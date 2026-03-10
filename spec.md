@@ -114,7 +114,7 @@ An AI-powered task board that:
 
 ### 3.6b Reports
 - **Activity report** showing completed tasks for a selected period
-- **Period filters**: today, this week, this month, custom date range
+- **Period filters**: today, yesterday, this week, this month, custom date range
 - **Category filter**: filter by one or more categories (work, exercise, family, personal, errand, learning)
 - **View modes**:
   - **Full list**: flat chronological list of all completed tasks with duration stats

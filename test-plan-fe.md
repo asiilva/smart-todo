@@ -108,7 +108,7 @@
 - Trend line chart shows weekly accuracy buckets
 
 ### 2.4b Reports Components
-- Reports page renders with period selector buttons (Today, This Week, This Month)
+- Reports page renders with period selector buttons (Today, Yesterday, This Week, This Month)
 - Clicking period button fetches data for that period and updates list
 - Category filter chips toggle on/off and filter displayed tasks
 - View mode toggle switches between Full List and Grouped by Category

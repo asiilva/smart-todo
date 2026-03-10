@@ -224,7 +224,7 @@
 
 ### 5.4 Reports Page
 - [ ] `GET /reports` — Activity reports page (new tab in navigation)
-- [ ] Period selector: Today, This Week, This Month buttons + custom date range picker
+- [ ] Period selector: Today, Yesterday, This Week, This Month buttons + custom date range picker
 - [ ] Category filter: multi-select chips (work, exercise, family, personal, errand, learning)
 - [ ] View mode toggle: Full List | Grouped by Category
 - [ ] **Summary stats bar** (always visible):
