@@ -2,7 +2,7 @@
 
 ## Context
 
-Smart Todo is a **command center for orchestrating parallel Claude-powered work**. The user runs many tasks simultaneously — most executed via Claude CLI prompts — and needs a rich, interactive UI to plan, track, and manage all workstreams without overcommitting. Non-technical tickets (exercise, family, errands) only need duration estimation.
+Smart Todo is a **cockpit for tech professionals** — engineers, product owners, and anyone in a technical role who juggles parallel deliveries while trying to maintain a healthy life balance. It orchestrates parallel Claude-powered work through a rich, interactive UI that plans, tracks, and manages all workstreams with AI-driven time estimation — so users deliver well without overcommitting. Life tasks (exercise, family, errands) sit alongside work tasks with equal visibility, needing only duration estimation.
 
 The original plan targeted a web-based stack (Next.js + Express). This pivots to an **Electron desktop app** that:
 
