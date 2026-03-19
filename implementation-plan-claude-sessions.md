@@ -153,12 +153,12 @@ The task detail panel gets an **Agents** tab:
 
 ## Phase Integration
 
-This feature spans multiple phases:
+This feature spans multiple phases — ~16h additional effort:
 
-- **Phase 1:** Add `task_sessions` to Prisma schema
-- **Phase 3:** Implement `startSession`/`resumeSession` in `claude-cli.ts` + IPC handlers
-- **Phase 4:** Add Agents tab to task detail panel, session management UI
-- **Phase 5:** Use session context for better estimation (feed prior session summaries as history)
+- **Phase 1:** Add `task_sessions` to Prisma schema — ~1h
+- **Phase 3:** Implement `startSession`/`resumeSession` in `claude-cli.ts` + IPC handlers — ~4h
+- **Phase 4:** Add Agents tab to task detail panel, session management UI — ~8h
+- **Phase 5:** Use session context for better estimation (feed prior session summaries as history) — ~3h
 
 ---
 

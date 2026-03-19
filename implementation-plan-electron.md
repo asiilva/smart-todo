@@ -221,81 +221,83 @@ Telegram voice messages are handled server-side (the bot runs on Digital Ocean).
 
 ## Updated Phase Plan
 
-### Phase 1: Project Scaffolding & Infrastructure
-- [ ] Initialize monorepo with workspaces (`apps/desktop`, `apps/api`, `packages/shared`)
-- [ ] Scaffold Electron app with Vite + React + TypeScript + Tailwind
-- [ ] Configure electron-builder (DMG, NSIS, AppImage targets)
-- [ ] Set up preload script with context bridge
-- [ ] Scaffold Express/Fastify API with TypeScript
-- [ ] Set up Prisma + PostgreSQL schema and migrations
-- [ ] Docker Compose for local dev (PostgreSQL + API)
-- [ ] Dockerfile for API (Digital Ocean deployment)
-- [ ] Shared types package
-- [ ] ESLint + Prettier config
-- [ ] CI: GitHub Actions (lint, test, build)
+### Phase 1: Project Scaffolding & Infrastructure — ~14h total
+- [ ] Initialize monorepo with workspaces (`apps/desktop`, `apps/api`, `packages/shared`) — ~1h
+- [ ] Scaffold Electron app with Vite + React + TypeScript + Tailwind — ~2h
+- [ ] Configure electron-builder (DMG, NSIS, AppImage targets) — ~1h
+- [ ] Set up preload script with context bridge — ~1h
+- [ ] Scaffold Express/Fastify API with TypeScript — ~1.5h
+- [ ] Set up Prisma + PostgreSQL schema and migrations — ~2h
+- [ ] Docker Compose for local dev (PostgreSQL + API) — ~1h
+- [ ] Dockerfile for API (Digital Ocean deployment) — ~1h
+- [ ] Shared types package — ~1h
+- [ ] ESLint + Prettier config — ~0.5h
+- [ ] CI: GitHub Actions (lint, test, build) — ~2h
 
-### Phase 2: Authentication & Multi-Tenancy
-- [ ] API: Auth endpoints (register, login, refresh) with JWT
-- [ ] API: Organization CRUD + invite + role-based auth
-- [ ] API: Google OAuth (passport-google-oauth20)
-- [ ] Electron: Login/Register pages
-- [ ] Electron: Secure token storage (safeStorage)
-- [ ] Electron: Custom protocol handler for OAuth callback (`smarttodo://`)
-- [ ] Electron: Auth context/provider with auto-refresh
-- [ ] Electron: Protected route wrappers
+### Phase 2: Authentication & Multi-Tenancy — ~20h total
+- [ ] API: Auth endpoints (register, login, refresh) with JWT — ~3h
+- [ ] API: Organization CRUD + invite + role-based auth — ~4h
+- [ ] API: Google OAuth (passport-google-oauth20) — ~2h
+- [ ] Electron: Login/Register pages — ~3h
+- [ ] Electron: Secure token storage (safeStorage) — ~1.5h
+- [ ] Electron: Custom protocol handler for OAuth callback (`smarttodo://`) — ~2h
+- [ ] Electron: Auth context/provider with auto-refresh — ~2.5h
+- [ ] Electron: Protected route wrappers — ~2h
 
-### Phase 3: User Profiles & Tech Profiling
-- [ ] API: Profile CRUD endpoints
-- [ ] API: Resume upload + text extraction (pdf-parse, mammoth)
-- [ ] Electron: Claude CLI integration (`claude-cli.ts`)
-- [ ] Electron: IPC handlers for AI operations
-- [ ] Electron: First-launch Claude CLI check + setup instructions
-- [ ] Electron: Onboarding flow (skills, resume, profile review, availability)
-- [ ] Electron: Profile page
+### Phase 3: User Profiles & Tech Profiling — ~18h total
+- [ ] API: Profile CRUD endpoints — ~2h
+- [ ] API: Resume upload + text extraction (pdf-parse, mammoth) — ~3h
+- [ ] Electron: Claude CLI integration (`claude-cli.ts`) — ~3h
+- [ ] Electron: IPC handlers for AI operations — ~2h
+- [ ] Electron: First-launch Claude CLI check + setup instructions — ~1.5h
+- [ ] Electron: Onboarding flow (skills, resume, profile review, availability) — ~4h
+- [ ] Electron: Profile page — ~2.5h
 
-### Phase 4: Task Management & Kanban Board
-- [ ] API: Category CRUD (defaults + custom)
-- [ ] API: Board + Task CRUD with position management
-- [ ] API: Task attachments (upload, list, delete)
-- [ ] API: Time tracking (start/stop, time_entries)
-- [ ] API: Web Push (VAPID, subscriptions, preferences, service worker)
-- [ ] Electron: Kanban board with @dnd-kit drag-and-drop
-- [ ] Electron: Task cards, creation modal, detail panel
-- [ ] Electron: AI estimation integration (IPC → Claude CLI → API persist)
-- [ ] Electron: Timer UI with start/stop
-- [ ] Electron: Custom category creation (name + color picker)
-- [ ] Electron: Completion celebration modal
-- [ ] Electron: Notification permission flow + preferences
+### Phase 4: Task Management & Kanban Board — ~36h total
+- [ ] API: Category CRUD (defaults + custom) — ~2h
+- [ ] API: Board + Task CRUD with position management — ~4h
+- [ ] API: Task attachments (upload, list, delete) — ~2.5h
+- [ ] API: Time tracking (start/stop, time_entries) — ~2.5h
+- [ ] API: Web Push (VAPID, subscriptions, preferences, service worker) — ~3h
+- [ ] Electron: Kanban board with @dnd-kit drag-and-drop — ~6h
+- [ ] Electron: Task cards, creation modal, detail panel — ~5h
+- [ ] Electron: AI estimation integration (IPC → Claude CLI → API persist) — ~3h
+- [ ] Electron: Timer UI with start/stop — ~2.5h
+- [ ] Electron: Custom category creation (name + color picker) — ~1.5h
+- [ ] Electron: Completion celebration modal — ~2h
+- [ ] Electron: Notification permission flow + preferences — ~2h
 
-### Phase 5: AI ETA Estimation & Daily Planner
-- [ ] Electron: Estimation prompt engineering (reuse prompt templates)
-- [ ] Electron: Task text parsing via Claude CLI
-- [ ] API: Daily planner endpoints (settings, protected blocks, overbooking)
-- [ ] API: Insights endpoints (accuracy, category breakdown)
-- [ ] API: Reports endpoints (period/category filters, grouped, export)
-- [ ] Electron: Planner page (timeline, time blocks, day summary)
-- [ ] Electron: Insights dashboard (accuracy, trends, charts)
-- [ ] Electron: Reports page (filters, list/grouped views, CSV export)
+### Phase 5: AI ETA Estimation & Daily Planner — ~28h total
+- [ ] Electron: Estimation prompt engineering (reuse prompt templates) — ~3h
+- [ ] Electron: Task text parsing via Claude CLI — ~2h
+- [ ] API: Daily planner endpoints (settings, protected blocks, overbooking) — ~3h
+- [ ] API: Insights endpoints (accuracy, category breakdown) — ~3h
+- [ ] API: Reports endpoints (period/category filters, grouped, export) — ~3h
+- [ ] Electron: Planner page (timeline, time blocks, day summary) — ~6h
+- [ ] Electron: Insights dashboard (accuracy, trends, charts) — ~4h
+- [ ] Electron: Reports page (filters, list/grouped views, CSV export) — ~4h
 
-### Phase 6: Telegram Integration
-- [ ] API: Telegram bot (webhook mode on Digital Ocean)
-- [ ] API: Account linking flow (6-digit code)
-- [ ] API: Text message → task handler (server-side AI or simple parsing)
-- [ ] API: Voice message → transcribe → task handler
-- [ ] API: Bot commands (/list, /done, /status, /today, /help)
-- [ ] API: Telegram duration alerts (60%/100%)
-- [ ] Electron: Telegram settings page (link/unlink)
+### Phase 6: Telegram Integration — ~18h total
+- [ ] API: Telegram bot (webhook mode on Digital Ocean) — ~3h
+- [ ] API: Account linking flow (6-digit code) — ~2h
+- [ ] API: Text message → task handler (server-side simple parsing) — ~2h
+- [ ] API: Voice message → transcribe → task handler — ~3h
+- [ ] API: Bot commands (/list, /done, /status, /today, /help) — ~3h
+- [ ] API: Telegram duration alerts (60%/100%) — ~2h
+- [ ] Electron: Telegram settings page (link/unlink) — ~3h
 
-### Phase 7: Polish & Production
-- [ ] Electron: Auto-updates (electron-updater + GitHub Releases)
-- [ ] Electron: System tray (Show/Hide/Quit)
-- [ ] Electron: First-run setup wizard
-- [ ] Electron: Loading skeletons, toasts, error boundaries, empty states
-- [ ] Electron: Responsive layout (sidebar collapse, etc.)
-- [ ] API: Global error handling + logging
-- [ ] API: Rate limiting
-- [ ] API: Dockerized deployment to Digital Ocean
-- [ ] CI: Build + publish Electron app for macOS/Windows/Linux
+### Phase 7: Polish & Production — ~22h total
+- [ ] Electron: Auto-updates (electron-updater + GitHub Releases) — ~3h
+- [ ] Electron: System tray (Show/Hide/Quit) — ~1h
+- [ ] Electron: First-run setup wizard — ~3h
+- [ ] Electron: Loading skeletons, toasts, error boundaries, empty states — ~4h
+- [ ] Electron: Responsive layout (sidebar collapse, etc.) — ~3h
+- [ ] API: Global error handling + logging — ~2h
+- [ ] API: Rate limiting — ~1.5h
+- [ ] API: Dockerized deployment to Digital Ocean — ~2.5h
+- [ ] CI: Build + publish Electron app for macOS/Windows/Linux — ~2h
+
+### Total estimated effort: ~156h
 
 ---
 
