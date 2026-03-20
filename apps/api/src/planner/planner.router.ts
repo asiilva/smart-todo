@@ -43,34 +43,31 @@ plannerRouter.get('/:date', async (req, res, next) => {
       throw new AppError(400, 'Date must be in YYYY-MM-DD format');
     }
 
-    // Use noon UTC to avoid timezone boundary issues with @db.Date
-    const targetDate = new Date(date + 'T12:00:00.000Z');
-    const dayOfWeek = targetDate.getUTCDay();
+    const dayOfWeek = new Date(date + 'T12:00:00.000Z').getUTCDay();
 
-    // For Prisma @db.Date, compare using a range to avoid timezone issues
-    const startOfDay = new Date(date + 'T00:00:00.000Z');
-    const endOfDay = new Date(date + 'T23:59:59.999Z');
+    // Use raw SQL for date comparison to avoid Prisma timezone conversion issues
+    const taskIds = await prisma.$queryRaw<Array<{ id: string }>>`
+      SELECT t.id FROM tasks t
+      JOIN columns c ON t.column_id = c.id
+      JOIN boards b ON c.board_id = b.id
+      WHERE b.user_id = ${userId}
+      AND t.scheduled_date = ${date}::date
+    `;
 
-    // Fetch tasks scheduled for this date
-    const tasks = await prisma.task.findMany({
-      where: {
-        scheduledDate: { gte: startOfDay, lte: endOfDay },
-        column: {
-          board: {
-            userId,
+    const tasks = taskIds.length > 0
+      ? await prisma.task.findMany({
+          where: { id: { in: taskIds.map(t => t.id) } },
+          select: {
+            id: true,
+            title: true,
+            projectedDurationMinutes: true,
+            executedDurationMinutes: true,
+            category: true,
+            priority: true,
           },
-        },
-      },
-      select: {
-        id: true,
-        title: true,
-        projectedDurationMinutes: true,
-        executedDurationMinutes: true,
-        category: true,
-        priority: true,
-      },
-      orderBy: { position: 'asc' },
-    });
+          orderBy: { position: 'asc' },
+        })
+      : [];
 
     // Fetch protected time blocks (recurring by day_of_week OR specific_date match)
     const protectedBlocks = await prisma.protectedTimeBlock.findMany({
@@ -78,7 +75,7 @@ plannerRouter.get('/:date', async (req, res, next) => {
         userId,
         OR: [
           { recurring: true, dayOfWeek },
-          { specificDate: targetDate },
+          { specificDate: new Date(date + 'T12:00:00.000Z') },
         ],
       },
       select: {
