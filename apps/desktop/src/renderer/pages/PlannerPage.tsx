@@ -91,7 +91,7 @@ export default function PlannerPage() {
   if (loading) {
     return (
       <div className="p-6 flex items-center justify-center h-full">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600" />
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-accent" />
       </div>
     );
   }
@@ -101,16 +101,16 @@ export default function PlannerPage() {
       {/* Date navigation */}
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-3">
-          <button onClick={prevDay} className="p-1 hover:bg-gray-100 rounded">
-            <ChevronLeft size={20} />
+          <button onClick={prevDay} className="btn-secondary !px-2.5 !py-1.5">
+            <ChevronLeft size={18} />
           </button>
-          <h1 className="text-xl font-bold">{formatDisplayDate(date)}</h1>
-          <button onClick={nextDay} className="p-1 hover:bg-gray-100 rounded">
-            <ChevronRight size={20} />
+          <h1 className="text-[20px] font-bold text-text">{formatDisplayDate(date)}</h1>
+          <button onClick={nextDay} className="btn-secondary !px-2.5 !py-1.5">
+            <ChevronRight size={18} />
           </button>
         </div>
         {!isToday && (
-          <button onClick={today} className="text-sm text-primary-600 hover:underline">
+          <button onClick={today} className="btn-primary">
             Today
           </button>
         )}
@@ -120,25 +120,31 @@ export default function PlannerPage() {
         <>
           {/* Overbooked warning */}
           {plan.summary.isOverbooked && (
-            <div className="bg-red-50 border border-red-200 rounded-lg p-3 mb-4 flex items-center gap-2">
-              <AlertTriangle size={18} className="text-red-500" />
-              <span className="text-sm text-red-700">
+            <div
+              className="rounded-[14px] p-3.5 mb-4 flex items-center gap-2.5"
+              style={{
+                background: 'rgba(240,85,110,0.06)',
+                border: '1px solid rgba(240,85,110,0.2)',
+              }}
+            >
+              <AlertTriangle size={18} className="text-danger flex-shrink-0" />
+              <span className="text-[13px] text-danger">
                 Day is overbooked! {formatMinutes(plan.summary.totalProjectedMinutes)} projected vs {formatMinutes(plan.summary.availableMinutes)} available.
               </span>
             </div>
           )}
 
           {/* Summary bar */}
-          <div className="bg-white rounded-lg border p-4 mb-6">
+          <div className="bg-white rounded-[16px] border border-border p-5 mb-6 shadow-sm">
             <div className="flex items-center justify-between mb-3">
-              <h2 className="text-sm font-semibold text-gray-700">Day Summary</h2>
-              <span className="text-sm text-gray-500">
+              <h2 className="text-[12px] font-bold uppercase tracking-wide text-text-muted">Day Summary</h2>
+              <span className="text-[13px] text-text-muted">
                 {formatMinutes(plan.summary.totalProjectedMinutes)} / {formatMinutes(plan.summary.availableMinutes)} available
               </span>
             </div>
 
             {/* Category breakdown bar */}
-            <div className="h-4 bg-gray-100 rounded-full overflow-hidden flex">
+            <div className="h-2 bg-bg rounded-pill overflow-hidden flex">
               {Object.entries(plan.summary.categoryBreakdown).map(([cat, minutes]) => (
                 <div
                   key={cat}
@@ -157,16 +163,16 @@ export default function PlannerPage() {
               {Object.entries(plan.summary.categoryBreakdown).map(([cat, minutes]) => (
                 <div key={cat} className="flex items-center gap-1.5">
                   <div
-                    className="w-3 h-3 rounded-full"
+                    className="w-2.5 h-2.5 rounded-full"
                     style={{ backgroundColor: categoryColors[cat] || '#6B7280' }}
                   />
-                  <span className="text-xs text-gray-600">{cat}: {formatMinutes(minutes)}</span>
+                  <span className="text-[12px] text-text-muted">{cat}: {formatMinutes(minutes)}</span>
                 </div>
               ))}
               {plan.summary.availableMinutes > plan.summary.totalProjectedMinutes && (
                 <div className="flex items-center gap-1.5">
-                  <div className="w-3 h-3 rounded-full bg-gray-200" />
-                  <span className="text-xs text-gray-600">
+                  <div className="w-2.5 h-2.5 rounded-full bg-bg" />
+                  <span className="text-[12px] text-text-muted">
                     free: {formatMinutes(plan.summary.availableMinutes - plan.summary.totalProjectedMinutes)}
                   </span>
                 </div>
@@ -177,21 +183,21 @@ export default function PlannerPage() {
           {/* Protected blocks */}
           {plan.protectedBlocks.length > 0 && (
             <div className="mb-6">
-              <h2 className="text-sm font-semibold text-gray-700 mb-2">Protected Time</h2>
-              <div className="space-y-2">
+              <h2 className="text-[12px] font-bold uppercase tracking-wide text-text-muted mb-3">Protected Time</h2>
+              <div className="space-y-0">
                 {plan.protectedBlocks.map((block) => (
                   <div
                     key={block.id}
-                    className="flex items-center gap-3 bg-gray-50 border border-dashed border-gray-300 rounded-lg px-4 py-2"
+                    className="flex items-center gap-3 px-4 py-2.5 border-b border-dashed border-border"
                   >
-                    <span className="text-sm font-medium text-gray-500 w-28">
+                    <span className="text-[13px] font-medium text-text-dim w-28">
                       {block.startTime} – {block.endTime}
                     </span>
                     <div
-                      className="w-2 h-2 rounded-full"
+                      className="w-2.5 h-2.5 rounded-full flex-shrink-0"
                       style={{ backgroundColor: categoryColors[block.category] || '#6B7280' }}
                     />
-                    <span className="text-sm text-gray-700">{block.title}</span>
+                    <span className="text-[13px] text-text">{block.title}</span>
                   </div>
                 ))}
               </div>
@@ -200,11 +206,11 @@ export default function PlannerPage() {
 
           {/* Tasks list */}
           <div>
-            <h2 className="text-sm font-semibold text-gray-700 mb-2">
+            <h2 className="text-[12px] font-bold uppercase tracking-wide text-text-muted mb-3">
               Tasks ({plan.tasks.length})
             </h2>
             {plan.tasks.length === 0 ? (
-              <div className="bg-gray-50 border border-dashed border-gray-300 rounded-lg p-8 text-center text-gray-400">
+              <div className="border-2 border-dashed border-border rounded-[14px] p-12 text-center text-text-dim">
                 No tasks scheduled for this day.
               </div>
             ) : (
@@ -212,24 +218,24 @@ export default function PlannerPage() {
                 {plan.tasks.map((task) => (
                   <div
                     key={task.id}
-                    className="flex items-center gap-3 bg-white border rounded-lg px-4 py-3"
+                    className="flex items-center gap-3 bg-white border border-border rounded-[14px] px-5 py-3.5 transition-all duration-200 hover:shadow-card hover:-translate-y-px cursor-default"
                   >
                     <div
                       className="w-3 h-3 rounded-full flex-shrink-0"
                       style={{ backgroundColor: categoryColors[task.category] || '#6B7280' }}
                     />
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium text-gray-800 truncate">{task.title}</p>
-                      <p className="text-xs text-gray-400">{task.category} · {task.priority}</p>
+                      <p className="text-[14px] font-medium text-text truncate">{task.title}</p>
+                      <p className="text-[11px] text-text-dim">{task.category} · {task.priority}</p>
                     </div>
                     <div className="text-right flex-shrink-0">
                       {task.projectedDurationMinutes && (
-                        <p className="text-sm font-medium text-gray-600">
+                        <p className="text-[13px] font-semibold text-text">
                           {formatMinutes(task.projectedDurationMinutes)}
                         </p>
                       )}
                       {task.executedDurationMinutes > 0 && (
-                        <p className="text-xs text-gray-400">
+                        <p className="text-[11px] text-text-dim">
                           {formatMinutes(task.executedDurationMinutes)} done
                         </p>
                       )}
@@ -243,9 +249,9 @@ export default function PlannerPage() {
       )}
 
       {!plan && (
-        <div className="text-center text-gray-500 py-12">
+        <div className="border-2 border-dashed border-border rounded-[14px] p-12 text-center text-text-dim">
           <p>Could not load plan for this day.</p>
-          <button onClick={loadPlan} className="mt-2 text-primary-600 hover:underline text-sm">
+          <button onClick={loadPlan} className="mt-2 text-accent hover:text-accent-hover text-sm font-medium">
             Retry
           </button>
         </div>

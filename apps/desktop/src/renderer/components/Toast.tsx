@@ -32,10 +32,10 @@ const icons = {
   info: Info,
 };
 
-const colors = {
-  success: 'bg-green-50 border-green-200 text-green-800',
-  error: 'bg-red-50 border-red-200 text-red-800',
-  info: 'bg-blue-50 border-blue-200 text-blue-800',
+const borderColors = {
+  success: '#2CC197',
+  error: '#F0556E',
+  info: '#7C5CFC',
 };
 
 export default function ToastContainer() {
@@ -51,11 +51,20 @@ export default function ToastContainer() {
         return (
           <div
             key={toast.id}
-            className={`flex items-center gap-2 px-4 py-3 rounded-lg border shadow-lg animate-slide-in ${colors[toast.type]}`}
+            className="flex items-center gap-2.5 px-4 py-3 rounded-[14px] border border-border shadow animate-slide-in"
+            style={{
+              background: 'rgba(255,255,255,0.92)',
+              backdropFilter: 'blur(12px)',
+              WebkitBackdropFilter: 'blur(12px)',
+              borderLeft: `3px solid ${borderColors[toast.type]}`,
+            }}
           >
-            <Icon size={16} />
-            <span className="text-sm">{toast.message}</span>
-            <button onClick={() => removeToast(toast.id)} className="ml-2 opacity-50 hover:opacity-100">
+            <Icon size={16} style={{ color: borderColors[toast.type] }} className="flex-shrink-0" />
+            <span className="text-[13px] font-medium text-text">{toast.message}</span>
+            <button
+              onClick={() => removeToast(toast.id)}
+              className="ml-2 text-text-dim hover:text-text transition-colors"
+            >
               <X size={14} />
             </button>
           </div>
