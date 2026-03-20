@@ -77,6 +77,7 @@ boardRouter.post('/', async (req, res, next) => {
           include: {
             tasks: {
               orderBy: { position: 'asc' },
+              include: { timeEntries: true },
             },
           },
         },
@@ -103,6 +104,9 @@ boardRouter.get('/:id', async (req, res, next) => {
           include: {
             tasks: {
               orderBy: { position: 'asc' },
+              include: {
+                timeEntries: true,
+              },
             },
           },
         },
