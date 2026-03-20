@@ -10,7 +10,8 @@
     "resolveJsonModule": true,
     "declaration": false,
     "sourceMap": true,
-    "outDir": "./dist/main"
+    "rootDir": "./src",
+    "outDir": "./dist"
   },
   "include": ["src/main", "src/preload"]
 }

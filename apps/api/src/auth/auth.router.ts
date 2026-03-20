@@ -121,7 +121,7 @@ authRouter.post('/register', async (req, res, next) => {
 
     const tokens = generateTokens(user);
 
-    res.status(201).json({ user, ...tokens });
+    res.status(201).json({ user, tokens });
   } catch (err) {
     next(err);
   }
@@ -160,7 +160,7 @@ authRouter.post('/login', async (req, res, next) => {
     const tokens = generateTokens(user);
 
     const { passwordHash: _, ...safeUser } = user;
-    res.json({ user: safeUser, ...tokens });
+    res.json({ user: safeUser, tokens });
   } catch (err) {
     next(err);
   }
@@ -188,7 +188,7 @@ authRouter.post('/refresh', async (req, res, next) => {
 
     const tokens = generateTokens({ id: payload.userId, email: payload.email });
 
-    res.json(tokens);
+    res.json({ tokens });
   } catch (err) {
     next(err);
   }
