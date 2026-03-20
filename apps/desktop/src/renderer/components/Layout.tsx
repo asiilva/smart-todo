@@ -1,6 +1,6 @@
 import { Outlet, NavLink } from 'react-router-dom';
 import { useAuthStore } from '../stores/auth-store';
-import { LayoutDashboard, Calendar, User, LogOut, Bell, Moon, Sun } from 'lucide-react';
+import { LayoutDashboard, Calendar, User, LogOut, Moon, Sun } from 'lucide-react';
 import { useThemeStore } from '../stores/theme-store';
 
 const navItems = [

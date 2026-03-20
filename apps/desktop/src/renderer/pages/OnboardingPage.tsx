@@ -39,7 +39,7 @@ export default function OnboardingPage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-bg">
-      <div className="max-w-lg w-full bg-white rounded-xl shadow p-9 border border-border">
+      <div className="max-w-lg w-full bg-[var(--color-surface)] rounded-xl shadow p-9 border border-border">
         {/* Progress dots */}
         <div className="flex justify-center gap-2 mb-8">
           {[1, 2].map((s) => (

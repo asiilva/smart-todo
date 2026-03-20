@@ -2,27 +2,7 @@ import { useDroppable } from '@dnd-kit/core';
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import SortableTaskCard from './SortableTaskCard';
 import { Plus } from 'lucide-react';
-
-interface Task {
-  id: string;
-  columnId: string;
-  title: string;
-  description?: string;
-  projectedDurationMinutes?: number;
-  executedDurationMinutes: number;
-  priority: string;
-  category: string;
-  position: number;
-  labels: string[];
-  timeEntries?: Array<{ id: string; startedAt: string; stoppedAt?: string; durationMinutes?: number }>;
-}
-
-interface Column {
-  id: string;
-  name: string;
-  position: number;
-  tasks: Task[];
-}
+import { Task, Column } from '../types';
 
 interface Props {
   column: Column;

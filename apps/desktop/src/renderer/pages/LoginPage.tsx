@@ -19,7 +19,8 @@ export default function LoginPage() {
       await login(email, password);
       navigate('/board');
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Login failed');
+      const axiosErr = err as any;
+      setError(axiosErr?.response?.data?.error || (err instanceof Error ? err.message : 'Login failed'));
     } finally {
       setLoading(false);
     }

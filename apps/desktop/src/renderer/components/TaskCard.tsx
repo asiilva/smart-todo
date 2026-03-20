@@ -1,18 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Clock, Play, Square } from 'lucide-react';
 import { formatMinutes, categoryColors } from '../utils/format';
-
-interface Task {
-  id: string;
-  title: string;
-  description?: string;
-  projectedDurationMinutes?: number;
-  executedDurationMinutes: number;
-  priority: string;
-  category: string;
-  labels: string[];
-  timeEntries?: Array<{ id: string; startedAt: string; stoppedAt?: string; durationMinutes?: number }>;
-}
+import { Task } from '../types';
 
 interface Props {
   task: Task;

@@ -1,12 +1,6 @@
 import { useEffect, useState } from 'react';
 import { formatMinutes } from '../utils/format';
-
-interface Task {
-  id: string;
-  title: string;
-  projectedDurationMinutes?: number;
-  executedDurationMinutes: number;
-}
+import { Task } from '../types';
 
 interface Props {
   task: Task;
@@ -30,6 +24,12 @@ export default function CelebrationModal({ task, onClose }: Props) {
   const [message] = useState(() => messages[Math.floor(Math.random() * messages.length)]);
 
   useEffect(() => {
+    const handleEsc = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose(); };
+    window.addEventListener('keydown', handleEsc);
+    return () => window.removeEventListener('keydown', handleEsc);
+  }, [onClose]);
+
+  useEffect(() => {
     const timeout = setTimeout(onClose, 8000);
     return () => clearTimeout(timeout);
   }, [onClose]);
@@ -48,7 +48,7 @@ export default function CelebrationModal({ task, onClose }: Props) {
       <div
         className="relative w-full max-w-[480px] mx-4 rounded-[28px] text-center border border-border"
         style={{
-          background: 'linear-gradient(135deg, #FFFFFF 0%, #F7F5FF 100%)',
+          background: 'linear-gradient(135deg, var(--color-surface) 0%, var(--color-bg) 100%)',
           boxShadow: '0 0 60px rgba(124,92,252,0.12), 0 20px 60px rgba(0,0,0,0.08)',
           padding: '48px 56px',
         }}

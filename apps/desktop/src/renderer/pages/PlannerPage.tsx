@@ -2,15 +2,7 @@ import { useState, useEffect } from 'react';
 import { ChevronLeft, ChevronRight, AlertTriangle } from 'lucide-react';
 import { apiClient } from '../services/api-client';
 import { formatMinutes, categoryColors } from '../utils/format';
-
-interface Task {
-  id: string;
-  title: string;
-  projectedDurationMinutes?: number;
-  executedDurationMinutes: number;
-  category: string;
-  priority: string;
-}
+import { Task } from '../types';
 
 interface ProtectedBlock {
   id: string;
@@ -54,12 +46,6 @@ function formatDisplayDate(date: Date): string {
 function timeToMinutes(time: string): number {
   const [h, m] = time.split(':').map(Number);
   return h * 60 + m;
-}
-
-function minutesToTime(minutes: number): string {
-  const h = Math.floor(minutes / 60);
-  const m = minutes % 60;
-  return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`;
 }
 
 export default function PlannerPage() {
@@ -156,9 +142,9 @@ export default function PlannerPage() {
 
         {/* Timeline */}
         {plan && (
-          <div className="relative ml-[60px]" style={{ borderLeft: '2px solid #E8E5F5' }}>
+          <div className="relative ml-[60px]" style={{ borderLeft: '2px solid var(--color-border)' }}>
             {hours.map((hour) => (
-              <div key={hour} className="relative" style={{ height: SLOT_HEIGHT, borderBottom: '1px dashed #E8E5F5' }}>
+              <div key={hour} className="relative" style={{ height: SLOT_HEIGHT, borderBottom: '1px dashed var(--color-border)' }}>
                 <span className="absolute text-[11px] text-text-dim w-[50px] text-right"
                   style={{ left: -60, top: -8 }}>
                   {String(hour).padStart(2, '0')}:00

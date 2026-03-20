@@ -1,20 +1,7 @@
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import TaskCard from './TaskCard';
-
-interface Task {
-  id: string;
-  columnId: string;
-  title: string;
-  description?: string;
-  projectedDurationMinutes?: number;
-  executedDurationMinutes: number;
-  priority: string;
-  category: string;
-  position: number;
-  labels: string[];
-  timeEntries?: Array<{ id: string; startedAt: string; stoppedAt?: string; durationMinutes?: number }>;
-}
+import { Task } from '../types';
 
 interface Props {
   task: Task;
@@ -34,7 +21,7 @@ export default function SortableTaskCard({ task, onClick }: Props) {
 
   return (
     <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
-      <TaskCard task={task} onClick={onClick} />
+      <TaskCard task={task} onClick={onClick} isDragging={isDragging} />
     </div>
   );
 }

@@ -1,12 +1,7 @@
 import { useState, useEffect } from 'react';
 import { X } from 'lucide-react';
 import { apiClient } from '../services/api-client';
-
-interface Column {
-  id: string;
-  name: string;
-  position: number;
-}
+import { Column } from '../types';
 
 interface Props {
   boardId: string;
@@ -28,6 +23,12 @@ export default function CreateTaskModal({ boardId, columnId, columns, onClose, o
   const [estimation, setEstimation] = useState<{ projectedDurationMinutes: number; reasoning: string } | null>(null);
   const [error, setError] = useState('');
   const [categories, setCategories] = useState<Array<{id: string; name: string; color: string}>>([]);
+
+  useEffect(() => {
+    const handleEsc = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose(); };
+    window.addEventListener('keydown', handleEsc);
+    return () => window.removeEventListener('keydown', handleEsc);
+  }, [onClose]);
 
   useEffect(() => {
     apiClient.get('/categories').then(res => setCategories(res.data)).catch(() => {});
@@ -169,7 +170,7 @@ export default function CreateTaskModal({ boardId, columnId, columns, onClose, o
                 onChange={(e) => setSelectedColumnId(e.target.value)}
                 className="form-input"
               >
-                {columns.sort((a, b) => a.position - b.position).map((col) => (
+                {[...columns].sort((a, b) => a.position - b.position).map((col) => (
                   <option key={col.id} value={col.id}>{col.name}</option>
                 ))}
               </select>

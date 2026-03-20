@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
-import { DndContext, DragEndEvent, DragOverEvent, DragStartEvent, closestCorners, DragOverlay, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
-import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
+import { DndContext, DragEndEvent, DragStartEvent, closestCorners, DragOverlay, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
 import { useNavigate } from 'react-router-dom';
 import { apiClient } from '../services/api-client';
 import KanbanColumn from '../components/KanbanColumn';
@@ -10,36 +9,7 @@ import TaskDetailPanel from '../components/TaskDetailPanel';
 import CelebrationModal from '../components/CelebrationModal';
 import { useToastStore } from '../components/Toast';
 import { Plus } from 'lucide-react';
-
-interface Task {
-  id: string;
-  columnId: string;
-  title: string;
-  description?: string;
-  projectedDurationMinutes?: number;
-  executedDurationMinutes: number;
-  priority: string;
-  category: string;
-  position: number;
-  labels: string[];
-  scheduledDate?: string;
-  startedAt?: string;
-  completedAt?: string;
-  timeEntries?: Array<{ id: string; startedAt: string; stoppedAt?: string; durationMinutes?: number }>;
-}
-
-interface Column {
-  id: string;
-  name: string;
-  position: number;
-  tasks: Task[];
-}
-
-interface Board {
-  id: string;
-  name: string;
-  columns: Column[];
-}
+import { Task, Column, Board } from '../types';
 
 // Tech profile requirement expires 2026-06-19 (3 months from launch)
 const PROFILE_REQUIRED_UNTIL = new Date('2026-06-19');
@@ -170,10 +140,6 @@ export default function BoardPage() {
     }
   };
 
-  const handleDragOver = (_event: DragOverEvent) => {
-    // Visual feedback handled by dnd-kit
-  };
-
   const findTask = (id: string): Task | undefined => {
     if (!board) return undefined;
     for (const col of board.columns) {
@@ -231,7 +197,6 @@ export default function BoardPage() {
           sensors={sensors}
           collisionDetection={closestCorners}
           onDragStart={handleDragStart}
-          onDragOver={handleDragOver}
           onDragEnd={handleDragEnd}
         >
           <div className="flex gap-4 h-full">

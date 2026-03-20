@@ -19,7 +19,8 @@ export default function RegisterPage() {
       await register(form);
       navigate('/onboarding');
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Registration failed');
+      const axiosErr = err as any;
+      setError(axiosErr?.response?.data?.error || (err instanceof Error ? err.message : 'Registration failed'));
     } finally {
       setLoading(false);
     }

@@ -69,6 +69,7 @@ export const useAuthStore = create<AuthState>((set) => ({
         set({ isLoading: false });
       }
     } catch {
+      await window.electronAPI.clearToken();
       set({ isLoading: false });
     }
   },

@@ -3,30 +3,7 @@ import { X, Play, Square, Clock } from 'lucide-react';
 import { apiClient } from '../services/api-client';
 import { useToastStore } from './Toast';
 import { formatMinutes } from '../utils/format';
-
-interface TimeEntry {
-  id: string;
-  startedAt: string;
-  stoppedAt?: string;
-  durationMinutes?: number;
-}
-
-interface Task {
-  id: string;
-  columnId: string;
-  title: string;
-  description?: string;
-  notes?: string;
-  projectedDurationMinutes?: number;
-  executedDurationMinutes: number;
-  priority: string;
-  category: string;
-  position: number;
-  labels: string[];
-  scheduledDate?: string;
-  dueDate?: string;
-  timeEntries?: TimeEntry[];
-}
+import { Task, TimeEntry } from '../types';
 
 interface Props {
   task: Task;
@@ -67,6 +44,12 @@ export default function TaskDetailPanel({ task, onClose, onUpdated }: Props) {
     const interval = setInterval(update, 1000);
     return () => clearInterval(interval);
   }, [activeEntry]);
+
+  useEffect(() => {
+    const handleEsc = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose(); };
+    window.addEventListener('keydown', handleEsc);
+    return () => window.removeEventListener('keydown', handleEsc);
+  }, [onClose]);
 
   useEffect(() => {
     loadTimeEntries();
@@ -120,6 +103,7 @@ export default function TaskDetailPanel({ task, onClose, onUpdated }: Props) {
   };
 
   const handleDelete = async () => {
+    if (!window.confirm('Are you sure you want to delete this task? This cannot be undone.')) return;
     try {
       await apiClient.delete(`/tasks/${task.id}`);
       onUpdated();
@@ -151,7 +135,7 @@ export default function TaskDetailPanel({ task, onClose, onUpdated }: Props) {
           onChange={(e) => setTitle(e.target.value)}
           className="text-lg font-bold bg-transparent border-0 border-b border-border pb-2 w-full focus:border-accent focus:outline-none transition-colors"
           style={{ boxShadow: 'none' }}
-          onFocus={(e) => e.target.style.boxShadow = '0 2px 0 0 #7C5CFC'}
+          onFocus={(e) => e.target.style.boxShadow = '0 2px 0 0 var(--color-accent)'}
           onBlur={(e) => e.target.style.boxShadow = 'none'}
         />
 
