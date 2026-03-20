@@ -136,7 +136,7 @@ export default function ProfilePage() {
   }
 
   return (
-    <div className="p-6 max-w-4xl">
+    <div className="p-6 max-w-5xl mx-auto">
       <h1 className="text-[20px] font-bold text-text mb-6">Tech Profile</h1>
 
       {claudeAvailable === false && (
@@ -150,152 +150,114 @@ export default function ProfilePage() {
       )}
 
       {error && (
-        <div
-          className="rounded-[14px] px-4 py-3 mb-4 text-[13px] text-danger"
-          style={{
-            background: 'rgba(240,85,110,0.08)',
-            border: '1px solid rgba(240,85,110,0.2)',
-          }}
-        >
+        <div className="rounded-[14px] px-4 py-3 mb-4 text-[13px] text-danger"
+          style={{ background: 'rgba(240,85,110,0.08)', border: '1px solid rgba(240,85,110,0.2)' }}>
           {error}
         </div>
       )}
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Left: Input */}
-        <div>
-          <label className="form-label mb-2">
-            Describe your skills and experience
-          </label>
-          <textarea
-            value={rawText}
-            onChange={(e) => setRawText(e.target.value)}
-            className="form-input h-64 resize-none"
-            placeholder="e.g., I'm a senior full-stack developer with 8 years of experience. Proficient in TypeScript, React, Node.js, Python. Experience with AWS, Docker, PostgreSQL. Domain expertise in fintech and e-commerce."
-          />
-          <div className="flex gap-2 mt-3">
-            <button
-              onClick={handleSave}
-              disabled={saving}
-              className="btn-primary"
-            >
-              {saving ? 'Saving...' : 'Save Profile'}
+      {/* Skills Input — full width */}
+      <div className="bg-white rounded-[16px] border border-border p-6 mb-6" style={{ boxShadow: '0 1px 3px rgba(0,0,0,0.04), 0 2px 8px rgba(0,0,0,0.04)' }}>
+        <label className="form-label mb-2">Describe your skills and experience</label>
+        <textarea
+          value={rawText}
+          onChange={(e) => setRawText(e.target.value)}
+          className="form-input h-32 resize-none"
+          placeholder="e.g., I'm a senior full-stack developer with 8 years of experience. Proficient in TypeScript, React, Node.js, Python. Experience with AWS, Docker, PostgreSQL."
+        />
+        <div className="flex gap-2 mt-3">
+          <button onClick={handleSave} disabled={saving} className="btn-primary">
+            {saving ? 'Saving...' : 'Save Profile'}
+          </button>
+          {claudeAvailable !== false && (
+            <button onClick={handleGenerate} disabled={generating}
+              className="px-5 py-2.5 text-sm font-semibold rounded-pill border-0 cursor-pointer text-white transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed bg-text hover:bg-text/90">
+              {generating ? 'Generating...' : 'Generate AI Profile'}
             </button>
-            {claudeAvailable !== false && (
-              <button
-                onClick={handleGenerate}
-                disabled={generating}
-                className="px-5 py-2.5 text-sm font-semibold rounded-pill border-0 cursor-pointer text-white transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed bg-text hover:bg-text/90"
-              >
-                {generating ? 'Generating...' : 'Generate AI Profile'}
-              </button>
-            )}
-          </div>
-        </div>
-
-        {/* Right: Structured profile */}
-        <div>
-          {structuredProfile ? (
-            <div className="space-y-4">
-              <div className="bg-white rounded-[14px] border border-border p-5">
-                <h3 className="text-[14px] font-semibold text-text-muted mb-2">Experience</h3>
-                <p className="text-[24px] font-extrabold text-accent">
-                  {structuredProfile.yearsOfExperience} years
-                </p>
-              </div>
-
-              {structuredProfile.languages.length > 0 && (
-                <div className="bg-white rounded-[14px] border border-border p-5">
-                  <h3 className="text-[14px] font-semibold text-text-muted mb-2">Languages</h3>
-                  <div className="flex flex-wrap gap-2">
-                    {structuredProfile.languages.map((lang) => (
-                      <span
-                        key={lang.name}
-                        className={`px-3 py-1 rounded-pill text-[12px] font-medium ${proficiencyColors[lang.proficiency] || 'bg-bg text-text-dim'}`}
-                      >
-                        {lang.name} · {lang.proficiency}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {structuredProfile.frameworks.length > 0 && (
-                <div className="bg-white rounded-[14px] border border-border p-5">
-                  <h3 className="text-[14px] font-semibold text-text-muted mb-2">Frameworks</h3>
-                  <div className="flex flex-wrap gap-2">
-                    {structuredProfile.frameworks.map((fw) => (
-                      <span
-                        key={fw.name}
-                        className={`px-3 py-1 rounded-pill text-[12px] font-medium ${proficiencyColors[fw.proficiency] || 'bg-bg text-text-dim'}`}
-                      >
-                        {fw.name} · {fw.proficiency}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {structuredProfile.domains.length > 0 && (
-                <div className="bg-white rounded-[14px] border border-border p-5">
-                  <h3 className="text-[14px] font-semibold text-text-muted mb-2">Domains</h3>
-                  <div className="flex flex-wrap gap-2">
-                    {structuredProfile.domains.map((domain) => (
-                      <span
-                        key={domain}
-                        className="px-3 py-1 rounded-pill text-[12px] font-medium bg-accent/10 text-accent"
-                      >
-                        {domain}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              )}
-            </div>
-          ) : (
-            <div className="border-2 border-dashed border-border rounded-[14px] p-8 text-center text-text-dim">
-              <p className="text-[14px]">No structured profile yet.</p>
-              <p className="text-[13px] mt-1">
-                Enter your skills description and click "Generate AI Profile" to create one.
-              </p>
-            </div>
           )}
         </div>
       </div>
 
-      {/* Daily Availability */}
-      <div className="mt-8">
-        <h2 className="text-[20px] font-bold text-text mb-4">Daily Availability</h2>
-        <div className="bg-white rounded-[14px] border border-border p-5">
-          <p className="text-[13px] text-text-muted mb-4">
-            Set your available hours so the planner knows when you can work. This is used to calculate if your day is overbooked.
-          </p>
-          <div className="grid grid-cols-2 gap-4 max-w-sm">
-            <div>
-              <label className="form-label">From</label>
-              <input
-                type="time"
-                value={availableFrom}
-                onChange={(e) => setAvailableFrom(e.target.value)}
-                className="form-input"
-              />
-            </div>
-            <div>
-              <label className="form-label">Until</label>
-              <input
-                type="time"
-                value={availableUntil}
-                onChange={(e) => setAvailableUntil(e.target.value)}
-                className="form-input"
-              />
-            </div>
+      {/* Structured Profile */}
+      {structuredProfile ? (
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+          {/* Experience — small card */}
+          <div className="bg-white rounded-[16px] border border-border p-5" style={{ boxShadow: '0 1px 3px rgba(0,0,0,0.04), 0 2px 8px rgba(0,0,0,0.04)' }}>
+            <h3 className="text-xs font-bold uppercase tracking-[0.5px] text-text-muted mb-2">Experience</h3>
+            <p className="text-[28px] font-extrabold text-accent leading-none">{structuredProfile.yearsOfExperience}</p>
+            <p className="text-xs text-text-muted mt-1">years</p>
           </div>
-          <button
-            onClick={handleSaveSettings}
-            disabled={savingSettings}
-            className="btn-primary mt-4"
-          >
-            {savingSettings ? 'Saving...' : 'Save Availability'}
+
+          {/* Languages — spans 3 cols */}
+          {structuredProfile.languages.length > 0 && (
+            <div className="col-span-1 lg:col-span-3 bg-white rounded-[16px] border border-border p-5" style={{ boxShadow: '0 1px 3px rgba(0,0,0,0.04), 0 2px 8px rgba(0,0,0,0.04)' }}>
+              <h3 className="text-xs font-bold uppercase tracking-[0.5px] text-text-muted mb-3">Languages</h3>
+              <div className="flex flex-wrap gap-2">
+                {structuredProfile.languages.map((lang) => (
+                  <span key={lang.name}
+                    className={`px-3 py-1 rounded-pill text-[11px] font-semibold ${proficiencyColors[lang.proficiency] || 'bg-bg text-text-dim'}`}>
+                    {lang.name} · {lang.proficiency}
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Frameworks — full width */}
+          {structuredProfile.frameworks.length > 0 && (
+            <div className="col-span-2 lg:col-span-2 bg-white rounded-[16px] border border-border p-5" style={{ boxShadow: '0 1px 3px rgba(0,0,0,0.04), 0 2px 8px rgba(0,0,0,0.04)' }}>
+              <h3 className="text-xs font-bold uppercase tracking-[0.5px] text-text-muted mb-3">Frameworks & Tools</h3>
+              <div className="flex flex-wrap gap-2">
+                {structuredProfile.frameworks.map((fw) => (
+                  <span key={fw.name}
+                    className={`px-3 py-1 rounded-pill text-[11px] font-semibold ${proficiencyColors[fw.proficiency] || 'bg-bg text-text-dim'}`}>
+                    {fw.name} · {fw.proficiency}
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Domains */}
+          {structuredProfile.domains.length > 0 && (
+            <div className="col-span-2 lg:col-span-2 bg-white rounded-[16px] border border-border p-5" style={{ boxShadow: '0 1px 3px rgba(0,0,0,0.04), 0 2px 8px rgba(0,0,0,0.04)' }}>
+              <h3 className="text-xs font-bold uppercase tracking-[0.5px] text-text-muted mb-3">Domains</h3>
+              <div className="flex flex-wrap gap-2">
+                {structuredProfile.domains.map((domain) => (
+                  <span key={domain}
+                    className="px-3 py-1 rounded-pill text-[11px] font-semibold bg-accent/10 text-accent">
+                    {domain}
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      ) : (
+        <div className="border-2 border-dashed border-border rounded-[16px] p-10 text-center text-text-dim mb-6">
+          <p className="text-3xl mb-2">🧠</p>
+          <p className="text-[14px] font-medium">No structured profile yet</p>
+          <p className="text-[12px] mt-1">Enter your skills above and click "Generate AI Profile"</p>
+        </div>
+      )}
+
+      {/* Daily Availability */}
+      <div className="bg-white rounded-[16px] border border-border p-6" style={{ boxShadow: '0 1px 3px rgba(0,0,0,0.04), 0 2px 8px rgba(0,0,0,0.04)' }}>
+        <h2 className="text-xs font-bold uppercase tracking-[0.5px] text-text-muted mb-4">Daily Availability</h2>
+        <p className="text-[13px] text-text-muted mb-4">
+          Set your available hours so the planner can calculate if your day is overbooked.
+        </p>
+        <div className="flex items-end gap-4">
+          <div>
+            <label className="form-label">From</label>
+            <input type="time" value={availableFrom} onChange={(e) => setAvailableFrom(e.target.value)} className="form-input w-[140px]" />
+          </div>
+          <div>
+            <label className="form-label">Until</label>
+            <input type="time" value={availableUntil} onChange={(e) => setAvailableUntil(e.target.value)} className="form-input w-[140px]" />
+          </div>
+          <button onClick={handleSaveSettings} disabled={savingSettings} className="btn-primary">
+            {savingSettings ? 'Saving...' : 'Save'}
           </button>
         </div>
       </div>
