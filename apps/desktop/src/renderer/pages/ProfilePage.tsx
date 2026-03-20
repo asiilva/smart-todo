@@ -35,15 +35,43 @@ export default function ProfilePage() {
   const [generating, setGenerating] = useState(false);
   const [error, setError] = useState('');
   const [claudeAvailable, setClaudeAvailable] = useState<boolean | null>(null);
+  const [availableFrom, setAvailableFrom] = useState('07:00');
+  const [availableUntil, setAvailableUntil] = useState('22:00');
+  const [savingSettings, setSavingSettings] = useState(false);
 
   useEffect(() => {
     loadProfile();
+    loadDailySettings();
     checkClaude();
   }, []);
 
   const checkClaude = async () => {
     const available = await window.electronAPI.checkClaudeAvailable();
     setClaudeAvailable(available);
+  };
+
+  const loadDailySettings = async () => {
+    try {
+      const res = await apiClient.get(`/planner/${new Date().toISOString().split('T')[0]}`);
+      if (res.data?.settings) {
+        setAvailableFrom(res.data.settings.availableFrom);
+        setAvailableUntil(res.data.settings.availableUntil);
+      }
+    } catch {
+      // Use defaults
+    }
+  };
+
+  const handleSaveSettings = async () => {
+    setSavingSettings(true);
+    setError('');
+    try {
+      await apiClient.put('/planner/settings', { availableFrom, availableUntil });
+    } catch {
+      setError('Failed to save availability settings');
+    } finally {
+      setSavingSettings(false);
+    }
   };
 
   const loadProfile = async () => {
@@ -220,6 +248,43 @@ export default function ProfilePage() {
               </p>
             </div>
           )}
+        </div>
+      </div>
+
+      {/* Daily Availability */}
+      <div className="mt-8">
+        <h2 className="text-xl font-bold mb-4">Daily Availability</h2>
+        <div className="bg-white rounded-lg border border-gray-200 p-4">
+          <p className="text-sm text-gray-500 mb-4">
+            Set your available hours so the planner knows when you can work. This is used to calculate if your day is overbooked.
+          </p>
+          <div className="grid grid-cols-2 gap-4 max-w-sm">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">From</label>
+              <input
+                type="time"
+                value={availableFrom}
+                onChange={(e) => setAvailableFrom(e.target.value)}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Until</label>
+              <input
+                type="time"
+                value={availableUntil}
+                onChange={(e) => setAvailableUntil(e.target.value)}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+              />
+            </div>
+          </div>
+          <button
+            onClick={handleSaveSettings}
+            disabled={savingSettings}
+            className="mt-4 px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 disabled:opacity-50 transition-colors"
+          >
+            {savingSettings ? 'Saving...' : 'Save Availability'}
+          </button>
         </div>
       </div>
     </div>
