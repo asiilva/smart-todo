@@ -218,16 +218,16 @@ Dropped from full schema: organizations, task_attachments, task_history, push_su
 | Electron: Day summary bar (projected vs available, category breakdown) | ~1.5h | included above | [x] |
 | Electron: Overbooked warning | ~1h | included above | [x] |
 
-### Phase 6: Polish — estimated ~6h | actual: ___
+### Phase 6: Polish — estimated ~6h | actual: ~1min
 | Task | Estimated | Actual | Status |
 |------|-----------|--------|--------|
-| Electron: Loading states and error handling | ~1.5h | | [ ] |
-| Electron: Empty states (no tasks, no board) | ~1h | | [ ] |
-| Electron: Toast notifications for actions (task created, timer started, etc.) | ~1h | | [ ] |
-| API: Input validation with Zod on all endpoints | ~1.5h | | [ ] |
-| API: Global error handler + structured logging | ~1h | | [ ] |
+| Electron: Loading states and error handling | ~1.5h | built into all pages | [x] |
+| Electron: Empty states (no tasks, no board) | ~1h | built into BoardPage/PlannerPage | [x] |
+| Electron: Toast notifications for actions (task created, timer started, etc.) | ~1h | ~0.5min | [x] |
+| API: Input validation with Zod on all endpoints | ~1.5h | done in P2-P5 | [x] |
+| API: Global error handler + structured logging | ~1h | done in P1 | [x] |
 
-### Total MVP effort — estimated: ~64h | actual: ___
+### Total MVP effort — estimated: ~64h | actual: ~22min
 
 ---
 
