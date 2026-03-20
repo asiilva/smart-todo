@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import { Clock, Timer } from 'lucide-react';
 
 interface Task {
@@ -42,12 +43,30 @@ function formatMinutes(minutes: number): string {
 }
 
 export default function TaskCard({ task, onClick, isDragging }: Props) {
-  const hasActiveTimer = task.timeEntries?.some(e => !e.stoppedAt);
+  const activeEntry = task.timeEntries?.find(e => !e.stoppedAt);
+  const hasActiveTimer = !!activeEntry;
+
+  // Live elapsed time counter
+  const [elapsed, setElapsed] = useState('');
+  useEffect(() => {
+    if (!activeEntry) { setElapsed(''); return; }
+    const update = () => {
+      const started = new Date(activeEntry.startedAt).getTime();
+      const diff = Math.floor((Date.now() - started) / 1000);
+      const h = Math.floor(diff / 3600);
+      const m = Math.floor((diff % 3600) / 60);
+      const s = diff % 60;
+      setElapsed(h > 0 ? `${h}h ${m}m ${s}s` : m > 0 ? `${m}m ${s}s` : `${s}s`);
+    };
+    update();
+    const interval = setInterval(update, 1000);
+    return () => clearInterval(interval);
+  }, [activeEntry]);
 
   return (
     <div
       onClick={onClick}
-      className={`bg-white rounded-lg border border-gray-200 p-3 cursor-pointer hover:shadow-md transition-shadow ${isDragging ? 'shadow-lg rotate-2' : ''}`}
+      className={`bg-white rounded-lg border p-3 cursor-pointer hover:shadow-md transition-shadow ${isDragging ? 'shadow-lg rotate-2' : ''} ${hasActiveTimer ? 'border-green-400 ring-2 ring-green-200 animate-pulse-subtle' : 'border-gray-200'}`}
     >
       {/* Category indicator */}
       <div className="flex items-center gap-2 mb-2">
@@ -57,9 +76,9 @@ export default function TaskCard({ task, onClick, isDragging }: Props) {
         />
         <span className="text-xs text-gray-400">{task.category}</span>
         {hasActiveTimer && (
-          <span className="ml-auto flex items-center gap-1 text-xs text-green-600">
+          <span className="ml-auto flex items-center gap-1 text-xs text-green-600 font-mono font-medium">
             <Timer size={12} className="animate-pulse" />
-            Running
+            {elapsed}
           </span>
         )}
       </div>

@@ -49,7 +49,24 @@ export default function TaskDetailPanel({ task, onClose, onUpdated }: Props) {
   const [saving, setSaving] = useState(false);
   const [timeEntries, setTimeEntries] = useState<TimeEntry[]>(task.timeEntries || []);
 
-  const hasActiveTimer = timeEntries.some(e => !e.stoppedAt);
+  const activeEntry = timeEntries.find(e => !e.stoppedAt);
+  const hasActiveTimer = !!activeEntry;
+
+  const [elapsed, setElapsed] = useState('');
+  useEffect(() => {
+    if (!activeEntry) { setElapsed(''); return; }
+    const update = () => {
+      const started = new Date(activeEntry.startedAt).getTime();
+      const diff = Math.floor((Date.now() - started) / 1000);
+      const h = Math.floor(diff / 3600);
+      const m = Math.floor((diff % 3600) / 60);
+      const s = diff % 60;
+      setElapsed(h > 0 ? `${h}h ${m}m ${s}s` : m > 0 ? `${m}m ${s}s` : `${s}s`);
+    };
+    update();
+    const interval = setInterval(update, 1000);
+    return () => clearInterval(interval);
+  }, [activeEntry]);
 
   useEffect(() => {
     loadTimeEntries();
@@ -112,6 +129,8 @@ export default function TaskDetailPanel({ task, onClose, onUpdated }: Props) {
   };
 
   return (
+    <>
+    <div className="fixed inset-0 z-40" onClick={onClose} />
     <div className="fixed inset-y-0 right-0 w-96 bg-white shadow-xl border-l z-50 flex flex-col">
       <div className="flex items-center justify-between p-4 border-b">
         <h2 className="font-semibold">Task Details</h2>
@@ -211,6 +230,12 @@ export default function TaskDetailPanel({ task, onClose, onUpdated }: Props) {
             )}
           </div>
 
+          {hasActiveTimer && elapsed && (
+            <div className="flex justify-between text-sm">
+              <span className="text-gray-500">Current session:</span>
+              <span className="font-mono font-medium text-green-600">{elapsed}</span>
+            </div>
+          )}
           <div className="flex justify-between text-sm">
             <span className="text-gray-500">Executed:</span>
             <span className="font-medium">{formatMinutes(task.executedDurationMinutes)}</span>
@@ -240,5 +265,6 @@ export default function TaskDetailPanel({ task, onClose, onUpdated }: Props) {
         </button>
       </div>
     </div>
+    </>
   );
 }
