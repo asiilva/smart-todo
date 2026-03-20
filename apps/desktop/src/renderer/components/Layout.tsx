@@ -17,7 +17,7 @@ export default function Layout() {
   return (
     <div className="flex flex-col h-screen bg-bg">
       {/* Top Navbar — frosted glass */}
-      <header className="drag-region h-[60px] flex items-center justify-between px-6 border-b border-border z-50 shrink-0"
+      <header className="drag-region h-[60px] flex items-center justify-between pl-20 pr-6 border-b border-border z-50 shrink-0"
         style={{
           background: isDark ? 'rgba(26,23,38,0.85)' : 'rgba(255,255,255,0.85)',
           backdropFilter: 'blur(16px)',
