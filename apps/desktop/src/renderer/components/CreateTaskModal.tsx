@@ -22,6 +22,7 @@ export default function CreateTaskModal({ boardId, columnId, columns, onClose, o
   const [priority, setPriority] = useState('medium');
   const [category, setCategory] = useState('work');
   const [selectedColumnId, setSelectedColumnId] = useState(columnId || columns[0]?.id || '');
+  const [scheduledDate, setScheduledDate] = useState(new Date().toISOString().split('T')[0]);
   const [loading, setLoading] = useState(false);
   const [estimating, setEstimating] = useState(false);
   const [estimation, setEstimation] = useState<{ projectedDurationMinutes: number; reasoning: string } | null>(null);
@@ -62,6 +63,7 @@ export default function CreateTaskModal({ boardId, columnId, columns, onClose, o
         category,
         columnId: selectedColumnId,
         projectedDurationMinutes: estimation?.projectedDurationMinutes,
+        scheduledDate: scheduledDate || undefined,
       });
       onCreated();
     } catch (err) {
@@ -104,6 +106,16 @@ export default function CreateTaskModal({ boardId, columnId, columns, onClose, o
               onChange={(e) => setDescription(e.target.value)}
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent h-20 resize-none"
               placeholder="Optional details..."
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Scheduled Date</label>
+            <input
+              type="date"
+              value={scheduledDate}
+              onChange={(e) => setScheduledDate(e.target.value)}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
             />
           </div>
 
