@@ -208,15 +208,15 @@ Dropped from full schema: organizations, task_attachments, task_history, push_su
 | Electron: Task creation modal with AI estimation (IPC → Claude CLI → API persist) | ~2h | ~0.5min | [x] |
 | Electron: Task detail panel (edit fields, view time entries) | ~2h | ~0.5min | [x] |
 
-### Phase 5: Daily Planner — estimated ~10h | actual: ___
+### Phase 5: Daily Planner — estimated ~10h | actual: ~3min
 | Task | Estimated | Actual | Status |
 |------|-----------|--------|--------|
-| API: Daily planner endpoint (tasks for date + time blocks + availability) | ~2h | | [ ] |
-| API: Daily settings CRUD (available_from/until) | ~1h | | [ ] |
-| API: Protected time blocks CRUD | ~1.5h | | [ ] |
-| Electron: Planner page with visual timeline | ~3h | | [ ] |
-| Electron: Day summary bar (projected vs available, category breakdown) | ~1.5h | | [ ] |
-| Electron: Overbooked warning | ~1h | | [ ] |
+| API: Daily planner endpoint (tasks for date + time blocks + availability) | ~2h | ~1min | [x] |
+| API: Daily settings CRUD (available_from/until) | ~1h | ~0.5min | [x] |
+| API: Protected time blocks CRUD | ~1.5h | ~0.5min | [x] |
+| Electron: Planner page with visual timeline | ~3h | ~1min | [x] |
+| Electron: Day summary bar (projected vs available, category breakdown) | ~1.5h | included above | [x] |
+| Electron: Overbooked warning | ~1h | included above | [x] |
 
 ### Phase 6: Polish — estimated ~6h | actual: ___
 | Task | Estimated | Actual | Status |
