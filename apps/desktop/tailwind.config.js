@@ -9,23 +9,23 @@ export default {
       },
       colors: {
         accent: {
-          DEFAULT: '#7C5CFC',
+          DEFAULT: 'var(--color-accent)',
           hover: '#6344E0',
-          soft: '#F0EDFF',
+          soft: 'var(--color-accent-soft)',
         },
-        surface: '#FFFFFF',
+        surface: 'var(--color-surface)',
         danger: '#F0556E',
         warning: '#F5A623',
         success: '#2CC197',
-        border: '#E8E5F5',
+        border: 'var(--color-border)',
         bg: {
-          DEFAULT: '#F7F5FF',
-          hover: '#F0EDFF',
+          DEFAULT: 'var(--color-bg)',
+          hover: 'var(--color-bg-hover)',
         },
         text: {
-          DEFAULT: '#1E1B3A',
-          muted: '#6B6894',
-          dim: '#9B98B8',
+          DEFAULT: 'var(--color-text)',
+          muted: 'var(--color-text-muted)',
+          dim: 'var(--color-text-dim)',
         },
       },
       borderRadius: {

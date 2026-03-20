@@ -18,15 +18,15 @@
   }
 
   .dark {
-    --color-bg: #13111C;
-    --color-bg-hover: #1E1B2E;
-    --color-surface: #1A1726;
-    --color-text: #E8E5F5;
-    --color-text-muted: #9B98B8;
-    --color-text-dim: #6B6894;
-    --color-border: #2A2640;
+    --color-bg: #0F0D19;
+    --color-bg-hover: #1A1728;
+    --color-surface: #1E1B2E;
+    --color-text: #EDEAF5;
+    --color-text-muted: #A8A4C0;
+    --color-text-dim: #706C8A;
+    --color-border: #302C48;
     --color-accent: #9B7FFF;
-    --color-accent-soft: #1E1A30;
+    --color-accent-soft: #252140;
   }
 
   body {
