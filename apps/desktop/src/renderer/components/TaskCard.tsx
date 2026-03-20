@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Clock, Timer } from 'lucide-react';
+import { Clock, Play, Square } from 'lucide-react';
 import { formatMinutes, categoryColors } from '../utils/format';
 
 interface Task {
@@ -20,18 +20,17 @@ interface Props {
   isDragging?: boolean;
 }
 
-const priorityColors: Record<string, string> = {
-  low: 'bg-gray-100 text-gray-600',
-  medium: 'bg-blue-100 text-blue-600',
-  high: 'bg-orange-100 text-orange-600',
-  critical: 'bg-red-100 text-red-600',
+const priorityDotColors: Record<string, string> = {
+  critical: '#F0556E',
+  high: '#F5A623',
+  medium: '#7C5CFC',
+  low: '#9B98B8',
 };
 
 export default function TaskCard({ task, onClick, isDragging }: Props) {
   const activeEntry = task.timeEntries?.find(e => !e.stoppedAt);
   const hasActiveTimer = !!activeEntry;
 
-  // Live elapsed time counter
   const [elapsed, setElapsed] = useState('');
   useEffect(() => {
     if (!activeEntry) { setElapsed(''); return; }
@@ -48,58 +47,71 @@ export default function TaskCard({ task, onClick, isDragging }: Props) {
     return () => clearInterval(interval);
   }, [activeEntry]);
 
+  const catColor = categoryColors[task.category] || '#6B6894';
+
   return (
     <div
       onClick={onClick}
-      className={`bg-white rounded-lg border p-3 cursor-pointer hover:shadow-md transition-shadow ${isDragging ? 'shadow-lg rotate-2' : ''} ${hasActiveTimer ? 'border-green-400 ring-2 ring-green-200 animate-pulse-subtle' : 'border-gray-200'}`}
+      className={`bg-white rounded-[14px] border p-3.5 cursor-grab select-none transition-all duration-200
+        ${isDragging ? 'opacity-60 scale-[0.97] rotate-1 border-accent shadow-lift' : 'border-border hover:border-accent/30 hover:shadow-card hover:-translate-y-px'}
+        ${hasActiveTimer ? 'border-success ring-2 ring-success/20 animate-pulse-subtle' : ''}`}
+      style={{ boxShadow: isDragging ? undefined : '0 1px 3px rgba(0,0,0,0.03)' }}
     >
-      {/* Category indicator */}
-      <div className="flex items-center gap-2 mb-2">
+      {/* Top: Category badge + Priority dot */}
+      <div className="flex items-center gap-1.5 mb-2">
+        <span
+          className="text-[10px] font-bold uppercase tracking-wide text-white px-2.5 py-0.5 rounded-pill"
+          style={{ backgroundColor: catColor }}
+        >
+          {task.category}
+        </span>
         <div
           className="w-2 h-2 rounded-full"
-          style={{ backgroundColor: categoryColors[task.category] || '#6B7280' }}
+          style={{
+            backgroundColor: priorityDotColors[task.priority] || '#9B98B8',
+            boxShadow: task.priority === 'critical' ? `0 0 6px ${priorityDotColors.critical}` : undefined,
+          }}
         />
-        <span className="text-xs text-gray-400">{task.category}</span>
         {hasActiveTimer && (
-          <span className="ml-auto flex items-center gap-1 text-xs text-green-600 font-mono font-medium">
-            <Timer size={12} className="animate-pulse" />
+          <span className="ml-auto text-[11px] font-bold font-mono text-success">
             {elapsed}
           </span>
         )}
       </div>
 
       {/* Title */}
-      <h4 className="text-sm font-medium text-gray-800 mb-2">{task.title}</h4>
+      <h4 className="text-sm font-semibold leading-snug text-text mb-2.5">{task.title}</h4>
 
-      {/* Footer */}
+      {/* Footer: Durations + Timer */}
       <div className="flex items-center justify-between">
-        <span className={`text-xs px-1.5 py-0.5 rounded ${priorityColors[task.priority] || ''}`}>
-          {task.priority}
-        </span>
+        <div className="flex items-center gap-1.5">
+          {task.projectedDurationMinutes != null && (
+            <span className="text-[10px] font-bold px-2 py-0.5 rounded-pill"
+              style={{ background: 'rgba(155,152,184,0.12)', color: '#9B98B8' }}>
+              <Clock size={10} className="inline -mt-px mr-0.5" />
+              {formatMinutes(task.projectedDurationMinutes)}
+            </span>
+          )}
+          {task.executedDurationMinutes > 0 && (
+            <span className="text-[10px] font-bold px-2 py-0.5 rounded-pill"
+              style={{
+                background: task.projectedDurationMinutes && task.executedDurationMinutes > task.projectedDurationMinutes
+                  ? 'rgba(240,85,110,0.12)' : 'rgba(44,193,151,0.12)',
+                color: task.projectedDurationMinutes && task.executedDurationMinutes > task.projectedDurationMinutes
+                  ? '#F0556E' : '#2CC197',
+              }}>
+              {formatMinutes(task.executedDurationMinutes)}
+            </span>
+          )}
+        </div>
 
-        {(task.projectedDurationMinutes || task.executedDurationMinutes > 0) && (
-          <div className="flex items-center gap-1 text-xs text-gray-400">
-            <Clock size={12} />
-            {task.executedDurationMinutes > 0 && (
-              <span>{formatMinutes(task.executedDurationMinutes)}</span>
-            )}
-            {task.projectedDurationMinutes && (
-              <span className="text-gray-300">/ {formatMinutes(task.projectedDurationMinutes)}</span>
-            )}
+        {hasActiveTimer && (
+          <div className="w-[30px] h-[30px] rounded-full flex items-center justify-center"
+            style={{ background: 'rgba(240,85,110,0.12)', color: '#F0556E' }}>
+            <Square size={12} />
           </div>
         )}
       </div>
-
-      {/* Labels */}
-      {task.labels && task.labels.length > 0 && (
-        <div className="flex flex-wrap gap-1 mt-2">
-          {task.labels.map((label) => (
-            <span key={label} className="text-xs bg-gray-100 text-gray-500 px-1.5 py-0.5 rounded">
-              {label}
-            </span>
-          ))}
-        </div>
-      )}
     </div>
   );
 }

@@ -30,41 +30,38 @@ interface Props {
   onTaskClick: (task: Task) => void;
 }
 
-const columnColors: Record<string, string> = {
-  'Backlog': 'border-gray-300',
-  'To Do': 'border-blue-300',
-  'In Progress': 'border-yellow-300',
-  'Review': 'border-purple-300',
-  'Done': 'border-green-300',
-};
-
 export default function KanbanColumn({ column, onAddTask, onTaskClick }: Props) {
   const { setNodeRef, isOver } = useDroppable({ id: column.id });
-
   const sortedTasks = [...(column.tasks || [])].sort((a, b) => a.position - b.position);
 
   return (
     <div
-      className={`flex flex-col w-72 min-w-[18rem] bg-gray-100 rounded-lg border-t-2 ${columnColors[column.name] || 'border-gray-300'} ${isOver ? 'bg-blue-50' : ''}`}
+      className={`flex flex-col w-[280px] min-w-[280px] bg-white rounded-lg border border-border transition-all duration-200
+        ${isOver ? 'bg-accent-soft outline-2 outline-dashed outline-accent/30 -outline-offset-4' : ''}`}
+      style={{ borderRadius: '18px', boxShadow: '0 1px 3px rgba(0,0,0,0.04), 0 2px 8px rgba(0,0,0,0.04)' }}
     >
-      <div className="flex items-center justify-between p-3">
+      {/* Header */}
+      <div className="flex items-center justify-between px-3.5 py-3">
         <div className="flex items-center gap-2">
-          <h3 className="font-semibold text-sm text-gray-700">{column.name}</h3>
-          <span className="text-xs text-gray-400 bg-gray-200 rounded-full px-2 py-0.5">
-            {column.tasks.length}
+          <h3 className="text-[13px] font-semibold uppercase tracking-[0.5px] text-text-muted">
+            {column.name}
+          </h3>
+          <span className="text-[11px] font-medium bg-bg rounded-pill px-2 py-0.5 text-text-dim">
+            {sortedTasks.length}
           </span>
         </div>
         <button
           onClick={onAddTask}
-          className="text-gray-400 hover:text-gray-600 transition-colors"
+          className="w-7 h-7 rounded-full flex items-center justify-center text-text-dim hover:bg-accent-soft hover:text-accent transition-all duration-200"
         >
-          <Plus size={16} />
+          <Plus size={15} />
         </button>
       </div>
 
+      {/* Body */}
       <div
         ref={setNodeRef}
-        className="flex-1 overflow-y-auto p-2 space-y-2 min-h-[100px]"
+        className="flex-1 overflow-y-auto px-2 pb-2 space-y-2 min-h-[60px]"
       >
         <SortableContext items={sortedTasks.map(t => t.id)} strategy={verticalListSortingStrategy}>
           {sortedTasks.map((task) => (

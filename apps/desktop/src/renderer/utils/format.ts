@@ -6,10 +6,10 @@ export function formatMinutes(minutes: number): string {
 }
 
 export const categoryColors: Record<string, string> = {
-  work: '#3B82F6',
-  exercise: '#10B981',
-  family: '#F59E0B',
-  personal: '#8B5CF6',
-  errand: '#EF4444',
-  learning: '#06B6D4',
+  work: '#7C5CFC',
+  exercise: '#2CC197',
+  family: '#F5A623',
+  personal: '#A855F7',
+  errand: '#8B8BA8',
+  learning: '#F472B6',
 };

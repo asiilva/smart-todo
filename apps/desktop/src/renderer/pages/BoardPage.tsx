@@ -200,14 +200,14 @@ export default function BoardPage() {
   if (loading) {
     return (
       <div className="p-6 flex items-center justify-center h-full">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600" />
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-accent" />
       </div>
     );
   }
 
   if (!board) {
     return (
-      <div className="p-6 text-center text-gray-500">
+      <div className="p-6 text-center text-text-muted">
         <p>No board found. Something went wrong.</p>
       </div>
     );
@@ -216,10 +216,10 @@ export default function BoardPage() {
   return (
     <div className="h-full flex flex-col">
       <div className="flex items-center justify-between p-4 border-b">
-        <h1 className="text-xl font-bold">{board.name}</h1>
+        <h1 className="text-xl font-bold text-text">{board.name}</h1>
         <button
           onClick={() => handleNewTask()}
-          className="flex items-center gap-2 px-3 py-1.5 bg-primary-600 text-white text-sm rounded-lg hover:bg-primary-700 transition-colors"
+          className="flex items-center gap-2 px-3 py-1.5 btn-primary text-sm transition-colors"
         >
           <Plus size={16} />
           New Task
@@ -273,22 +273,22 @@ export default function BoardPage() {
 
       {showProfilePrompt && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-xl shadow-xl max-w-md mx-4 p-6">
-            <h2 className="text-lg font-semibold mb-2">Set Up Your Tech Profile First</h2>
-            <p className="text-gray-500 text-sm mb-4">
+          <div className="bg-white rounded-[22px] shadow-xl max-w-md mx-4 p-6">
+            <h2 className="text-lg font-semibold text-text mb-2">Set Up Your Tech Profile First</h2>
+            <p className="text-text-muted text-sm mb-4">
               To create accurate time estimates, Smart Todo needs to know your skills and experience.
               Please fill out your tech profile before creating your first task.
             </p>
             <div className="flex gap-2 justify-end">
               <button
                 onClick={() => setShowProfilePrompt(false)}
-                className="px-4 py-2 text-sm text-gray-600 hover:text-gray-800 transition-colors"
+                className="px-4 py-2 text-sm text-text-dim hover:text-text transition-colors"
               >
                 Cancel
               </button>
               <button
                 onClick={() => { setShowProfilePrompt(false); navigate('/profile'); }}
-                className="px-4 py-2 text-sm bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors"
+                className="px-4 py-2 text-sm btn-primary rounded-[12px] transition-colors"
               >
                 Go to Profile
               </button>
