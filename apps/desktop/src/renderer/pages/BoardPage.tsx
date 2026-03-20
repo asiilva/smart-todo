@@ -7,6 +7,7 @@ import KanbanColumn from '../components/KanbanColumn';
 import TaskCard from '../components/TaskCard';
 import CreateTaskModal from '../components/CreateTaskModal';
 import TaskDetailPanel from '../components/TaskDetailPanel';
+import CelebrationModal from '../components/CelebrationModal';
 import { Plus } from 'lucide-react';
 
 interface Task {
@@ -51,6 +52,7 @@ export default function BoardPage() {
   const [createColumnId, setCreateColumnId] = useState<string | undefined>();
   const [hasProfile, setHasProfile] = useState<boolean | null>(null);
   const [showProfilePrompt, setShowProfilePrompt] = useState(false);
+  const [celebrationTask, setCelebrationTask] = useState<Task | null>(null);
   const navigate = useNavigate();
 
   const sensors = useSensors(
@@ -136,6 +138,29 @@ export default function BoardPage() {
         columnId: targetColumnId,
         position: targetPosition,
       });
+
+      // Auto-start/stop timer based on target column
+      const targetColumn = board.columns.find(c => c.id === targetColumnId);
+      if (targetColumn) {
+        if (targetColumn.name === 'In Progress') {
+          try {
+            await apiClient.post(`/tasks/${taskId}/timer/start`);
+          } catch (timerErr) {
+            console.error('Failed to auto-start timer', timerErr);
+          }
+        } else if (targetColumn.name === 'Done') {
+          try {
+            await apiClient.post(`/tasks/${taskId}/timer/stop`);
+          } catch (timerErr) {
+            console.error('Failed to auto-stop timer', timerErr);
+          }
+          const task = findTask(taskId);
+          if (task) {
+            setCelebrationTask(task);
+          }
+        }
+      }
+
       await loadBoard();
     } catch (err) {
       console.error('Failed to move task', err);
@@ -267,6 +292,13 @@ export default function BoardPage() {
             </div>
           </div>
         </div>
+      )}
+
+      {celebrationTask && (
+        <CelebrationModal
+          task={celebrationTask}
+          onClose={() => setCelebrationTask(null)}
+        />
       )}
     </div>
   );
