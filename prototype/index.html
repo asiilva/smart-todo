@@ -455,6 +455,167 @@
     .protected-block-name { font-size: 13px; font-weight: 600; }
     .protected-block-time { font-size: 11px; color: var(--text-muted); }
 
+    /* ===== Profile / Settings Sections ===== */
+    .profile-section {
+      max-width: 900px; padding: 24px;
+    }
+    .profile-section-title {
+      font-size: 12px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.5px; color: var(--text-muted); margin-bottom: 16px;
+    }
+    .profile-card {
+      background: var(--bg-surface); border-radius: 16px;
+      border: 1px solid var(--border); padding: 20px;
+      box-shadow: var(--shadow-sm); margin-bottom: 20px;
+    }
+    /* Projects */
+    .project-item {
+      display: flex; align-items: center; gap: 12px;
+      padding: 12px 16px; background: var(--bg); border-radius: 14px;
+      border: 1px solid var(--border); margin-bottom: 8px; transition: all 0.2s;
+    }
+    .project-item:hover { border-color: var(--accent); background: var(--bg-hover); }
+    .project-icon {
+      width: 36px; height: 36px; border-radius: 10px;
+      background: var(--accent-soft); color: var(--accent);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px; flex-shrink: 0;
+    }
+    .project-info { flex: 1; min-width: 0; }
+    .project-name { font-size: 14px; font-weight: 600; }
+    .project-path { font-size: 11px; color: var(--text-dim); font-family: 'SF Mono', 'Fira Code', monospace; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .project-actions { display: flex; gap: 4px; }
+    .project-actions button {
+      width: 28px; height: 28px; border-radius: 50%; border: none;
+      background: transparent; color: var(--text-dim); cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px; transition: all 0.2s;
+    }
+    .project-actions button:hover { background: var(--bg-hover); color: var(--text); }
+    .project-actions button.delete:hover { background: rgba(240,85,110,0.08); color: var(--danger); }
+    .add-project-form {
+      display: flex; gap: 8px; align-items: flex-end; margin-top: 12px;
+    }
+    .add-project-form .form-group { flex: 1; margin-bottom: 0; }
+    .add-project-form .form-group:first-child { flex: 0.4; }
+    .btn-browse {
+      padding: 11px 14px; border-radius: var(--radius); border: 1px solid var(--border);
+      background: var(--bg); color: var(--text-muted); font-size: 13px; cursor: pointer;
+      transition: all 0.2s; white-space: nowrap;
+    }
+    .btn-browse:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-soft); }
+    /* Category Planning */
+    .cat-planning-row {
+      display: flex; align-items: center; gap: 12px;
+      padding: 10px 0; border-bottom: 1px solid var(--border);
+    }
+    .cat-planning-row:last-child { border-bottom: none; }
+    .cat-planning-name {
+      font-size: 13px; font-weight: 600; width: 120px; display: flex; align-items: center; gap: 8px;
+    }
+    .cat-planning-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+    .cat-planning-toggle {
+      position: relative; width: 36px; height: 20px; border-radius: 10px;
+      background: var(--border); cursor: pointer; transition: background 0.2s;
+      border: none; flex-shrink: 0;
+    }
+    .cat-planning-toggle.active { background: var(--accent); }
+    .cat-planning-toggle::after {
+      content: ''; position: absolute; top: 2px; left: 2px;
+      width: 16px; height: 16px; border-radius: 50%;
+      background: white; transition: transform 0.2s;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+    }
+    .cat-planning-toggle.active::after { transform: translateX(16px); }
+    .cat-planning-skill {
+      flex: 1; display: flex; align-items: center; gap: 6px;
+    }
+    .cat-planning-skill input {
+      width: 160px; padding: 6px 10px; border-radius: var(--radius);
+      border: 1px solid var(--border); background: var(--bg);
+      color: var(--text); font-size: 12px; font-family: 'SF Mono', 'Fira Code', monospace;
+      transition: all 0.2s;
+    }
+    .cat-planning-skill input:focus { outline: none; border-color: var(--accent); box-shadow: var(--shadow-glow); }
+    .cat-planning-skill input:disabled { opacity: 0.4; cursor: not-allowed; }
+    .cat-planning-skill label { font-size: 11px; color: var(--text-dim); }
+    /* Planning badge on task cards */
+    .planning-badge {
+      font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.3px;
+      padding: 2px 8px; border-radius: var(--radius-pill);
+      display: inline-flex; align-items: center; gap: 4px;
+    }
+    .planning-badge.planning {
+      background: rgba(44,193,151,0.12); color: var(--success);
+      animation: pulse 2s ease-in-out infinite;
+    }
+    .planning-badge.planned {
+      background: rgba(44,193,151,0.12); color: var(--success);
+    }
+    .planning-badge-dot {
+      width: 6px; height: 6px; border-radius: 50%; background: currentColor;
+    }
+    /* Skill badge */
+    .skill-badge {
+      font-size: 10px; font-weight: 600; font-family: 'SF Mono', 'Fira Code', monospace;
+      padding: 2px 8px; border-radius: var(--radius-pill);
+      background: var(--accent-soft); color: var(--accent);
+      display: inline-flex; align-items: center; gap: 4px;
+    }
+    /* Project pills in task detail */
+    .project-pills { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; }
+    .project-pill {
+      font-size: 11px; font-weight: 600; padding: 4px 10px;
+      border-radius: var(--radius-pill); background: var(--bg);
+      border: 1px solid var(--border); color: var(--text-muted);
+      display: inline-flex; align-items: center; gap: 4px;
+    }
+    .project-pill-icon { font-size: 12px; }
+    /* Planning section in task detail */
+    .planning-section {
+      padding: 14px; background: var(--bg); border-radius: 14px;
+      border: 1px solid var(--border); margin-top: 4px;
+    }
+    .planning-section-header {
+      display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;
+    }
+    .planning-section-title { font-size: 12px; font-weight: 700; color: var(--text-muted); }
+    .btn-start-planning {
+      padding: 8px 18px; border-radius: var(--radius-pill); border: none;
+      background: linear-gradient(135deg, var(--success), #34D399); color: white;
+      font-size: 12px; font-weight: 700; cursor: pointer;
+      transition: all 0.2s; box-shadow: 0 2px 8px rgba(44,193,151,0.25);
+      display: flex; align-items: center; gap: 6px;
+    }
+    .btn-start-planning:hover { transform: translateY(-1px); box-shadow: 0 4px 16px rgba(44,193,151,0.35); }
+    .btn-start-planning:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+    .btn-start-planning.replanning { background: var(--accent-soft); color: var(--accent); box-shadow: none; border: 1px solid var(--border); }
+    .planning-output {
+      margin-top: 10px; padding: 10px 12px; background: var(--bg-surface);
+      border-radius: 10px; border: 1px solid var(--border);
+      font-size: 12px; color: var(--text-muted); line-height: 1.5;
+      max-height: 200px; overflow-y: auto; white-space: pre-wrap;
+    }
+    /* Multi-select projects in create modal */
+    .project-checklist { display: flex; flex-direction: column; gap: 6px; margin-top: 6px; }
+    .project-check-item {
+      display: flex; align-items: center; gap: 8px; padding: 6px 10px;
+      border-radius: 10px; cursor: pointer; transition: all 0.2s;
+      font-size: 13px;
+    }
+    .project-check-item:hover { background: var(--bg-hover); }
+    .project-check-item input[type="checkbox"] { accent-color: var(--accent); width: 16px; height: 16px; }
+    .project-check-item .project-check-name { font-weight: 600; }
+    .project-check-item .project-check-path { font-size: 10px; color: var(--text-dim); font-family: 'SF Mono', monospace; }
+    .planning-info-box {
+      background: var(--accent-soft); border: 1px solid rgba(124,92,252,0.2);
+      border-radius: 14px; padding: 12px 14px; margin-top: 12px;
+    }
+    .planning-info-box-title {
+      font-size: 12px; font-weight: 700; color: var(--accent);
+      display: flex; align-items: center; gap: 6px; margin-bottom: 6px;
+    }
+
     /* ===== API Keys View ===== */
     #apikeys-view { flex-direction: column; overflow-y: auto; padding: 24px; }
     .apikeys-header {
@@ -1139,6 +1300,7 @@
         <button class="nav-tab" data-view="planner-view">Planner</button>
         <button class="nav-tab" data-view="reports-view">Reports</button>
         <button class="nav-tab" data-view="apikeys-view">API Keys</button>
+        <button class="nav-tab" data-view="profile-view">Profile</button>
       </div>
       <div class="nav-right">
         <button class="notif-btn" id="notif-btn" title="Notifications">
@@ -1248,6 +1410,138 @@
         <div class="reports-body" id="reports-body"></div>
       </div>
 
+      <!-- Profile View -->
+      <div id="profile-view" class="view">
+        <div class="profile-section">
+          <h2 style="font-size:20px;font-weight:700;margin-bottom:20px;">Profile & Settings</h2>
+
+          <!-- Projects Section -->
+          <div class="profile-card">
+            <div class="profile-section-title">Projects</div>
+            <div id="projects-list">
+              <div class="project-item">
+                <div class="project-icon">📁</div>
+                <div class="project-info">
+                  <div class="project-name">Smart Todo</div>
+                  <div class="project-path">/Users/alansilva/Documents/workspace/smart-todo</div>
+                </div>
+                <div class="project-actions">
+                  <button title="Edit">✎</button>
+                  <button class="delete" title="Delete">✕</button>
+                </div>
+              </div>
+              <div class="project-item">
+                <div class="project-icon">📁</div>
+                <div class="project-info">
+                  <div class="project-name">Quadra Producers</div>
+                  <div class="project-path">/Users/alansilva/Documents/workspace/quadra-producers</div>
+                </div>
+                <div class="project-actions">
+                  <button title="Edit">✎</button>
+                  <button class="delete" title="Delete">✕</button>
+                </div>
+              </div>
+              <div class="project-item">
+                <div class="project-icon">📁</div>
+                <div class="project-info">
+                  <div class="project-name">Quadra AI</div>
+                  <div class="project-path">/Users/alansilva/Documents/workspace/quadra-ai</div>
+                </div>
+                <div class="project-actions">
+                  <button title="Edit">✎</button>
+                  <button class="delete" title="Delete">✕</button>
+                </div>
+              </div>
+            </div>
+            <div class="add-project-form">
+              <div class="form-group">
+                <label class="form-label">Name</label>
+                <input class="form-input" type="text" placeholder="Project name">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Path</label>
+                <input class="form-input" type="text" placeholder="/Users/.../project" style="font-family:'SF Mono',monospace;font-size:12px;">
+              </div>
+              <button class="btn-browse">📂 Browse</button>
+              <button class="btn-create" style="padding:11px 18px;font-size:12px;">Add</button>
+            </div>
+          </div>
+
+          <!-- Category Planning Section -->
+          <div class="profile-card">
+            <div class="profile-section-title">Category Planning</div>
+            <p style="font-size:12px;color:var(--text-dim);margin-bottom:14px;">Enable spec-driven development for tech categories. Assign a Claude Code skill to execute planning.</p>
+            <div id="cat-planning-list">
+              <div class="cat-planning-row">
+                <div class="cat-planning-name"><div class="cat-planning-dot" style="background:var(--cat-work)"></div> work</div>
+                <button class="cat-planning-toggle active" onclick="this.classList.toggle('active')"></button>
+                <div class="cat-planning-skill">
+                  <label>Skill:</label>
+                  <input type="text" value="implement" placeholder="skill name">
+                </div>
+              </div>
+              <div class="cat-planning-row">
+                <div class="cat-planning-name"><div class="cat-planning-dot" style="background:var(--cat-exercise)"></div> exercise</div>
+                <button class="cat-planning-toggle" onclick="this.classList.toggle('active')"></button>
+                <div class="cat-planning-skill">
+                  <label>Skill:</label>
+                  <input type="text" placeholder="skill name" disabled>
+                </div>
+              </div>
+              <div class="cat-planning-row">
+                <div class="cat-planning-name"><div class="cat-planning-dot" style="background:var(--cat-family)"></div> family</div>
+                <button class="cat-planning-toggle" onclick="this.classList.toggle('active')"></button>
+                <div class="cat-planning-skill">
+                  <label>Skill:</label>
+                  <input type="text" placeholder="skill name" disabled>
+                </div>
+              </div>
+              <div class="cat-planning-row">
+                <div class="cat-planning-name"><div class="cat-planning-dot" style="background:var(--cat-personal)"></div> personal</div>
+                <button class="cat-planning-toggle" onclick="this.classList.toggle('active')"></button>
+                <div class="cat-planning-skill">
+                  <label>Skill:</label>
+                  <input type="text" placeholder="skill name" disabled>
+                </div>
+              </div>
+              <div class="cat-planning-row">
+                <div class="cat-planning-name"><div class="cat-planning-dot" style="background:var(--cat-errand)"></div> errand</div>
+                <button class="cat-planning-toggle" onclick="this.classList.toggle('active')"></button>
+                <div class="cat-planning-skill">
+                  <label>Skill:</label>
+                  <input type="text" placeholder="skill name" disabled>
+                </div>
+              </div>
+              <div class="cat-planning-row">
+                <div class="cat-planning-name"><div class="cat-planning-dot" style="background:var(--cat-learning)"></div> learning</div>
+                <button class="cat-planning-toggle active" onclick="this.classList.toggle('active')"></button>
+                <div class="cat-planning-skill">
+                  <label>Skill:</label>
+                  <input type="text" value="implement" placeholder="skill name">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Daily Availability Section -->
+          <div class="profile-card">
+            <div class="profile-section-title">Daily Availability</div>
+            <p style="font-size:12px;color:var(--text-dim);margin-bottom:14px;">Set your available hours for the planner.</p>
+            <div style="display:flex;gap:12px;align-items:flex-end;">
+              <div class="form-group" style="margin-bottom:0;">
+                <label class="form-label">From</label>
+                <input class="form-input" type="time" value="08:00" style="width:130px;">
+              </div>
+              <div class="form-group" style="margin-bottom:0;">
+                <label class="form-label">Until</label>
+                <input class="form-input" type="time" value="18:00" style="width:130px;">
+              </div>
+              <button class="btn-create" style="padding:11px 18px;font-size:12px;">Save</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
     </div>
   </div>
 
@@ -1299,6 +1593,35 @@
       <div class="form-group">
         <label class="form-label">Scheduled Date</label>
         <input class="form-input" id="task-date" type="date">
+      </div>
+      <div class="form-group" id="task-projects-group" style="display:none;">
+        <div class="planning-info-box">
+          <div class="planning-info-box-title">⚡ Planning enabled · Skill: <span id="task-skill-name" style="font-family:'SF Mono',monospace;">implement</span></div>
+          <label class="form-label" style="margin-top:8px;margin-bottom:4px;">Projects involved</label>
+          <div class="project-checklist" id="task-projects-checklist">
+            <label class="project-check-item">
+              <input type="checkbox" checked>
+              <div>
+                <div class="project-check-name">Smart Todo</div>
+                <div class="project-check-path">/Users/alansilva/.../smart-todo</div>
+              </div>
+            </label>
+            <label class="project-check-item">
+              <input type="checkbox">
+              <div>
+                <div class="project-check-name">Quadra Producers</div>
+                <div class="project-check-path">/Users/alansilva/.../quadra-producers</div>
+              </div>
+            </label>
+            <label class="project-check-item">
+              <input type="checkbox">
+              <div>
+                <div class="project-check-name">Quadra AI</div>
+                <div class="project-check-path">/Users/alansilva/.../quadra-ai</div>
+              </div>
+            </label>
+          </div>
+        </div>
       </div>
       <div class="ai-estimating" id="ai-estimating">
         <div class="ai-spinner"></div>
@@ -1393,6 +1716,42 @@
             <div class="task-detail-duration-value" id="detail-ratio"></div>
             <div class="task-detail-duration-label">Ratio</div>
           </div>
+        </div>
+        <!-- Planning Section -->
+        <div class="planning-section" id="detail-planning-section">
+          <div class="planning-section-header">
+            <div style="display:flex;align-items:center;gap:8px;">
+              <span class="skill-badge">⚡ implement</span>
+              <span class="planning-badge planned"><span class="planning-badge-dot"></span> PLANNED</span>
+            </div>
+            <button class="btn-start-planning replanning" id="btn-replan">
+              🔄 Re-Plan
+            </button>
+          </div>
+          <div style="margin-bottom:8px;">
+            <div class="profile-section-title" style="margin-bottom:6px;font-size:11px;">Projects</div>
+            <div class="project-pills">
+              <span class="project-pill"><span class="project-pill-icon">📁</span> Smart Todo</span>
+              <span class="project-pill"><span class="project-pill-icon">📁</span> Quadra Producers</span>
+            </div>
+          </div>
+          <div class="planning-output">--- Planning Output (2026-03-20 09:15) ---
+
+## Spec: Fix auth token refresh
+
+### Problem
+The refresh token flow silently fails when...
+
+### Approach
+1. Update the token interceptor to handle...
+2. Add retry logic with exponential backoff...
+
+### Files to modify
+- apps/api/src/auth/auth.router.ts
+- apps/desktop/src/renderer/services/api-client.ts
+
+### PR: #42 - Fix auth token refresh
+https://github.com/org/smart-todo/pull/42</div>
         </div>
         <div class="task-detail-row">
           <div class="task-detail-field">
@@ -3129,6 +3488,39 @@
         document.getElementById('apikey-created-banner').classList.remove('visible');
       });
     });
+
+    // === Skill Integration: Show project selection when planning-enabled category is selected ===
+    const taskCategorySelect = document.getElementById('task-category');
+    const taskProjectsGroup = document.getElementById('task-projects-group');
+    const planningEnabledCategories = ['work', 'learning']; // Categories with planning enabled
+
+    if (taskCategorySelect && taskProjectsGroup) {
+      taskCategorySelect.addEventListener('change', function() {
+        if (planningEnabledCategories.includes(this.value)) {
+          taskProjectsGroup.style.display = 'block';
+        } else {
+          taskProjectsGroup.style.display = 'none';
+        }
+      });
+    }
+
+    // === Category planning toggle: enable/disable skill input ===
+    document.querySelectorAll('.cat-planning-toggle').forEach(toggle => {
+      toggle.addEventListener('click', function() {
+        const row = this.closest('.cat-planning-row');
+        const input = row.querySelector('.cat-planning-skill input');
+        if (this.classList.contains('active')) {
+          input.disabled = false;
+          input.focus();
+        } else {
+          input.disabled = true;
+          input.value = '';
+        }
+      });
+    });
+
+    // === Profile view nav tab ===
+    // The existing nav tab logic already handles this since it uses data-view
   </script>
 </body>
 </html>
