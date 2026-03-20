@@ -175,16 +175,16 @@ Dropped from full schema: organizations, task_attachments, task_history, push_su
 | ESLint + Prettier config | ~0.5h | ~0.5min | [x] |
 | CI: GitHub Actions (lint, test, build) | ~2h | ~0.5min | [x] |
 
-### Phase 2: Auth — estimated ~8h | actual: ___
+### Phase 2: Auth — estimated ~8h | actual: ~1min
 | Task | Estimated | Actual | Status |
 |------|-----------|--------|--------|
-| API: Register endpoint (email, password, name) with bcrypt + JWT | ~2h | | [ ] |
-| API: Login endpoint with JWT access (15min) + refresh (7d) tokens | ~1.5h | | [ ] |
-| API: Refresh token endpoint | ~1h | | [ ] |
-| API: Auth middleware (authenticate, get current user) | ~0.5h | | [ ] |
-| Electron: Login page | ~1h | | [ ] |
-| Electron: Register page | ~1h | | [ ] |
-| Electron: Secure token storage (safeStorage) + auth context/provider | ~1h | | [ ] |
+| API: Register endpoint (email, password, name) with bcrypt + JWT | ~2h | ~0.5min | [x] |
+| API: Login endpoint with JWT access (15min) + refresh (7d) tokens | ~1.5h | ~0.5min | [x] |
+| API: Refresh token endpoint | ~1h | ~0.5min | [x] |
+| API: Auth middleware (authenticate, get current user) | ~0.5h | ~0.5min | [x] |
+| Electron: Login page | ~1h | scaffolded in P1 | [x] |
+| Electron: Register page | ~1h | scaffolded in P1 | [x] |
+| Electron: Secure token storage (safeStorage) + auth context/provider | ~1h | scaffolded in P1 | [x] |
 
 ### Phase 3: Claude CLI + User Profile — estimated ~8h | actual: ___
 | Task | Estimated | Actual | Status |
