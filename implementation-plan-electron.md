@@ -9,7 +9,7 @@ The original plan targeted a web-based stack (Next.js + Express). This pivots to
 - Runs locally on macOS/Windows as the UI and orchestrator
 - Spawns the **local Claude Code CLI** for all AI tasks (hard requirement for v1)
 - Talks to a **remote backend API on Digital Ocean** for CRUD, auth, and persistence
-- Keeps **all original features**: multi-tenancy, Telegram, Google OAuth, Web Push, API keys, Kanban, planner, reports
+- Keeps **all original features**: multi-tenancy, Telegram, Web Push, API keys, Kanban, planner, reports
 
 ---
 
@@ -76,7 +76,7 @@ The original plan targeted a web-based stack (Next.js + Express). This pivots to
 │   │   └── tsconfig.json
 │   └── api/                  # Backend API (deployed to Digital Ocean)
 │       ├── src/
-│       │   ├── auth/         # JWT, Google OAuth
+│       │   ├── auth/         # JWT
 │       │   ├── organizations/
 │       │   ├── users/
 │       │   ├── boards/
@@ -113,7 +113,6 @@ The original plan targeted a web-based stack (Next.js + Express). This pivots to
 | Auth | JWT (standard web) | JWT (Electron stores tokens in secure storage) |
 | Packaging | Vercel/Docker deployment | electron-builder → DMG/NSIS/AppImage |
 | Telegram | Webhook mode | Webhook on Digital Ocean (no change to API) |
-| Google OAuth | Browser redirect | Electron opens system browser for OAuth, deep-link callback |
 
 ## What Stays the Same
 
@@ -176,7 +175,6 @@ The original plan targeted a web-based stack (Next.js + Express). This pivots to
   // This goes through preload → IPC → main process → claude CLI
   ```
 - Auth: JWT stored securely via Electron's `safeStorage` API (not localStorage)
-- Google OAuth: opens system browser via `shell.openExternal()`, receives callback via custom protocol (`smarttodo://oauth/callback`)
 
 ### 3. Remote API (`apps/api/`)
 
@@ -186,7 +184,6 @@ The original plan targeted a web-based stack (Next.js + Express). This pivots to
 - API receives AI results as part of request payloads (e.g., `POST /tasks` body includes `projected_duration` from client-side AI)
 - Deployed via Docker on Digital Ocean (Dockerfile + docker-compose with PostgreSQL)
 - Telegram bot runs in webhook mode on the server (publicly accessible)
-- Google OAuth callback configured for the custom protocol redirect
 
 ### 4. Preload Script (`apps/desktop/src/preload/`)
 
@@ -203,17 +200,7 @@ contextBridge.exposeInMainWorld('electronAPI', {
 });
 ```
 
-### 5. Google OAuth in Electron
-
-1. User clicks "Sign in with Google" in Electron
-2. Electron opens system browser via `shell.openExternal('https://api.smarttodo.com/auth/google')`
-3. User authenticates with Google
-4. Google redirects to API callback
-5. API generates JWT, redirects to `smarttodo://oauth/callback?token=<jwt>`
-6. Electron registers custom protocol handler, receives the token
-7. Token stored via `safeStorage`
-
-### 6. Audio Transcription (Telegram Voice)
+### 5. Audio Transcription (Telegram Voice)
 
 Telegram voice messages are handled server-side (the bot runs on Digital Ocean). The server can use a cloud transcription API or ship Whisper. This doesn't involve the Electron app at all.
 
@@ -234,13 +221,11 @@ Telegram voice messages are handled server-side (the bot runs on Digital Ocean).
 - [ ] ESLint + Prettier config — ~0.5h
 - [ ] CI: GitHub Actions (lint, test, build) — ~2h
 
-### Phase 2: Authentication & Multi-Tenancy — ~20h total
+### Phase 2: Authentication & Multi-Tenancy — ~16h total
 - [ ] API: Auth endpoints (register, login, refresh) with JWT — ~3h
 - [ ] API: Organization CRUD + invite + role-based auth — ~4h
-- [ ] API: Google OAuth (passport-google-oauth20) — ~2h
 - [ ] Electron: Login/Register pages — ~3h
 - [ ] Electron: Secure token storage (safeStorage) — ~1.5h
-- [ ] Electron: Custom protocol handler for OAuth callback (`smarttodo://`) — ~2h
 - [ ] Electron: Auth context/provider with auto-refresh — ~2.5h
 - [ ] Electron: Protected route wrappers — ~2h
 
@@ -297,14 +282,14 @@ Telegram voice messages are handled server-side (the bot runs on Digital Ocean).
 - [ ] API: Dockerized deployment to Digital Ocean — ~2.5h
 - [ ] CI: Build + publish Electron app for macOS/Windows/Linux — ~2h
 
-### Total estimated effort: ~156h
+### Total estimated effort: ~152h
 
 ---
 
 ## Verification
 
 1. **Electron launches** — app opens, shows login screen
-2. **Auth flow** — register, login, Google OAuth all work with remote API
+2. **Auth flow** — register, login work with remote API
 3. **Claude CLI** — create a task, see AI estimation run locally and persist to server
 4. **Kanban** — drag-and-drop, timer, completion celebration all work
 5. **Planner/Reports** — data loads from remote API, displays correctly
