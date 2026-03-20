@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { ChevronLeft, ChevronRight, AlertTriangle } from 'lucide-react';
 import { apiClient } from '../services/api-client';
+import { formatMinutes, categoryColors } from '../utils/format';
 
 interface Task {
   id: string;
@@ -37,22 +38,6 @@ interface DayPlan {
   protectedBlocks: ProtectedBlock[];
   settings: DailySettings;
   summary: DaySummary;
-}
-
-const categoryColors: Record<string, string> = {
-  work: '#3B82F6',
-  exercise: '#10B981',
-  family: '#F59E0B',
-  personal: '#8B5CF6',
-  errand: '#EF4444',
-  learning: '#06B6D4',
-};
-
-function formatMinutes(minutes: number): string {
-  if (minutes < 60) return `${minutes}m`;
-  const h = Math.floor(minutes / 60);
-  const m = minutes % 60;
-  return m > 0 ? `${h}h ${m}m` : `${h}h`;
 }
 
 function formatDate(date: Date): string {

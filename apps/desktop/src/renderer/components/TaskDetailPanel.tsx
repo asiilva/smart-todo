@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import { X, Play, Square, Clock } from 'lucide-react';
 import { apiClient } from '../services/api-client';
+import { useToastStore } from './Toast';
+import { formatMinutes } from '../utils/format';
 
 interface TimeEntry {
   id: string;
@@ -32,13 +34,6 @@ interface Props {
   onUpdated: () => void;
 }
 
-function formatMinutes(minutes: number): string {
-  if (minutes < 60) return `${minutes}m`;
-  const h = Math.floor(minutes / 60);
-  const m = minutes % 60;
-  return m > 0 ? `${h}h ${m}m` : `${h}h`;
-}
-
 export default function TaskDetailPanel({ task, onClose, onUpdated }: Props) {
   const [title, setTitle] = useState(task.title);
   const [description, setDescription] = useState(task.description || '');
@@ -48,6 +43,11 @@ export default function TaskDetailPanel({ task, onClose, onUpdated }: Props) {
   const [scheduledDate, setScheduledDate] = useState(task.scheduledDate?.split('T')[0] || '');
   const [saving, setSaving] = useState(false);
   const [timeEntries, setTimeEntries] = useState<TimeEntry[]>(task.timeEntries || []);
+  const [categories, setCategories] = useState<Array<{id: string; name: string; color: string}>>([]);
+
+  useEffect(() => {
+    apiClient.get('/categories').then(res => setCategories(res.data)).catch(() => {});
+  }, []);
 
   const activeEntry = timeEntries.find(e => !e.stoppedAt);
   const hasActiveTimer = !!activeEntry;
@@ -94,7 +94,7 @@ export default function TaskDetailPanel({ task, onClose, onUpdated }: Props) {
       });
       onUpdated();
     } catch {
-      // ignore
+      useToastStore.getState().addToast('Failed to save task', 'error');
     } finally {
       setSaving(false);
     }
@@ -105,7 +105,7 @@ export default function TaskDetailPanel({ task, onClose, onUpdated }: Props) {
       await apiClient.post(`/tasks/${task.id}/timer/start`);
       await loadTimeEntries();
     } catch {
-      // ignore
+      useToastStore.getState().addToast('Failed to start timer', 'error');
     }
   };
 
@@ -115,7 +115,7 @@ export default function TaskDetailPanel({ task, onClose, onUpdated }: Props) {
       await loadTimeEntries();
       onUpdated();
     } catch {
-      // ignore
+      useToastStore.getState().addToast('Failed to stop timer', 'error');
     }
   };
 
@@ -124,7 +124,7 @@ export default function TaskDetailPanel({ task, onClose, onUpdated }: Props) {
       await apiClient.delete(`/tasks/${task.id}`);
       onUpdated();
     } catch {
-      // ignore
+      useToastStore.getState().addToast('Failed to delete task', 'error');
     }
   };
 
@@ -187,12 +187,18 @@ export default function TaskDetailPanel({ task, onClose, onUpdated }: Props) {
               onChange={(e) => setCategory(e.target.value)}
               className="w-full px-3 py-1.5 border border-gray-200 rounded-lg text-sm"
             >
-              <option value="work">Work</option>
-              <option value="exercise">Exercise</option>
-              <option value="family">Family</option>
-              <option value="personal">Personal</option>
-              <option value="errand">Errand</option>
-              <option value="learning">Learning</option>
+              {categories.length > 0 ? categories.map((cat) => (
+                <option key={cat.id} value={cat.name}>{cat.name}</option>
+              )) : (
+                <>
+                  <option value="work">Work</option>
+                  <option value="exercise">Exercise</option>
+                  <option value="family">Family</option>
+                  <option value="personal">Personal</option>
+                  <option value="errand">Errand</option>
+                  <option value="learning">Learning</option>
+                </>
+              )}
             </select>
           </div>
         </div>

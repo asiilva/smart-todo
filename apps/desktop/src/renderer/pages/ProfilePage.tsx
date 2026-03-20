@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { apiClient } from '../services/api-client';
+import { useToastStore } from '../components/Toast';
 
 interface SkillEntry {
   name: string;
@@ -69,6 +70,7 @@ export default function ProfilePage() {
       await apiClient.put('/planner/settings', { availableFrom, availableUntil });
     } catch {
       setError('Failed to save availability settings');
+      useToastStore.getState().addToast('Failed to save availability settings', 'error');
     } finally {
       setSavingSettings(false);
     }

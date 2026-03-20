@@ -8,6 +8,7 @@ import TaskCard from '../components/TaskCard';
 import CreateTaskModal from '../components/CreateTaskModal';
 import TaskDetailPanel from '../components/TaskDetailPanel';
 import CelebrationModal from '../components/CelebrationModal';
+import { useToastStore } from '../components/Toast';
 import { Plus } from 'lucide-react';
 
 interface Task {
@@ -100,6 +101,7 @@ export default function BoardPage() {
       }
     } catch (err) {
       console.error('Failed to load board', err);
+      useToastStore.getState().addToast('Failed to load board', 'error');
     } finally {
       setLoading(false);
     }
@@ -164,6 +166,7 @@ export default function BoardPage() {
       await loadBoard();
     } catch (err) {
       console.error('Failed to move task', err);
+      useToastStore.getState().addToast('Failed to move task', 'error');
     }
   };
 

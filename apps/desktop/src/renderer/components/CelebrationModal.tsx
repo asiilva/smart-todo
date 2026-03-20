@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { X } from 'lucide-react';
+import { formatMinutes } from '../utils/format';
 
 interface Task {
   id: string;
@@ -25,13 +26,6 @@ const messages = [
   "One less thing to worry about!",
   "Shipped it!",
 ];
-
-function formatMinutes(minutes: number): string {
-  if (minutes < 60) return `${minutes}m`;
-  const h = Math.floor(minutes / 60);
-  const m = minutes % 60;
-  return m > 0 ? `${h}h ${m}m` : `${h}h`;
-}
 
 export default function CelebrationModal({ task, onClose }: Props) {
   const [message] = useState(() => messages[Math.floor(Math.random() * messages.length)]);

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { X } from 'lucide-react';
 import { apiClient } from '../services/api-client';
 
@@ -27,6 +27,11 @@ export default function CreateTaskModal({ boardId, columnId, columns, onClose, o
   const [estimating, setEstimating] = useState(false);
   const [estimation, setEstimation] = useState<{ projectedDurationMinutes: number; reasoning: string } | null>(null);
   const [error, setError] = useState('');
+  const [categories, setCategories] = useState<Array<{id: string; name: string; color: string}>>([]);
+
+  useEffect(() => {
+    apiClient.get('/categories').then(res => setCategories(res.data)).catch(() => {});
+  }, []);
 
   const handleEstimate = async () => {
     if (!title.trim()) return;
@@ -175,12 +180,18 @@ export default function CreateTaskModal({ boardId, columnId, columns, onClose, o
                 onChange={(e) => setCategory(e.target.value)}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
               >
-                <option value="work">Work</option>
-                <option value="exercise">Exercise</option>
-                <option value="family">Family</option>
-                <option value="personal">Personal</option>
-                <option value="errand">Errand</option>
-                <option value="learning">Learning</option>
+                {categories.length > 0 ? categories.map((cat) => (
+                  <option key={cat.id} value={cat.name}>{cat.name}</option>
+                )) : (
+                  <>
+                    <option value="work">Work</option>
+                    <option value="exercise">Exercise</option>
+                    <option value="family">Family</option>
+                    <option value="personal">Personal</option>
+                    <option value="errand">Errand</option>
+                    <option value="learning">Learning</option>
+                  </>
+                )}
               </select>
             </div>
           </div>

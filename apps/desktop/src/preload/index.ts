@@ -24,13 +24,6 @@ const electronAPI = {
   getToken: () => ipcRenderer.invoke('auth:get-token'),
 
   clearToken: () => ipcRenderer.invoke('auth:clear-token'),
-
-  onOAuthCallback: (callback: (data: { token: string }) => void) => {
-    const handler = (_event: Electron.IpcRendererEvent, data: { token: string }) =>
-      callback(data);
-    ipcRenderer.on('auth:oauth-callback', handler);
-    return () => ipcRenderer.removeListener('auth:oauth-callback', handler);
-  },
 };
 
 contextBridge.exposeInMainWorld('electronAPI', electronAPI);

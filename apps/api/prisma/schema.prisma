@@ -87,6 +87,8 @@ model Task {
   column      Column      @relation(fields: [columnId], references: [id])
   timeEntries TimeEntry[]
 
+  @@index([columnId, position])
+  @@index([scheduledDate])
   @@map("tasks")
 }
 
@@ -108,6 +110,7 @@ model TimeEntry {
   task Task @relation(fields: [taskId], references: [id])
   user User @relation(fields: [userId], references: [id])
 
+  @@index([taskId, stoppedAt])
   @@map("time_entries")
 }
 
@@ -138,6 +141,7 @@ model ProtectedTimeBlock {
 
   user User @relation(fields: [userId], references: [id])
 
+  @@index([userId, recurring, dayOfWeek])
   @@map("protected_time_blocks")
 }
 

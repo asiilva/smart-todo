@@ -10,6 +10,13 @@ import { taskRouter } from './tasks/task.router';
 import { categoryRouter } from './categories/category.router';
 import { plannerRouter } from './planner/planner.router';
 
+if (process.env.NODE_ENV === 'production') {
+  if (!process.env.JWT_SECRET || !process.env.JWT_REFRESH_SECRET) {
+    logger.fatal('JWT_SECRET and JWT_REFRESH_SECRET must be set in production');
+    process.exit(1);
+  }
+}
+
 const app = express();
 const PORT = process.env.PORT || 3001;
 

@@ -170,6 +170,14 @@ taskRouter.patch('/:id/move', async (req, res, next) => {
       });
     });
 
+    // Set/clear completedAt based on target column
+    const targetColumnInfo = await prisma.column.findUnique({ where: { id: newColumnId }, select: { name: true } });
+    if (targetColumnInfo?.name === 'Done') {
+      await prisma.task.update({ where: { id }, data: { completedAt: new Date() } });
+    } else {
+      await prisma.task.update({ where: { id }, data: { completedAt: null } });
+    }
+
     const updatedTask = await prisma.task.findUnique({
       where: { id },
       include: { column: true },
@@ -277,7 +285,7 @@ taskRouter.post('/:id/timer/stop', async (req, res, next) => {
 
     const now = new Date();
     const durationMs = now.getTime() - activeEntry.startedAt.getTime();
-    const durationMinutes = Math.round(durationMs / 60000);
+    const durationMinutes = Math.ceil(durationMs / 60000);
 
     const updatedEntry = await prisma.timeEntry.update({
       where: { id: activeEntry.id },

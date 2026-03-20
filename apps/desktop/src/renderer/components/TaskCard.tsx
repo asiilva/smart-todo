@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Clock, Timer } from 'lucide-react';
+import { formatMinutes, categoryColors } from '../utils/format';
 
 interface Task {
   id: string;
@@ -25,22 +26,6 @@ const priorityColors: Record<string, string> = {
   high: 'bg-orange-100 text-orange-600',
   critical: 'bg-red-100 text-red-600',
 };
-
-const categoryColors: Record<string, string> = {
-  work: '#3B82F6',
-  exercise: '#10B981',
-  family: '#F59E0B',
-  personal: '#8B5CF6',
-  errand: '#EF4444',
-  learning: '#06B6D4',
-};
-
-function formatMinutes(minutes: number): string {
-  if (minutes < 60) return `${minutes}m`;
-  const h = Math.floor(minutes / 60);
-  const m = minutes % 60;
-  return m > 0 ? `${h}h ${m}m` : `${h}h`;
-}
 
 export default function TaskCard({ task, onClick, isDragging }: Props) {
   const activeEntry = task.timeEntries?.find(e => !e.stoppedAt);

@@ -3,8 +3,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../stores/auth-store';
 
 export default function LoginPage() {
-  const [email, setEmail] = useState('test@test.com');
-  const [password, setPassword] = useState('Test@1234');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
