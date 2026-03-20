@@ -22,7 +22,7 @@ export default function CreateTaskModal({ boardId, columnId, columns, onClose, o
   const [priority, setPriority] = useState('medium');
   const [category, setCategory] = useState('work');
   const [selectedColumnId, setSelectedColumnId] = useState(columnId || columns[0]?.id || '');
-  const [scheduledDate, setScheduledDate] = useState(new Date().toISOString().split('T')[0]);
+  const [scheduledDate, setScheduledDate] = useState('');
   const [loading, setLoading] = useState(false);
   const [estimating, setEstimating] = useState(false);
   const [estimation, setEstimation] = useState<{ projectedDurationMinutes: number; reasoning: string } | null>(null);

@@ -45,6 +45,7 @@ export default function TaskDetailPanel({ task, onClose, onUpdated }: Props) {
   const [notes, setNotes] = useState(task.notes || '');
   const [priority, setPriority] = useState(task.priority);
   const [category, setCategory] = useState(task.category);
+  const [scheduledDate, setScheduledDate] = useState(task.scheduledDate?.split('T')[0] || '');
   const [saving, setSaving] = useState(false);
   const [timeEntries, setTimeEntries] = useState<TimeEntry[]>(task.timeEntries || []);
 
@@ -72,6 +73,7 @@ export default function TaskDetailPanel({ task, onClose, onUpdated }: Props) {
         notes: notes.trim() || undefined,
         priority,
         category,
+        scheduledDate: scheduledDate || null,
       });
       onUpdated();
     } catch {
@@ -174,6 +176,16 @@ export default function TaskDetailPanel({ task, onClose, onUpdated }: Props) {
               <option value="learning">Learning</option>
             </select>
           </div>
+        </div>
+
+        <div>
+          <label className="block text-xs font-medium text-gray-500 mb-1">Scheduled Date</label>
+          <input
+            type="date"
+            value={scheduledDate}
+            onChange={(e) => setScheduledDate(e.target.value)}
+            className="w-full px-3 py-1.5 border border-gray-200 rounded-lg text-sm"
+          />
         </div>
 
         {/* Time tracking */}
