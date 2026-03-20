@@ -32,11 +32,34 @@ export default function CreateTaskModal({ boardId, columnId, columns, onClose, o
     if (!title.trim()) return;
     setEstimating(true);
     try {
+      // Fetch user's tech profile for personalized estimation
+      let userProfile = '';
+      try {
+        const profileRes = await apiClient.get('/users/me/profile');
+        const profile = profileRes.data;
+        userProfile = profile.rawText || JSON.stringify(profile.structuredProfile || {});
+      } catch {
+        // No profile yet — estimate without it
+      }
+
+      // Fetch recent completed tasks for historical accuracy
+      let history = '';
+      try {
+        const historyRes = await apiClient.get('/reports/completed?period=month&date=' + new Date().toISOString().split('T')[0]);
+        const tasks = historyRes.data?.tasks || [];
+        const relevant = tasks.slice(0, 10).map((t: { title: string; projectedDurationMinutes?: number; executedDurationMinutes: number }) =>
+          `"${t.title}": projected ${t.projectedDurationMinutes || '?'}min, actual ${t.executedDurationMinutes}min`
+        );
+        if (relevant.length > 0) history = relevant.join('\n');
+      } catch {
+        // No history yet
+      }
+
       const result = await window.electronAPI.estimateTask({
         taskTitle: title,
         taskDescription: description,
-        userProfile: '',
-        history: '',
+        userProfile,
+        history,
       });
       if (result.success && result.data) {
         setEstimation(result.data);
