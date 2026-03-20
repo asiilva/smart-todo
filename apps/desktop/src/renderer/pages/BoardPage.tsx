@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { DndContext, DragEndEvent, DragOverEvent, DragStartEvent, closestCorners, DragOverlay, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
+import { useNavigate } from 'react-router-dom';
 import { apiClient } from '../services/api-client';
 import KanbanColumn from '../components/KanbanColumn';
 import TaskCard from '../components/TaskCard';
@@ -38,6 +39,9 @@ interface Board {
   columns: Column[];
 }
 
+// Tech profile requirement expires 2026-06-19 (3 months from launch)
+const PROFILE_REQUIRED_UNTIL = new Date('2026-06-19');
+
 export default function BoardPage() {
   const [board, setBoard] = useState<Board | null>(null);
   const [loading, setLoading] = useState(true);
@@ -45,6 +49,9 @@ export default function BoardPage() {
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
   const [activeTask, setActiveTask] = useState<Task | null>(null);
   const [createColumnId, setCreateColumnId] = useState<string | undefined>();
+  const [hasProfile, setHasProfile] = useState<boolean | null>(null);
+  const [showProfilePrompt, setShowProfilePrompt] = useState(false);
+  const navigate = useNavigate();
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 5 } })
@@ -52,7 +59,30 @@ export default function BoardPage() {
 
   useEffect(() => {
     loadBoard();
+    checkProfile();
   }, []);
+
+  const checkProfile = async () => {
+    try {
+      await apiClient.get('/users/me/profile');
+      setHasProfile(true);
+    } catch {
+      setHasProfile(false);
+    }
+  };
+
+  const isProfileRequired = () => {
+    return !hasProfile && new Date() < PROFILE_REQUIRED_UNTIL;
+  };
+
+  const handleNewTask = (columnId?: string) => {
+    if (isProfileRequired()) {
+      setShowProfilePrompt(true);
+      return;
+    }
+    setCreateColumnId(columnId);
+    setShowCreateModal(true);
+  };
 
   const loadBoard = async () => {
     try {
@@ -136,8 +166,7 @@ export default function BoardPage() {
   };
 
   const handleCreateInColumn = (columnId: string) => {
-    setCreateColumnId(columnId);
-    setShowCreateModal(true);
+    handleNewTask(columnId);
   };
 
   if (loading) {
@@ -161,7 +190,7 @@ export default function BoardPage() {
       <div className="flex items-center justify-between p-4 border-b">
         <h1 className="text-xl font-bold">{board.name}</h1>
         <button
-          onClick={() => { setCreateColumnId(undefined); setShowCreateModal(true); }}
+          onClick={() => handleNewTask()}
           className="flex items-center gap-2 px-3 py-1.5 bg-primary-600 text-white text-sm rounded-lg hover:bg-primary-700 transition-colors"
         >
           <Plus size={16} />
@@ -212,6 +241,32 @@ export default function BoardPage() {
           onClose={() => setSelectedTask(null)}
           onUpdated={handleTaskUpdated}
         />
+      )}
+
+      {showProfilePrompt && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-xl shadow-xl max-w-md mx-4 p-6">
+            <h2 className="text-lg font-semibold mb-2">Set Up Your Tech Profile First</h2>
+            <p className="text-gray-500 text-sm mb-4">
+              To create accurate time estimates, Smart Todo needs to know your skills and experience.
+              Please fill out your tech profile before creating your first task.
+            </p>
+            <div className="flex gap-2 justify-end">
+              <button
+                onClick={() => setShowProfilePrompt(false)}
+                className="px-4 py-2 text-sm text-gray-600 hover:text-gray-800 transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={() => { setShowProfilePrompt(false); navigate('/profile'); }}
+                className="px-4 py-2 text-sm bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors"
+              >
+                Go to Profile
+              </button>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );
