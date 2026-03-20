@@ -74,6 +74,11 @@ boardRouter.post('/', async (req, res, next) => {
       include: {
         columns: {
           orderBy: { position: 'asc' },
+          include: {
+            tasks: {
+              orderBy: { position: 'asc' },
+            },
+          },
         },
       },
     });

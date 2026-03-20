@@ -41,7 +41,7 @@ const columnColors: Record<string, string> = {
 export default function KanbanColumn({ column, onAddTask, onTaskClick }: Props) {
   const { setNodeRef, isOver } = useDroppable({ id: column.id });
 
-  const sortedTasks = [...column.tasks].sort((a, b) => a.position - b.position);
+  const sortedTasks = [...(column.tasks || [])].sort((a, b) => a.position - b.position);
 
   return (
     <div
