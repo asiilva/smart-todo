@@ -113,6 +113,8 @@ export default function ProfilePage() {
       const result = await window.electronAPI.generateProfile({ resumeText: rawText });
       if (result.success && result.data) {
         setStructuredProfile(result.data);
+        // Persist both rawText and structured profile to API
+        await apiClient.post('/users/me/profile', { rawText, structuredProfile: result.data });
       } else {
         setError(result.error || 'Failed to generate profile');
       }

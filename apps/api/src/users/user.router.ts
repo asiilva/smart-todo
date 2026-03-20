@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import { z } from 'zod';
+import { Prisma } from '@prisma/client';
 import { prisma } from '../lib/prisma';
 import { AppError } from '../middleware/error-handler';
 import { authenticate } from '../middleware/auth';
@@ -10,6 +11,7 @@ const updateNameSchema = z.object({
 
 const techProfileSchema = z.object({
   rawText: z.string().min(1, 'rawText is required'),
+  structuredProfile: z.any().optional(),
 });
 
 export const userRouter = Router();
@@ -61,15 +63,17 @@ userRouter.post('/me/profile', async (req, res, next) => {
       throw new AppError(400, parsed.error.issues[0].message);
     }
 
+    const data: { rawText: string; structuredProfile?: Prisma.InputJsonValue } = {
+      rawText: parsed.data.rawText,
+    };
+    if (parsed.data.structuredProfile) {
+      data.structuredProfile = parsed.data.structuredProfile as Prisma.InputJsonValue;
+    }
+
     const profile = await prisma.techProfile.upsert({
       where: { userId: req.user!.userId },
-      create: {
-        userId: req.user!.userId,
-        rawText: parsed.data.rawText,
-      },
-      update: {
-        rawText: parsed.data.rawText,
-      },
+      create: { userId: req.user!.userId, ...data },
+      update: data,
     });
 
     res.json(profile);
