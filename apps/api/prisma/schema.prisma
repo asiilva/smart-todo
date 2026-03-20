@@ -1,0 +1,156 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String   @id @default(uuid())
+  email        String   @unique
+  passwordHash String   @map("password_hash")
+  name         String
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  techProfile         TechProfile?
+  boards              Board[]
+  timeEntries         TimeEntry[]
+  dailySettings       DailySettings?
+  protectedTimeBlocks ProtectedTimeBlock[]
+  categories          Category[]
+
+  @@map("users")
+}
+
+model TechProfile {
+  id                String   @id @default(uuid())
+  userId            String   @unique @map("user_id")
+  rawText           String?  @map("raw_text")
+  structuredProfile Json     @default("{}") @map("structured_profile")
+  createdAt         DateTime @default(now()) @map("created_at")
+  updatedAt         DateTime @updatedAt @map("updated_at")
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@map("tech_profiles")
+}
+
+model Board {
+  id        String   @id @default(uuid())
+  userId    String   @map("user_id")
+  name      String
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  user    User     @relation(fields: [userId], references: [id])
+  columns Column[]
+
+  @@map("boards")
+}
+
+model Column {
+  id        String   @id @default(uuid())
+  boardId   String   @map("board_id")
+  name      String
+  position  Int
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  board Board  @relation(fields: [boardId], references: [id])
+  tasks Task[]
+
+  @@map("columns")
+}
+
+model Task {
+  id                       String    @id @default(uuid())
+  columnId                 String    @map("column_id")
+  title                    String
+  description              String?
+  notes                    String?
+  projectedDurationMinutes Int?      @map("projected_duration_minutes")
+  executedDurationMinutes  Int       @default(0) @map("executed_duration_minutes")
+  priority                 Priority  @default(medium)
+  category                 String    @default("work")
+  position                 Int
+  labels                   Json      @default("[]")
+  scheduledDate            DateTime? @map("scheduled_date") @db.Date
+  dueDate                  DateTime? @map("due_date") @db.Date
+  startedAt                DateTime? @map("started_at")
+  completedAt              DateTime? @map("completed_at")
+  createdAt                DateTime  @default(now()) @map("created_at")
+  updatedAt                DateTime  @updatedAt @map("updated_at")
+
+  column      Column      @relation(fields: [columnId], references: [id])
+  timeEntries TimeEntry[]
+
+  @@map("tasks")
+}
+
+enum Priority {
+  low
+  medium
+  high
+  critical
+}
+
+model TimeEntry {
+  id              String    @id @default(uuid())
+  taskId          String    @map("task_id")
+  userId          String    @map("user_id")
+  startedAt       DateTime  @map("started_at")
+  stoppedAt       DateTime? @map("stopped_at")
+  durationMinutes Int?      @map("duration_minutes")
+
+  task Task @relation(fields: [taskId], references: [id])
+  user User @relation(fields: [userId], references: [id])
+
+  @@map("time_entries")
+}
+
+model DailySettings {
+  id             String   @id @default(uuid())
+  userId         String   @unique @map("user_id")
+  availableFrom  String   @default("07:00") @map("available_from")
+  availableUntil String   @default("22:00") @map("available_until")
+  createdAt      DateTime @default(now()) @map("created_at")
+  updatedAt      DateTime @updatedAt @map("updated_at")
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@map("daily_settings")
+}
+
+model ProtectedTimeBlock {
+  id           String    @id @default(uuid())
+  userId       String    @map("user_id")
+  title        String
+  category     String
+  dayOfWeek    Int?      @map("day_of_week")
+  specificDate DateTime? @map("specific_date") @db.Date
+  startTime    String    @map("start_time")
+  endTime      String    @map("end_time")
+  recurring    Boolean   @default(false)
+  createdAt    DateTime  @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@map("protected_time_blocks")
+}
+
+model Category {
+  id        String   @id @default(uuid())
+  userId    String   @map("user_id")
+  name      String
+  color     String
+  isDefault Boolean  @default(false) @map("is_default")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@unique([userId, name])
+  @@map("categories")
+}

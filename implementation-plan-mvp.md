@@ -161,61 +161,73 @@ Dropped from full schema: organizations, task_attachments, task_history, push_su
 
 ## Phase Plan
 
-### Phase 1: Scaffolding — ~14h
-- [ ] Initialize monorepo with workspaces (`apps/desktop`, `apps/api`, `packages/shared`) — ~1h
-- [ ] Scaffold Electron app with Vite + React + TypeScript + Tailwind — ~2h
-- [ ] Configure electron-builder (DMG target for dev testing) — ~1h
-- [ ] Set up preload script with context bridge — ~1h
-- [ ] Scaffold Express API with TypeScript — ~1.5h
-- [ ] Set up Prisma + PostgreSQL schema (MVP subset) and migrations — ~2h
-- [ ] Docker Compose for local dev (PostgreSQL + API) — ~1h
-- [ ] Shared types package — ~1h
-- [ ] ESLint + Prettier config — ~0.5h
-- [ ] CI: GitHub Actions (lint, test, build) — ~2h
+### Phase 1: Scaffolding — estimated ~14h | actual: ~9min
+| Task | Estimated | Actual | Status |
+|------|-----------|--------|--------|
+| Initialize monorepo with workspaces (`apps/desktop`, `apps/api`, `packages/shared`) | ~1h | ~2min | [x] |
+| Scaffold Electron app with Vite + React + TypeScript + Tailwind | ~2h | ~2min | [x] |
+| Configure electron-builder (DMG target for dev testing) | ~1h | ~1min | [x] |
+| Set up preload script with context bridge | ~1h | ~1min | [x] |
+| Scaffold Express API with TypeScript | ~1.5h | ~2min | [x] |
+| Set up Prisma + PostgreSQL schema (MVP subset) and migrations | ~2h | ~1min | [x] |
+| Docker Compose for local dev (PostgreSQL + API) | ~1h | ~0.5min | [x] |
+| Shared types package | ~1h | ~0.5min | [x] |
+| ESLint + Prettier config | ~0.5h | ~0.5min | [x] |
+| CI: GitHub Actions (lint, test, build) | ~2h | ~0.5min | [x] |
 
-### Phase 2: Auth — ~8h
-- [ ] API: Register endpoint (email, password, name) with bcrypt + JWT — ~2h
-- [ ] API: Login endpoint with JWT access (15min) + refresh (7d) tokens — ~1.5h
-- [ ] API: Refresh token endpoint — ~1h
-- [ ] API: Auth middleware (authenticate, get current user) — ~0.5h
-- [ ] Electron: Login page — ~1h
-- [ ] Electron: Register page — ~1h
-- [ ] Electron: Secure token storage (safeStorage) + auth context/provider — ~1h
+### Phase 2: Auth — estimated ~8h | actual: ___
+| Task | Estimated | Actual | Status |
+|------|-----------|--------|--------|
+| API: Register endpoint (email, password, name) with bcrypt + JWT | ~2h | | [ ] |
+| API: Login endpoint with JWT access (15min) + refresh (7d) tokens | ~1.5h | | [ ] |
+| API: Refresh token endpoint | ~1h | | [ ] |
+| API: Auth middleware (authenticate, get current user) | ~0.5h | | [ ] |
+| Electron: Login page | ~1h | | [ ] |
+| Electron: Register page | ~1h | | [ ] |
+| Electron: Secure token storage (safeStorage) + auth context/provider | ~1h | | [ ] |
 
-### Phase 3: Claude CLI + User Profile — ~8h
-- [ ] Electron: Claude CLI integration (`claude-cli.ts` — spawn, stdin, timeout) — ~2h
-- [ ] Electron: IPC handlers for AI operations — ~1.5h
-- [ ] Electron: First-launch Claude CLI availability check — ~0.5h
-- [ ] API: Profile CRUD (plain text skills description + structured JSONB) — ~1.5h
-- [ ] Electron: Simple onboarding (text description of skills → Claude generates structured profile) — ~2h
-- [ ] Electron: Profile page (view/edit skills) — ~0.5h
+### Phase 3: Claude CLI + User Profile — estimated ~8h | actual: ___
+| Task | Estimated | Actual | Status |
+|------|-----------|--------|--------|
+| Electron: Claude CLI integration (`claude-cli.ts` — spawn, stdin, timeout) | ~2h | | [ ] |
+| Electron: IPC handlers for AI operations | ~1.5h | | [ ] |
+| Electron: First-launch Claude CLI availability check | ~0.5h | | [ ] |
+| API: Profile CRUD (plain text skills description + structured JSONB) | ~1.5h | | [ ] |
+| Electron: Simple onboarding (text description of skills → Claude generates structured profile) | ~2h | | [ ] |
+| Electron: Profile page (view/edit skills) | ~0.5h | | [ ] |
 
-### Phase 4: Task Management + Kanban — ~18h
-- [ ] API: Board + Column CRUD with defaults (auto-create 5 columns) — ~2h
-- [ ] API: Task CRUD with position management — ~3h
-- [ ] API: Category CRUD (defaults + custom) — ~1.5h
-- [ ] API: Time tracking (start/stop, time_entries, update executed_duration) — ~2h
-- [ ] Electron: Kanban board with @dnd-kit drag-and-drop — ~4h
-- [ ] Electron: Task card component (title, priority badge, category color, timer) — ~1.5h
-- [ ] Electron: Task creation modal with AI estimation (IPC → Claude CLI → API persist) — ~2h
-- [ ] Electron: Task detail panel (edit fields, view time entries) — ~2h
+### Phase 4: Task Management + Kanban — estimated ~18h | actual: ___
+| Task | Estimated | Actual | Status |
+|------|-----------|--------|--------|
+| API: Board + Column CRUD with defaults (auto-create 5 columns) | ~2h | | [ ] |
+| API: Task CRUD with position management | ~3h | | [ ] |
+| API: Category CRUD (defaults + custom) | ~1.5h | | [ ] |
+| API: Time tracking (start/stop, time_entries, update executed_duration) | ~2h | | [ ] |
+| Electron: Kanban board with @dnd-kit drag-and-drop | ~4h | | [ ] |
+| Electron: Task card component (title, priority badge, category color, timer) | ~1.5h | | [ ] |
+| Electron: Task creation modal with AI estimation (IPC → Claude CLI → API persist) | ~2h | | [ ] |
+| Electron: Task detail panel (edit fields, view time entries) | ~2h | | [ ] |
 
-### Phase 5: Daily Planner — ~10h
-- [ ] API: Daily planner endpoint (tasks for date + time blocks + availability) — ~2h
-- [ ] API: Daily settings CRUD (available_from/until) — ~1h
-- [ ] API: Protected time blocks CRUD — ~1.5h
-- [ ] Electron: Planner page with visual timeline — ~3h
-- [ ] Electron: Day summary bar (projected vs available, category breakdown) — ~1.5h
-- [ ] Electron: Overbooked warning — ~1h
+### Phase 5: Daily Planner — estimated ~10h | actual: ___
+| Task | Estimated | Actual | Status |
+|------|-----------|--------|--------|
+| API: Daily planner endpoint (tasks for date + time blocks + availability) | ~2h | | [ ] |
+| API: Daily settings CRUD (available_from/until) | ~1h | | [ ] |
+| API: Protected time blocks CRUD | ~1.5h | | [ ] |
+| Electron: Planner page with visual timeline | ~3h | | [ ] |
+| Electron: Day summary bar (projected vs available, category breakdown) | ~1.5h | | [ ] |
+| Electron: Overbooked warning | ~1h | | [ ] |
 
-### Phase 6: Polish — ~6h
-- [ ] Electron: Loading states and error handling — ~1.5h
-- [ ] Electron: Empty states (no tasks, no board) — ~1h
-- [ ] Electron: Toast notifications for actions (task created, timer started, etc.) — ~1h
-- [ ] API: Input validation with Zod on all endpoints — ~1.5h
-- [ ] API: Global error handler + structured logging — ~1h
+### Phase 6: Polish — estimated ~6h | actual: ___
+| Task | Estimated | Actual | Status |
+|------|-----------|--------|--------|
+| Electron: Loading states and error handling | ~1.5h | | [ ] |
+| Electron: Empty states (no tasks, no board) | ~1h | | [ ] |
+| Electron: Toast notifications for actions (task created, timer started, etc.) | ~1h | | [ ] |
+| API: Input validation with Zod on all endpoints | ~1.5h | | [ ] |
+| API: Global error handler + structured logging | ~1h | | [ ] |
 
-### Total MVP effort: ~64h
+### Total MVP effort — estimated: ~64h | actual: ___
 
 ---
 

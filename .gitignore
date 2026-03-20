@@ -30,3 +30,11 @@ coverage/
 
 # Docker
 *.log
+
+# Electron
+out/
+release/
+*.dmg
+*.exe
+*.AppImage
+*.snap
