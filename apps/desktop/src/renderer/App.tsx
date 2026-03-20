@@ -7,6 +7,7 @@ import RegisterPage from './pages/RegisterPage';
 import BoardPage from './pages/BoardPage';
 import PlannerPage from './pages/PlannerPage';
 import ProfilePage from './pages/ProfilePage';
+import OnboardingPage from './pages/OnboardingPage';
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
@@ -50,6 +51,7 @@ export default function App() {
         }
       >
         <Route index element={<Navigate to="/board" replace />} />
+        <Route path="onboarding" element={<OnboardingPage />} />
         <Route path="board" element={<BoardPage />} />
         <Route path="planner" element={<PlannerPage />} />
         <Route path="profile" element={<ProfilePage />} />

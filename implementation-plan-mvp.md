@@ -186,15 +186,15 @@ Dropped from full schema: organizations, task_attachments, task_history, push_su
 | Electron: Register page | ~1h | scaffolded in P1 | [x] |
 | Electron: Secure token storage (safeStorage) + auth context/provider | ~1h | scaffolded in P1 | [x] |
 
-### Phase 3: Claude CLI + User Profile — estimated ~8h | actual: ___
+### Phase 3: Claude CLI + User Profile — estimated ~8h | actual: ~2min
 | Task | Estimated | Actual | Status |
 |------|-----------|--------|--------|
-| Electron: Claude CLI integration (`claude-cli.ts` — spawn, stdin, timeout) | ~2h | | [ ] |
-| Electron: IPC handlers for AI operations | ~1.5h | | [ ] |
-| Electron: First-launch Claude CLI availability check | ~0.5h | | [ ] |
-| API: Profile CRUD (plain text skills description + structured JSONB) | ~1.5h | | [ ] |
-| Electron: Simple onboarding (text description of skills → Claude generates structured profile) | ~2h | | [ ] |
-| Electron: Profile page (view/edit skills) | ~0.5h | | [ ] |
+| Electron: Claude CLI integration (`claude-cli.ts` — spawn, stdin, timeout) | ~2h | scaffolded in P1 | [x] |
+| Electron: IPC handlers for AI operations | ~1.5h | scaffolded in P1 | [x] |
+| Electron: First-launch Claude CLI availability check | ~0.5h | ~0.5min | [x] |
+| API: Profile CRUD (plain text skills description + structured JSONB) | ~1.5h | done in P2 | [x] |
+| Electron: Simple onboarding (text description of skills → Claude generates structured profile) | ~2h | ~1min | [x] |
+| Electron: Profile page (view/edit skills) | ~0.5h | ~0.5min | [x] |
 
 ### Phase 4: Task Management + Kanban — estimated ~18h | actual: ___
 | Task | Estimated | Actual | Status |
