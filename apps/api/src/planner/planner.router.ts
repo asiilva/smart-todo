@@ -43,13 +43,18 @@ plannerRouter.get('/:date', async (req, res, next) => {
       throw new AppError(400, 'Date must be in YYYY-MM-DD format');
     }
 
-    const targetDate = new Date(date + 'T00:00:00.000Z');
+    // Use noon UTC to avoid timezone boundary issues with @db.Date
+    const targetDate = new Date(date + 'T12:00:00.000Z');
     const dayOfWeek = targetDate.getUTCDay();
+
+    // For Prisma @db.Date, compare using a range to avoid timezone issues
+    const startOfDay = new Date(date + 'T00:00:00.000Z');
+    const endOfDay = new Date(date + 'T23:59:59.999Z');
 
     // Fetch tasks scheduled for this date
     const tasks = await prisma.task.findMany({
       where: {
-        scheduledDate: targetDate,
+        scheduledDate: { gte: startOfDay, lte: endOfDay },
         column: {
           board: {
             userId,
