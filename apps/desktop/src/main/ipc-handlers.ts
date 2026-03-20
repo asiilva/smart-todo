@@ -20,10 +20,15 @@ export function registerIpcHandlers() {
   ipcMain.handle(
     'ai:estimate-task',
     async (_event, { taskTitle, taskDescription, userProfile, history }) => {
+      console.log('[AI] estimate-task called:', { taskTitle, taskDescription });
       try {
         const result = await estimateTask(taskTitle, taskDescription, userProfile, history);
-        return { success: true, data: JSON.parse(result) };
+        console.log('[AI] estimate-task raw result:', result);
+        const parsed = JSON.parse(result);
+        console.log('[AI] estimate-task parsed:', parsed);
+        return { success: true, data: parsed };
       } catch (error) {
+        console.error('[AI] estimate-task error:', (error as Error).message);
         return { success: false, error: (error as Error).message };
       }
     },

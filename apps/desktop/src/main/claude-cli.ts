@@ -10,6 +10,8 @@ export interface ClaudeCliOptions {
 export async function callClaude(options: ClaudeCliOptions): Promise<string> {
   const { prompt, timeout = CLI_TIMEOUT_MS } = options;
 
+  console.log('[Claude CLI] Spawning claude with prompt length:', prompt.length);
+
   return new Promise((resolve, reject) => {
     const proc = spawn('claude', ['-p', '--output-format', 'json'], {
       stdio: ['pipe', 'pipe', 'pipe'],
@@ -22,13 +24,18 @@ export async function callClaude(options: ClaudeCliOptions): Promise<string> {
 
     proc.stdout.on('data', (data: Buffer) => {
       stdout += data.toString();
+      console.log('[Claude CLI] stdout chunk:', data.toString().substring(0, 200));
     });
 
     proc.stderr.on('data', (data: Buffer) => {
       stderr += data.toString();
+      console.log('[Claude CLI] stderr chunk:', data.toString().substring(0, 200));
     });
 
     proc.on('close', (code) => {
+      console.log('[Claude CLI] Process exited with code:', code);
+      console.log('[Claude CLI] Full stdout:', stdout.substring(0, 500));
+      console.log('[Claude CLI] Full stderr:', stderr.substring(0, 500));
       if (code === 0) {
         resolve(stdout.trim());
       } else {
