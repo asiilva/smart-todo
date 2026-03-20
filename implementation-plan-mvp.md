@@ -196,17 +196,17 @@ Dropped from full schema: organizations, task_attachments, task_history, push_su
 | Electron: Simple onboarding (text description of skills → Claude generates structured profile) | ~2h | ~1min | [x] |
 | Electron: Profile page (view/edit skills) | ~0.5h | ~0.5min | [x] |
 
-### Phase 4: Task Management + Kanban — estimated ~18h | actual: ___
+### Phase 4: Task Management + Kanban — estimated ~18h | actual: ~6min
 | Task | Estimated | Actual | Status |
 |------|-----------|--------|--------|
-| API: Board + Column CRUD with defaults (auto-create 5 columns) | ~2h | | [ ] |
-| API: Task CRUD with position management | ~3h | | [ ] |
-| API: Category CRUD (defaults + custom) | ~1.5h | | [ ] |
-| API: Time tracking (start/stop, time_entries, update executed_duration) | ~2h | | [ ] |
-| Electron: Kanban board with @dnd-kit drag-and-drop | ~4h | | [ ] |
-| Electron: Task card component (title, priority badge, category color, timer) | ~1.5h | | [ ] |
-| Electron: Task creation modal with AI estimation (IPC → Claude CLI → API persist) | ~2h | | [ ] |
-| Electron: Task detail panel (edit fields, view time entries) | ~2h | | [ ] |
+| API: Board + Column CRUD with defaults (auto-create 5 columns) | ~2h | ~1min | [x] |
+| API: Task CRUD with position management | ~3h | ~1min | [x] |
+| API: Category CRUD (defaults + custom) | ~1.5h | ~1min | [x] |
+| API: Time tracking (start/stop, time_entries, update executed_duration) | ~2h | ~1min | [x] |
+| Electron: Kanban board with @dnd-kit drag-and-drop | ~4h | ~1min | [x] |
+| Electron: Task card component (title, priority badge, category color, timer) | ~1.5h | ~0.5min | [x] |
+| Electron: Task creation modal with AI estimation (IPC → Claude CLI → API persist) | ~2h | ~0.5min | [x] |
+| Electron: Task detail panel (edit fields, view time entries) | ~2h | ~0.5min | [x] |
 
 ### Phase 5: Daily Planner — estimated ~10h | actual: ___
 | Task | Estimated | Actual | Status |
