@@ -12,6 +12,37 @@ const REFRESH_TOKEN_KEY = 'smart-todo-refresh-token';
 
 const tokenStore = new Map<string, Buffer>();
 
+/**
+ * Extract the actual JSON result from Claude CLI's output.
+ * Claude CLI with --output-format json wraps the response in an envelope:
+ *   { type: "result", result: "```json\n{...}\n```", ... }
+ * We need to unwrap both layers.
+ */
+function extractClaudeResult(raw: string): unknown {
+  let outer;
+  try {
+    outer = JSON.parse(raw);
+  } catch {
+    // Not JSON envelope — try to extract JSON directly from the raw string
+    return extractJsonFromMarkdown(raw);
+  }
+
+  // If it's a Claude CLI envelope, extract the .result field
+  if (outer && typeof outer.result === 'string') {
+    return extractJsonFromMarkdown(outer.result);
+  }
+
+  // Already a plain object
+  return outer;
+}
+
+function extractJsonFromMarkdown(text: string): unknown {
+  // Strip markdown code block if present
+  const codeBlockMatch = text.match(/```(?:json)?\s*\n?([\s\S]*?)\n?```/);
+  const jsonStr = codeBlockMatch ? codeBlockMatch[1].trim() : text.trim();
+  return JSON.parse(jsonStr);
+}
+
 export function registerIpcHandlers() {
   ipcMain.handle('ai:check-available', async () => {
     return isClaudeAvailable();
@@ -23,10 +54,9 @@ export function registerIpcHandlers() {
       console.log('[AI] estimate-task called:', { taskTitle, taskDescription });
       try {
         const result = await estimateTask(taskTitle, taskDescription, userProfile, history);
-        console.log('[AI] estimate-task raw result:', result);
-        const parsed = JSON.parse(result);
-        console.log('[AI] estimate-task parsed:', parsed);
-        return { success: true, data: parsed };
+        const data = extractClaudeResult(result);
+        console.log('[AI] estimate-task result:', data);
+        return { success: true, data };
       } catch (error) {
         console.error('[AI] estimate-task error:', (error as Error).message);
         return { success: false, error: (error as Error).message };
@@ -37,7 +67,7 @@ export function registerIpcHandlers() {
   ipcMain.handle('ai:parse-task', async (_event, { text }) => {
     try {
       const result = await parseTaskFromText(text);
-      return { success: true, data: JSON.parse(result) };
+      return { success: true, data: extractClaudeResult(result) };
     } catch (error) {
       return { success: false, error: (error as Error).message };
     }
@@ -46,7 +76,7 @@ export function registerIpcHandlers() {
   ipcMain.handle('ai:generate-profile', async (_event, { resumeText }) => {
     try {
       const result = await generateTechProfile(resumeText);
-      return { success: true, data: JSON.parse(result) };
+      return { success: true, data: extractClaudeResult(result) };
     } catch (error) {
       return { success: false, error: (error as Error).message };
     }
@@ -61,7 +91,7 @@ export function registerIpcHandlers() {
           JSON.stringify(profile),
           JSON.stringify(availability),
         );
-        return { success: true, data: JSON.parse(result) };
+        return { success: true, data: extractClaudeResult(result) };
       } catch (error) {
         return { success: false, error: (error as Error).message };
       }
