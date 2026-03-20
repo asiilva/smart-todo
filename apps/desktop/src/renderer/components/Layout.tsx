@@ -15,7 +15,7 @@ export default function Layout() {
   return (
     <div className="flex h-screen">
       <aside className="w-64 bg-gray-900 text-white flex flex-col">
-        <div className="p-4 border-b border-gray-700">
+        <div className="p-4 border-b border-gray-700 drag-region">
           <h1 className="text-xl font-bold">Smart Todo</h1>
           {user && <p className="text-sm text-gray-400 mt-1">{user.name}</p>}
         </div>

@@ -6,6 +6,16 @@
   body {
     @apply antialiased;
   }
+
+  .drag-region {
+    -webkit-app-region: drag;
+  }
+
+  .drag-region button,
+  .drag-region a,
+  .drag-region input {
+    -webkit-app-region: no-drag;
+  }
 }
 
 @layer utilities {
