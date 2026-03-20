@@ -1,10 +1,14 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
   body {
-    @apply antialiased;
+    @apply antialiased font-sans;
+    background: #F7F5FF;
+    color: #1E1B3A;
   }
 
   .drag-region {
@@ -18,6 +22,76 @@
   }
 }
 
+@layer components {
+  .btn-primary {
+    @apply px-5 py-2.5 text-white font-semibold text-sm rounded-pill border-0 cursor-pointer;
+    background: linear-gradient(135deg, #7C5CFC, #A78BFA);
+    box-shadow: 0 3px 12px rgba(124,92,252,0.25);
+    transition: all 0.2s;
+  }
+  .btn-primary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 5px 16px rgba(124,92,252,0.35);
+  }
+  .btn-primary:disabled {
+    opacity: 0.5;
+    transform: none;
+    cursor: not-allowed;
+  }
+
+  .btn-secondary {
+    @apply px-4 py-2 text-sm font-semibold rounded-pill border cursor-pointer;
+    border-color: #E8E5F5;
+    background: white;
+    color: #6B6894;
+    transition: all 0.2s;
+  }
+  .btn-secondary:hover {
+    border-color: #7C5CFC;
+    color: #1E1B3A;
+    background: #F0EDFF;
+  }
+
+  .btn-danger {
+    @apply px-4 py-2 text-sm font-semibold rounded-pill border cursor-pointer;
+    border-color: rgba(240,85,110,0.3);
+    background: rgba(240,85,110,0.08);
+    color: #F0556E;
+    transition: all 0.2s;
+  }
+  .btn-danger:hover {
+    background: rgba(240,85,110,0.15);
+    border-color: rgba(240,85,110,0.5);
+  }
+
+  .form-input {
+    @apply w-full px-3.5 py-2.5 text-sm font-sans border rounded-[12px];
+    border-color: #E8E5F5;
+    background: #F7F5FF;
+    color: #1E1B3A;
+    transition: all 0.2s;
+  }
+  .form-input:focus {
+    outline: none;
+    border-color: #7C5CFC;
+    box-shadow: 0 0 0 3px rgba(124,92,252,0.12);
+  }
+  .form-input::placeholder {
+    color: #9B98B8;
+  }
+
+  .form-label {
+    @apply block text-xs font-semibold mb-1.5 uppercase tracking-wide;
+    color: #9B98B8;
+  }
+
+  .card {
+    @apply bg-white border rounded-[14px] p-4;
+    border-color: #E8E5F5;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 2px 8px rgba(0,0,0,0.04);
+  }
+}
+
 @layer utilities {
   .animate-slide-in {
     animation: slide-in 0.3s ease-out;
@@ -25,15 +99,6 @@
 
   .animate-pulse-subtle {
     animation: pulse-subtle 2s ease-in-out infinite;
-  }
-}
-
-@keyframes pulse-subtle {
-  0%, 100% {
-    box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.3);
-  }
-  50% {
-    box-shadow: 0 0 0 6px rgba(34, 197, 94, 0);
   }
 }
 
@@ -45,6 +110,15 @@
   to {
     transform: translateX(0);
     opacity: 1;
+  }
+}
+
+@keyframes pulse-subtle {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(44, 193, 151, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 0 6px rgba(44, 193, 151, 0);
   }
 }
 

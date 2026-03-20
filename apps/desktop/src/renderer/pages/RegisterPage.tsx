@@ -4,6 +4,7 @@ import { useAuthStore } from '../stores/auth-store';
 
 export default function RegisterPage() {
   const [form, setForm] = useState({ name: '', email: '', password: '', confirmPassword: '' });
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const register = useAuthStore((s) => s.register);
@@ -28,42 +29,106 @@ export default function RegisterPage() {
     setForm((f) => ({ ...f, [field]: e.target.value }));
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
-      <div className="max-w-md w-full bg-white rounded-xl shadow-lg p-8">
-        <h2 className="text-2xl font-bold text-center mb-6">Create an Account</h2>
-        {error && (
-          <div className="bg-red-50 text-red-600 p-3 rounded-lg mb-4 text-sm">{error}</div>
-        )}
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
-            <input type="text" value={form.name} onChange={update('name')}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent" required />
+    <div className="min-h-screen flex items-center justify-center bg-bg px-5">
+      <div className="w-[400px] max-w-full">
+        {/* Brand */}
+        <div className="flex items-center justify-center gap-3 mb-2">
+          <div className="w-11 h-11 rounded-[14px] flex items-center justify-center text-white text-xl font-bold"
+            style={{ background: 'linear-gradient(135deg, #7C5CFC, #A78BFA)', boxShadow: '0 4px 16px rgba(124,92,252,0.3)' }}
+          >
+            ST
           </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
-            <input type="email" value={form.email} onChange={update('email')}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent" required />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Password</label>
-            <input type="password" value={form.password} onChange={update('password')}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent" required minLength={8} />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Confirm Password</label>
-            <input type="password" value={form.confirmPassword} onChange={update('confirmPassword')}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent" required />
-          </div>
-          <button type="submit" disabled={loading}
-            className="w-full py-2 px-4 bg-primary-600 text-white rounded-lg hover:bg-primary-700 disabled:opacity-50 transition-colors">
-            {loading ? 'Creating account...' : 'Create Account'}
-          </button>
-        </form>
-        <p className="text-center text-sm text-gray-500 mt-4">
-          Already have an account?{' '}
-          <Link to="/login" className="text-primary-600 hover:underline">Sign in</Link>
+          <span className="text-[28px] font-extrabold" style={{
+            background: 'linear-gradient(135deg, #7C5CFC, #A78BFA)',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+          }}>
+            Smart Todo
+          </span>
+        </div>
+        <p className="text-center text-sm text-text-muted mb-8">
+          Plan your day realistically with AI
         </p>
+
+        {/* Register Card */}
+        <div className="bg-white rounded-[20px] p-9 border border-border shadow">
+          {error && (
+            <div className="rounded-[14px] px-4 py-3 mb-4 text-sm"
+              style={{ background: 'rgba(240,85,110,0.08)', border: '1px solid rgba(240,85,110,0.2)', color: '#F0556E' }}
+            >
+              {error}
+            </div>
+          )}
+
+          <form onSubmit={handleSubmit}>
+            <div className="mb-5">
+              <label className="form-label">Name</label>
+              <input
+                type="text"
+                value={form.name}
+                onChange={update('name')}
+                className="form-input"
+                placeholder="Your full name"
+                required
+              />
+            </div>
+            <div className="mb-5">
+              <label className="form-label">Email</label>
+              <input
+                type="email"
+                value={form.email}
+                onChange={update('email')}
+                className="form-input"
+                placeholder="you@example.com"
+                required
+              />
+            </div>
+            <div className="mb-5">
+              <label className="form-label">Password</label>
+              <div className="relative">
+                <input
+                  type={showPassword ? 'text' : 'password'}
+                  value={form.password}
+                  onChange={update('password')}
+                  className="form-input pr-14"
+                  placeholder="Min. 8 characters"
+                  required
+                  minLength={8}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-text-dim hover:text-text-muted text-xs font-semibold transition-colors"
+                >
+                  {showPassword ? 'Hide' : 'Show'}
+                </button>
+              </div>
+            </div>
+            <div className="mb-5">
+              <label className="form-label">Confirm Password</label>
+              <input
+                type="password"
+                value={form.confirmPassword}
+                onChange={update('confirmPassword')}
+                className="form-input"
+                placeholder="Re-enter your password"
+                required
+              />
+            </div>
+            <button
+              type="submit"
+              disabled={loading}
+              className="btn-primary w-full py-3 text-[15px] font-bold"
+            >
+              {loading ? 'Creating account...' : 'Create Account'}
+            </button>
+          </form>
+
+          <p className="text-center text-sm text-text-muted mt-5">
+            Already have an account?{' '}
+            <Link to="/login" className="text-accent font-semibold hover:underline">Sign in</Link>
+          </p>
+        </div>
       </div>
     </div>
   );
