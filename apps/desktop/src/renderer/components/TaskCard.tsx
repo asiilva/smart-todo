@@ -52,7 +52,7 @@ export default function TaskCard({ task, onClick, isDragging }: Props) {
   return (
     <div
       onClick={onClick}
-      className={`bg-white rounded-[14px] border p-3.5 cursor-grab select-none transition-all duration-200
+      className={`bg-[var(--color-surface)] rounded-[14px] border p-3.5 cursor-grab select-none transition-all duration-200
         ${isDragging ? 'opacity-60 scale-[0.97] rotate-1 border-accent shadow-lift' : 'border-border hover:border-accent/30 hover:shadow-card hover:-translate-y-px'}
         ${hasActiveTimer ? 'border-success ring-2 ring-success/20 animate-pulse-subtle' : ''}`}
       style={{ boxShadow: isDragging ? undefined : '0 1px 3px rgba(0,0,0,0.03)' }}

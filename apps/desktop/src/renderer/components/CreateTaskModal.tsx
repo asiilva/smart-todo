@@ -108,7 +108,7 @@ export default function CreateTaskModal({ boardId, columnId, columns, onClose, o
       onClick={onClose}
     >
       <div
-        className="bg-white rounded-[22px] w-full max-w-[480px] mx-4 border border-border"
+        className="bg-[var(--color-surface)] rounded-[22px] w-full max-w-[480px] mx-4 border border-border"
         style={{ boxShadow: '0 8px 40px rgba(124,92,252,0.1), 0 20px 60px rgba(0,0,0,0.1)' }}
         onClick={(e) => e.stopPropagation()}
       >

@@ -217,7 +217,7 @@ export default function PlannerPage() {
 
       {/* RIGHT: Sidebar */}
       {plan && (
-        <div className="w-[320px] bg-white border-l border-border p-5 overflow-y-auto shrink-0">
+        <div className="w-[320px] bg-[var(--color-surface)] border-l border-border p-5 overflow-y-auto shrink-0">
           {/* Summary */}
           <div className="mb-6">
             <h3 className="text-xs font-bold uppercase tracking-[0.5px] text-text-muted mb-3">Day Summary</h3>

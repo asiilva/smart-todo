@@ -36,7 +36,7 @@ export default function KanbanColumn({ column, onAddTask, onTaskClick }: Props) 
 
   return (
     <div
-      className={`flex flex-col w-[280px] min-w-[280px] bg-white rounded-lg border border-border transition-all duration-200
+      className={`flex flex-col w-[280px] min-w-[280px] bg-[var(--color-surface)] rounded-lg border border-border transition-all duration-200
         ${isOver ? 'bg-accent-soft outline-2 outline-dashed outline-accent/30 -outline-offset-4' : ''}`}
       style={{ borderRadius: '18px', boxShadow: '0 1px 3px rgba(0,0,0,0.04), 0 2px 8px rgba(0,0,0,0.04)' }}
     >

@@ -5,10 +5,34 @@
 @tailwind utilities;
 
 @layer base {
+  :root {
+    --color-bg: #F7F5FF;
+    --color-bg-hover: #F0EDFF;
+    --color-surface: #FFFFFF;
+    --color-text: #1E1B3A;
+    --color-text-muted: #6B6894;
+    --color-text-dim: #9B98B8;
+    --color-border: #E8E5F5;
+    --color-accent: #7C5CFC;
+    --color-accent-soft: #F0EDFF;
+  }
+
+  .dark {
+    --color-bg: #13111C;
+    --color-bg-hover: #1E1B2E;
+    --color-surface: #1A1726;
+    --color-text: #E8E5F5;
+    --color-text-muted: #9B98B8;
+    --color-text-dim: #6B6894;
+    --color-border: #2A2640;
+    --color-accent: #9B7FFF;
+    --color-accent-soft: #1E1A30;
+  }
+
   body {
     @apply antialiased font-sans;
-    background: #F7F5FF;
-    color: #1E1B3A;
+    background: var(--color-bg);
+    color: var(--color-text);
   }
 
   .drag-region {
@@ -41,15 +65,15 @@
 
   .btn-secondary {
     @apply px-4 py-2 text-sm font-semibold rounded-pill border cursor-pointer;
-    border-color: #E8E5F5;
-    background: white;
-    color: #6B6894;
+    border-color: var(--color-border);
+    background: var(--color-surface);
+    color: var(--color-text-muted);
     transition: all 0.2s;
   }
   .btn-secondary:hover {
-    border-color: #7C5CFC;
-    color: #1E1B3A;
-    background: #F0EDFF;
+    border-color: var(--color-accent);
+    color: var(--color-text);
+    background: var(--color-bg-hover);
   }
 
   .btn-danger {
@@ -66,28 +90,29 @@
 
   .form-input {
     @apply w-full px-3.5 py-2.5 text-sm font-sans border rounded-[12px];
-    border-color: #E8E5F5;
-    background: #F7F5FF;
-    color: #1E1B3A;
+    border-color: var(--color-border);
+    background: var(--color-bg);
+    color: var(--color-text);
     transition: all 0.2s;
   }
   .form-input:focus {
     outline: none;
-    border-color: #7C5CFC;
+    border-color: var(--color-accent);
     box-shadow: 0 0 0 3px rgba(124,92,252,0.12);
   }
   .form-input::placeholder {
-    color: #9B98B8;
+    color: var(--color-text-dim);
   }
 
   .form-label {
     @apply block text-xs font-semibold mb-1.5 uppercase tracking-wide;
-    color: #9B98B8;
+    color: var(--color-text-dim);
   }
 
   .card {
-    @apply bg-white border rounded-[14px] p-4;
-    border-color: #E8E5F5;
+    @apply border rounded-[14px] p-4;
+    background: var(--color-surface);
+    border-color: var(--color-border);
     box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 2px 8px rgba(0,0,0,0.04);
   }
 }

@@ -273,7 +273,7 @@ export default function BoardPage() {
 
       {showProfilePrompt && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-[22px] shadow-xl max-w-md mx-4 p-6">
+          <div className="bg-[var(--color-surface)] rounded-[22px] shadow-xl max-w-md mx-4 p-6">
             <h2 className="text-lg font-semibold text-text mb-2">Set Up Your Tech Profile First</h2>
             <p className="text-text-muted text-sm mb-4">
               To create accurate time estimates, Smart Todo needs to know your skills and experience.

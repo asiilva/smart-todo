@@ -53,7 +53,7 @@ export default function ToastContainer() {
             key={toast.id}
             className="flex items-center gap-2.5 px-4 py-3 rounded-[14px] border border-border shadow animate-slide-in"
             style={{
-              background: 'rgba(255,255,255,0.92)',
+              background: 'var(--color-surface)',
               backdropFilter: 'blur(12px)',
               WebkitBackdropFilter: 'blur(12px)',
               borderLeft: `3px solid ${borderColors[toast.type]}`,

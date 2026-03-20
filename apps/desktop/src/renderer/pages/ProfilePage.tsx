@@ -157,7 +157,7 @@ export default function ProfilePage() {
       )}
 
       {/* Skills Input — full width */}
-      <div className="bg-white rounded-[16px] border border-border p-6 mb-6" style={{ boxShadow: '0 1px 3px rgba(0,0,0,0.04), 0 2px 8px rgba(0,0,0,0.04)' }}>
+      <div className="bg-[var(--color-surface)] rounded-[16px] border border-border p-6 mb-6" style={{ boxShadow: '0 1px 3px rgba(0,0,0,0.04), 0 2px 8px rgba(0,0,0,0.04)' }}>
         <label className="form-label mb-2">Describe your skills and experience</label>
         <textarea
           value={rawText}
@@ -182,7 +182,7 @@ export default function ProfilePage() {
       {structuredProfile ? (
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
           {/* Experience — small card */}
-          <div className="bg-white rounded-[16px] border border-border p-5" style={{ boxShadow: '0 1px 3px rgba(0,0,0,0.04), 0 2px 8px rgba(0,0,0,0.04)' }}>
+          <div className="bg-[var(--color-surface)] rounded-[16px] border border-border p-5" style={{ boxShadow: '0 1px 3px rgba(0,0,0,0.04), 0 2px 8px rgba(0,0,0,0.04)' }}>
             <h3 className="text-xs font-bold uppercase tracking-[0.5px] text-text-muted mb-2">Experience</h3>
             <p className="text-[28px] font-extrabold text-accent leading-none">{structuredProfile.yearsOfExperience}</p>
             <p className="text-xs text-text-muted mt-1">years</p>
@@ -190,7 +190,7 @@ export default function ProfilePage() {
 
           {/* Languages — spans 3 cols */}
           {structuredProfile.languages.length > 0 && (
-            <div className="col-span-1 lg:col-span-3 bg-white rounded-[16px] border border-border p-5" style={{ boxShadow: '0 1px 3px rgba(0,0,0,0.04), 0 2px 8px rgba(0,0,0,0.04)' }}>
+            <div className="col-span-1 lg:col-span-3 bg-[var(--color-surface)] rounded-[16px] border border-border p-5" style={{ boxShadow: '0 1px 3px rgba(0,0,0,0.04), 0 2px 8px rgba(0,0,0,0.04)' }}>
               <h3 className="text-xs font-bold uppercase tracking-[0.5px] text-text-muted mb-3">Languages</h3>
               <div className="flex flex-wrap gap-2">
                 {structuredProfile.languages.map((lang) => (
@@ -205,7 +205,7 @@ export default function ProfilePage() {
 
           {/* Frameworks — full width */}
           {structuredProfile.frameworks.length > 0 && (
-            <div className="col-span-2 lg:col-span-2 bg-white rounded-[16px] border border-border p-5" style={{ boxShadow: '0 1px 3px rgba(0,0,0,0.04), 0 2px 8px rgba(0,0,0,0.04)' }}>
+            <div className="col-span-2 lg:col-span-2 bg-[var(--color-surface)] rounded-[16px] border border-border p-5" style={{ boxShadow: '0 1px 3px rgba(0,0,0,0.04), 0 2px 8px rgba(0,0,0,0.04)' }}>
               <h3 className="text-xs font-bold uppercase tracking-[0.5px] text-text-muted mb-3">Frameworks & Tools</h3>
               <div className="flex flex-wrap gap-2">
                 {structuredProfile.frameworks.map((fw) => (
@@ -220,7 +220,7 @@ export default function ProfilePage() {
 
           {/* Domains */}
           {structuredProfile.domains.length > 0 && (
-            <div className="col-span-2 lg:col-span-2 bg-white rounded-[16px] border border-border p-5" style={{ boxShadow: '0 1px 3px rgba(0,0,0,0.04), 0 2px 8px rgba(0,0,0,0.04)' }}>
+            <div className="col-span-2 lg:col-span-2 bg-[var(--color-surface)] rounded-[16px] border border-border p-5" style={{ boxShadow: '0 1px 3px rgba(0,0,0,0.04), 0 2px 8px rgba(0,0,0,0.04)' }}>
               <h3 className="text-xs font-bold uppercase tracking-[0.5px] text-text-muted mb-3">Domains</h3>
               <div className="flex flex-wrap gap-2">
                 {structuredProfile.domains.map((domain) => (
@@ -242,7 +242,7 @@ export default function ProfilePage() {
       )}
 
       {/* Daily Availability */}
-      <div className="bg-white rounded-[16px] border border-border p-6" style={{ boxShadow: '0 1px 3px rgba(0,0,0,0.04), 0 2px 8px rgba(0,0,0,0.04)' }}>
+      <div className="bg-[var(--color-surface)] rounded-[16px] border border-border p-6" style={{ boxShadow: '0 1px 3px rgba(0,0,0,0.04), 0 2px 8px rgba(0,0,0,0.04)' }}>
         <h2 className="text-xs font-bold uppercase tracking-[0.5px] text-text-muted mb-4">Daily Availability</h2>
         <p className="text-[13px] text-text-muted mb-4">
           Set your available hours so the planner can calculate if your day is overbooked.

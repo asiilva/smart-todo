@@ -48,7 +48,7 @@ export default function LoginPage() {
         </p>
 
         {/* Login Card */}
-        <div className="bg-white rounded-[20px] p-9 border border-border shadow">
+        <div className="bg-[var(--color-surface)] rounded-[20px] p-9 border border-border shadow">
           {error && (
             <div className="rounded-[14px] px-4 py-3 mb-4 text-sm"
               style={{ background: 'rgba(240,85,110,0.08)', border: '1px solid rgba(240,85,110,0.2)', color: '#F0556E' }}

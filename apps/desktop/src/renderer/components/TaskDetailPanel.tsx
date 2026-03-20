@@ -131,7 +131,7 @@ export default function TaskDetailPanel({ task, onClose, onUpdated }: Props) {
   return (
     <>
     <div className="fixed inset-0 z-40" onClick={onClose} />
-    <div className="fixed inset-y-0 right-0 w-[400px] bg-white shadow z-50 flex flex-col border-l border-border">
+    <div className="fixed inset-y-0 right-0 w-[400px] bg-[var(--color-surface)] shadow z-50 flex flex-col border-l border-border">
       {/* Header */}
       <div className="flex items-center justify-between px-6 py-4">
         <h2 className="text-[14px] font-bold text-text-muted uppercase tracking-wide">Task Details</h2>

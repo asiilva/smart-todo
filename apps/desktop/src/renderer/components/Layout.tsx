@@ -1,6 +1,7 @@
 import { Outlet, NavLink } from 'react-router-dom';
 import { useAuthStore } from '../stores/auth-store';
-import { LayoutDashboard, Calendar, User, LogOut, Bell } from 'lucide-react';
+import { LayoutDashboard, Calendar, User, LogOut, Bell, Moon, Sun } from 'lucide-react';
+import { useThemeStore } from '../stores/theme-store';
 
 const navItems = [
   { to: '/board', label: 'Board', icon: LayoutDashboard },
@@ -11,13 +12,14 @@ const navItems = [
 export default function Layout() {
   const logout = useAuthStore((s) => s.logout);
   const user = useAuthStore((s) => s.user);
+  const { isDark, toggle } = useThemeStore();
 
   return (
     <div className="flex flex-col h-screen bg-bg">
       {/* Top Navbar — frosted glass */}
       <header className="drag-region h-[60px] flex items-center justify-between px-6 border-b border-border z-50 shrink-0"
         style={{
-          background: 'rgba(255,255,255,0.85)',
+          background: isDark ? 'rgba(26,23,38,0.85)' : 'rgba(255,255,255,0.85)',
           backdropFilter: 'blur(16px)',
           WebkitBackdropFilter: 'blur(16px)',
         }}
@@ -60,6 +62,13 @@ export default function Layout() {
 
         {/* Right: User + Logout */}
         <div className="flex items-center gap-3">
+          <button
+            onClick={toggle}
+            className="w-[34px] h-[34px] rounded-full flex items-center justify-center text-text-dim hover:bg-bg-hover hover:text-accent transition-all duration-200"
+            title={isDark ? 'Light mode' : 'Dark mode'}
+          >
+            {isDark ? <Sun size={16} /> : <Moon size={16} />}
+          </button>
           {user && (
             <div className="flex items-center gap-2">
               <div className="w-[34px] h-[34px] rounded-full bg-accent-soft flex items-center justify-center text-accent text-xs font-bold">
