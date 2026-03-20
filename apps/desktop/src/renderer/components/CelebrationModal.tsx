@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import { X } from 'lucide-react';
 import { formatMinutes } from '../utils/format';
 
 interface Task {
@@ -40,63 +39,72 @@ export default function CelebrationModal({ task, onClose }: Props) {
     : null;
 
   return (
-    <div className="fixed inset-0 z-[200] flex items-center justify-center" onClick={onClose}>
-      {/* Fireworks background */}
-      <div className="absolute inset-0 bg-black/60 overflow-hidden">
-        {Array.from({ length: 30 }).map((_, i) => (
-          <div
-            key={i}
-            className="firework-particle"
-            style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-              animationDelay: `${Math.random() * 2}s`,
-              animationDuration: `${1 + Math.random() * 2}s`,
-              backgroundColor: ['#3B82F6', '#10B981', '#F59E0B', '#8B5CF6', '#EF4444', '#06B6D4'][Math.floor(Math.random() * 6)],
-            }}
-          />
-        ))}
-      </div>
-
+    <div
+      className="fixed inset-0 z-[200] flex items-center justify-center"
+      style={{ background: 'rgba(30,27,58,0.3)', backdropFilter: 'blur(12px)' }}
+      onClick={onClose}
+    >
       {/* Card */}
       <div
-        className="relative bg-white rounded-2xl shadow-2xl p-8 max-w-md mx-4 text-center animate-bounce-in"
+        className="relative w-full max-w-[480px] mx-4 rounded-[28px] text-center border border-border"
+        style={{
+          background: 'linear-gradient(135deg, #FFFFFF 0%, #F7F5FF 100%)',
+          boxShadow: '0 0 60px rgba(124,92,252,0.12), 0 20px 60px rgba(0,0,0,0.08)',
+          padding: '48px 56px',
+        }}
         onClick={(e) => e.stopPropagation()}
       >
-        <button onClick={onClose} className="absolute top-3 right-3 text-gray-300 hover:text-gray-500">
-          <X size={20} />
-        </button>
+        {/* Emoji with bounce */}
+        <div className="text-[64px] mb-4 animate-bounce">
+          🎉
+        </div>
 
-        <div className="text-6xl mb-4">🎉</div>
-        <h2 className="text-2xl font-bold text-gray-900 mb-2">{message}</h2>
-        <p className="text-gray-500 mb-6">"{task.title}" is done!</p>
+        {/* Title with gradient */}
+        <h2
+          className="text-[28px] font-extrabold mb-3"
+          style={{
+            background: 'linear-gradient(135deg, #7C5CFC, #A78BFA)',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+            backgroundClip: 'text',
+          }}
+        >
+          {message}
+        </h2>
 
-        <div className="bg-gray-50 rounded-lg p-4 mb-6 space-y-2">
+        {/* Task name */}
+        <p className="text-[16px] font-semibold text-success mb-8">
+          "{task.title}" is done!
+        </p>
+
+        {/* Stats */}
+        <div className="flex items-center justify-center gap-6 mb-8">
           {task.projectedDurationMinutes && (
-            <div className="flex justify-between text-sm">
-              <span className="text-gray-500">Estimated</span>
-              <span className="font-medium">{formatMinutes(task.projectedDurationMinutes)}</span>
+            <div className="text-center">
+              <div className="text-[20px] font-extrabold text-text">{formatMinutes(task.projectedDurationMinutes)}</div>
+              <div className="text-[11px] text-text-muted mt-0.5">Estimated</div>
             </div>
           )}
           {task.executedDurationMinutes > 0 && (
-            <div className="flex justify-between text-sm">
-              <span className="text-gray-500">Actual</span>
-              <span className="font-medium">{formatMinutes(task.executedDurationMinutes)}</span>
+            <div className="text-center">
+              <div className="text-[20px] font-extrabold text-text">{formatMinutes(task.executedDurationMinutes)}</div>
+              <div className="text-[11px] text-text-muted mt-0.5">Actual</div>
             </div>
           )}
           {accuracy !== null && (
-            <div className="flex justify-between text-sm">
-              <span className="text-gray-500">Accuracy</span>
-              <span className={`font-medium ${accuracy > 120 ? 'text-red-500' : accuracy < 80 ? 'text-blue-500' : 'text-green-500'}`}>
+            <div className="text-center">
+              <div className={`text-[20px] font-extrabold ${accuracy > 120 ? 'text-danger' : accuracy < 80 ? 'text-accent' : 'text-success'}`}>
                 {accuracy}%
-              </span>
+              </div>
+              <div className="text-[11px] text-text-muted mt-0.5">Accuracy</div>
             </div>
           )}
         </div>
 
+        {/* Button */}
         <button
           onClick={onClose}
-          className="px-6 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors font-medium"
+          className="btn-primary px-10 py-3 text-[15px] font-bold"
         >
           Keep Going!
         </button>

@@ -131,48 +131,56 @@ export default function TaskDetailPanel({ task, onClose, onUpdated }: Props) {
   return (
     <>
     <div className="fixed inset-0 z-40" onClick={onClose} />
-    <div className="fixed inset-y-0 right-0 w-96 bg-white shadow-xl border-l z-50 flex flex-col">
-      <div className="flex items-center justify-between p-4 border-b">
-        <h2 className="font-semibold">Task Details</h2>
-        <button onClick={onClose} className="text-gray-400 hover:text-gray-600">
-          <X size={20} />
+    <div className="fixed inset-y-0 right-0 w-[400px] bg-white shadow z-50 flex flex-col border-l border-border">
+      {/* Header */}
+      <div className="flex items-center justify-between px-6 py-4">
+        <h2 className="text-[14px] font-bold text-text-muted uppercase tracking-wide">Task Details</h2>
+        <button
+          onClick={onClose}
+          className="w-[34px] h-[34px] rounded-full bg-bg hover:bg-danger/10 hover:text-danger flex items-center justify-center transition-colors text-text-muted"
+        >
+          <X size={16} />
         </button>
       </div>
 
-      <div className="flex-1 overflow-y-auto p-4 space-y-4">
+      {/* Content */}
+      <div className="flex-1 overflow-y-auto px-6 pb-6 space-y-5">
         <input
           type="text"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
-          className="w-full text-lg font-medium border-0 border-b border-gray-200 pb-2 focus:ring-0 focus:border-primary-500"
+          className="text-lg font-bold bg-transparent border-0 border-b border-border pb-2 w-full focus:border-accent focus:outline-none transition-colors"
+          style={{ boxShadow: 'none' }}
+          onFocus={(e) => e.target.style.boxShadow = '0 2px 0 0 #7C5CFC'}
+          onBlur={(e) => e.target.style.boxShadow = 'none'}
         />
 
         <div>
-          <label className="block text-xs font-medium text-gray-500 mb-1">Description</label>
+          <label className="form-label">Description</label>
           <textarea
             value={description}
             onChange={(e) => setDescription(e.target.value)}
-            className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm h-20 resize-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+            className="form-input h-20 resize-none"
           />
         </div>
 
         <div>
-          <label className="block text-xs font-medium text-gray-500 mb-1">Notes</label>
+          <label className="form-label">Notes</label>
           <textarea
             value={notes}
             onChange={(e) => setNotes(e.target.value)}
-            className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm h-16 resize-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+            className="form-input h-16 resize-none"
             placeholder="Links, reminders, or useful info..."
           />
         </div>
 
         <div className="grid grid-cols-2 gap-3">
           <div>
-            <label className="block text-xs font-medium text-gray-500 mb-1">Priority</label>
+            <label className="form-label">Priority</label>
             <select
               value={priority}
               onChange={(e) => setPriority(e.target.value)}
-              className="w-full px-3 py-1.5 border border-gray-200 rounded-lg text-sm"
+              className="form-input"
             >
               <option value="low">Low</option>
               <option value="medium">Medium</option>
@@ -181,11 +189,11 @@ export default function TaskDetailPanel({ task, onClose, onUpdated }: Props) {
             </select>
           </div>
           <div>
-            <label className="block text-xs font-medium text-gray-500 mb-1">Category</label>
+            <label className="form-label">Category</label>
             <select
               value={category}
               onChange={(e) => setCategory(e.target.value)}
-              className="w-full px-3 py-1.5 border border-gray-200 rounded-lg text-sm"
+              className="form-input"
             >
               {categories.length > 0 ? categories.map((cat) => (
                 <option key={cat.id} value={cat.name}>{cat.name}</option>
@@ -204,68 +212,72 @@ export default function TaskDetailPanel({ task, onClose, onUpdated }: Props) {
         </div>
 
         <div>
-          <label className="block text-xs font-medium text-gray-500 mb-1">Scheduled Date</label>
+          <label className="form-label">Scheduled Date</label>
           <input
             type="date"
             value={scheduledDate}
             onChange={(e) => setScheduledDate(e.target.value)}
-            className="w-full px-3 py-1.5 border border-gray-200 rounded-lg text-sm"
+            className="form-input"
           />
         </div>
 
-        {/* Time tracking */}
-        <div className="bg-gray-50 rounded-lg p-3">
-          <div className="flex items-center justify-between mb-2">
-            <h3 className="text-sm font-medium text-gray-700 flex items-center gap-1">
-              <Clock size={14} /> Time Tracking
+        {/* Time Tracking */}
+        <div className="bg-bg rounded-[14px] p-4 border border-border">
+          <div className="flex items-center justify-between mb-3">
+            <h3 className="text-sm font-semibold text-text flex items-center gap-1.5">
+              <Clock size={14} className="text-text-muted" /> Time Tracking
             </h3>
             {hasActiveTimer ? (
               <button
                 onClick={handleStopTimer}
-                className="flex items-center gap-1 px-2 py-1 bg-red-500 text-white text-xs rounded hover:bg-red-600"
+                className="w-[30px] h-[30px] rounded-full bg-danger/10 text-danger hover:bg-danger/20 flex items-center justify-center transition-colors"
               >
-                <Square size={12} /> Stop
+                <Square size={12} />
               </button>
             ) : (
               <button
                 onClick={handleStartTimer}
-                className="flex items-center gap-1 px-2 py-1 bg-green-500 text-white text-xs rounded hover:bg-green-600"
+                className="w-[30px] h-[30px] rounded-full bg-success/10 text-success hover:bg-success/20 flex items-center justify-center transition-colors"
               >
-                <Play size={12} /> Start
+                <Play size={12} />
               </button>
             )}
           </div>
 
           {hasActiveTimer && elapsed && (
-            <div className="flex justify-between text-sm">
-              <span className="text-gray-500">Current session:</span>
-              <span className="font-mono font-medium text-green-600">{elapsed}</span>
+            <div className="flex items-center justify-between mb-3">
+              <span className="text-[11px] text-text-muted">Current session</span>
+              <span className="font-mono font-bold text-success">{elapsed}</span>
             </div>
           )}
-          <div className="flex justify-between text-sm">
-            <span className="text-gray-500">Executed:</span>
-            <span className="font-medium">{formatMinutes(task.executedDurationMinutes)}</span>
+
+          <div className="flex items-center gap-4">
+            <div className="flex-1">
+              <div className="text-[20px] font-extrabold text-text">{formatMinutes(task.executedDurationMinutes)}</div>
+              <div className="text-[11px] text-text-muted">Executed</div>
+            </div>
+            {task.projectedDurationMinutes && (
+              <div className="flex-1">
+                <div className="text-[20px] font-extrabold text-text">{formatMinutes(task.projectedDurationMinutes)}</div>
+                <div className="text-[11px] text-text-muted">Projected</div>
+              </div>
+            )}
           </div>
-          {task.projectedDurationMinutes && (
-            <div className="flex justify-between text-sm">
-              <span className="text-gray-500">Projected:</span>
-              <span className="font-medium">{formatMinutes(task.projectedDurationMinutes)}</span>
-            </div>
-          )}
         </div>
       </div>
 
-      <div className="p-4 border-t flex justify-between">
+      {/* Footer */}
+      <div className="px-6 py-4 border-t border-border flex items-center justify-between">
         <button
           onClick={handleDelete}
-          className="px-3 py-1.5 text-sm text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+          className="btn-danger"
         >
           Delete
         </button>
         <button
           onClick={handleSave}
           disabled={saving}
-          className="px-4 py-1.5 text-sm bg-primary-600 text-white rounded-lg hover:bg-primary-700 disabled:opacity-50 transition-colors"
+          className="btn-primary"
         >
           {saving ? 'Saving...' : 'Save'}
         </button>

@@ -102,25 +102,39 @@ export default function CreateTaskModal({ boardId, columnId, columns, onClose, o
   };
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-      <div className="bg-white rounded-xl shadow-xl w-full max-w-lg mx-4">
-        <div className="flex items-center justify-between p-4 border-b">
-          <h2 className="text-lg font-semibold">New Task</h2>
-          <button onClick={onClose} className="text-gray-400 hover:text-gray-600">
-            <X size={20} />
+    <div
+      className="fixed inset-0 z-[200] flex items-center justify-center"
+      style={{ background: 'rgba(30,27,58,0.3)', backdropFilter: 'blur(12px)' }}
+      onClick={onClose}
+    >
+      <div
+        className="bg-white rounded-[22px] w-full max-w-[480px] mx-4 border border-border"
+        style={{ boxShadow: '0 8px 40px rgba(124,92,252,0.1), 0 20px 60px rgba(0,0,0,0.1)' }}
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Header */}
+        <div className="flex items-center justify-between px-6 py-5">
+          <h2 className="text-[18px] font-bold text-text">New Task</h2>
+          <button
+            onClick={onClose}
+            className="w-[34px] h-[34px] rounded-full bg-bg hover:bg-danger/10 hover:text-danger flex items-center justify-center transition-colors text-text-muted"
+          >
+            <X size={16} />
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="p-4 space-y-4">
-          {error && <div className="bg-red-50 text-red-600 p-2 rounded text-sm">{error}</div>}
+        <form onSubmit={handleSubmit} className="px-6 pb-6 space-y-4">
+          {error && (
+            <div className="bg-danger/10 text-danger p-3 rounded-[10px] text-sm font-medium">{error}</div>
+          )}
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Title</label>
+            <label className="form-label">Title</label>
             <input
               type="text"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+              className="form-input"
               placeholder="What needs to be done?"
               required
               autoFocus
@@ -128,32 +142,32 @@ export default function CreateTaskModal({ boardId, columnId, columns, onClose, o
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
+            <label className="form-label">Description</label>
             <textarea
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent h-20 resize-none"
+              className="form-input h-20 resize-none"
               placeholder="Optional details..."
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Scheduled Date</label>
+            <label className="form-label">Scheduled Date</label>
             <input
               type="date"
               value={scheduledDate}
               onChange={(e) => setScheduledDate(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+              className="form-input"
             />
           </div>
 
           <div className="grid grid-cols-3 gap-3">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Column</label>
+              <label className="form-label">Column</label>
               <select
                 value={selectedColumnId}
                 onChange={(e) => setSelectedColumnId(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                className="form-input"
               >
                 {columns.sort((a, b) => a.position - b.position).map((col) => (
                   <option key={col.id} value={col.id}>{col.name}</option>
@@ -161,11 +175,11 @@ export default function CreateTaskModal({ boardId, columnId, columns, onClose, o
               </select>
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Priority</label>
+              <label className="form-label">Priority</label>
               <select
                 value={priority}
                 onChange={(e) => setPriority(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                className="form-input"
               >
                 <option value="low">Low</option>
                 <option value="medium">Medium</option>
@@ -174,11 +188,11 @@ export default function CreateTaskModal({ boardId, columnId, columns, onClose, o
               </select>
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Category</label>
+              <label className="form-label">Category</label>
               <select
                 value={category}
                 onChange={(e) => setCategory(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                className="form-input"
               >
                 {categories.length > 0 ? categories.map((cat) => (
                   <option key={cat.id} value={cat.name}>{cat.name}</option>
@@ -196,39 +210,39 @@ export default function CreateTaskModal({ boardId, columnId, columns, onClose, o
             </div>
           </div>
 
-          {/* AI Estimation */}
+          {/* AI Estimation Result */}
           {estimation && (
-            <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
-              <p className="text-sm font-medium text-blue-800">
+            <div className="bg-accent-soft border border-accent/20 rounded-[14px] p-4">
+              <p className="text-sm font-semibold text-accent">
                 AI Estimate: {estimation.projectedDurationMinutes < 60
                   ? `${estimation.projectedDurationMinutes}min`
                   : `${Math.floor(estimation.projectedDurationMinutes / 60)}h ${estimation.projectedDurationMinutes % 60}m`}
               </p>
-              <p className="text-xs text-blue-600 mt-1">{estimation.reasoning}</p>
+              <p className="text-xs text-text-muted mt-1.5 leading-relaxed">{estimation.reasoning}</p>
             </div>
           )}
 
-          <div className="flex justify-between pt-2">
+          <div className="flex items-center justify-between pt-2">
             <button
               type="button"
               onClick={handleEstimate}
               disabled={estimating || !title.trim()}
-              className="px-3 py-2 text-sm bg-gray-800 text-white rounded-lg hover:bg-gray-900 disabled:opacity-50 transition-colors"
+              className="btn-secondary"
             >
               {estimating ? 'Estimating...' : 'AI Estimate'}
             </button>
-            <div className="flex gap-2">
+            <div className="flex items-center gap-3">
               <button
                 type="button"
                 onClick={onClose}
-                className="px-4 py-2 text-sm text-gray-600 hover:text-gray-800 transition-colors"
+                className="text-sm font-medium text-text-muted hover:text-text transition-colors"
               >
                 Cancel
               </button>
               <button
                 type="submit"
                 disabled={loading || !title.trim()}
-                className="px-4 py-2 text-sm bg-primary-600 text-white rounded-lg hover:bg-primary-700 disabled:opacity-50 transition-colors"
+                className="btn-primary"
               >
                 {loading ? 'Creating...' : 'Create Task'}
               </button>
